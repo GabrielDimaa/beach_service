@@ -1,11 +1,15 @@
 import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/shared/components/app_bar/app_bar_title.dart';
+import 'package:beach_service/app/shared/components/busca_widget.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
 import 'package:beach_service/app/shared/components/scaffold_widget.dart';
+import 'package:beach_service/app/shared/components/text_form_field_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:beach_service/app/shared/extensions/date_extension.dart';
 
 class UserPage extends StatefulWidget {
   final String title;
@@ -17,22 +21,34 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-
   //TextEditingControllers
   final TextEditingController _controllerNome = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
-  final TextEditingController _controllerSenha = TextEditingController();
-  final TextEditingController _controllerCidade = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+  final TextEditingController _controllerCep = TextEditingController();
   final TextEditingController _controllerDataNascimento = TextEditingController();
   final TextEditingController _controllerTelefone = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() {
+    // Update TextEditingController
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final bottomScroll = MediaQuery.of(context).viewInsets.bottom;
     return ScaffoldWidget(
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
+              reverse: true,
+              padding: EdgeInsets.only(bottom: bottomScroll ?? 0),
               child: Column(
                 children: [
                   AppBarTitleWidget(title: widget.title),
@@ -48,11 +64,12 @@ class _UserPageState extends State<UserPage> {
                           child: Icon(Icons.person, color: PaletaCores.primaryLight, size: 86),
                         ),
                         Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
-                            ),
-                            child: Icon(Icons.add, color: PaletaCores.primaryLight)),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                          ),
+                          child: Icon(Icons.add, color: PaletaCores.primaryLight),
+                        ),
                       ],
                     ),
                   ),
@@ -61,26 +78,63 @@ class _UserPageState extends State<UserPage> {
                   Form(
                     child: Column(
                       children: [
-                        _textFormField(label: "Nome completo", keyboardType: TextInputType.name),
+                        TextFormFieldWidget(
+                          label: "Nome completo",
+                          keyboardType: TextInputType.name,
+                          controller: _controllerNome,
+                        ),
                         DefaultSizedBox(),
-                        _textFormField(label: "Email", keyboardType: TextInputType.emailAddress),
+                        TextFormFieldWidget(
+                          label: "Email",
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _controllerEmail,
+                        ),
                         DefaultSizedBox(),
-                        _textFormField(label: "Senha", obscure: true),
+                        TextFormFieldWidget(
+                          label: "Senha",
+                          obscure: true,
+                          controller: _controllerPassword,
+                        ),
                         DefaultSizedBox(),
-                        _textFormField(label: "Cidade"),
+                        TextFormFieldWidget(
+                          label: "CEP",
+                          controller: _controllerCep,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CepInputFormatter(),
+                          ],
+                        ),
                         DefaultSizedBox(),
-                        _textFormField(label: "Data de nascimento", keyboardType: TextInputType.number, controller: _controllerDataNascimento, inputFormatter: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          DataInputFormatter(),
-                        ]),
-                        DefaultSizedBox(),
-                        _textFormField(
+                        TextFormFieldWidget(
                           label: "Telefone",
                           keyboardType: TextInputType.phone,
-                          inputFormatter: [
+                          inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             TelefoneInputFormatter(),
                           ],
+                        ),
+                        DefaultSizedBox(),
+                        BuscaWidget(
+                          label: "Data de nascimento",
+                          textEditingController: _controllerDataNascimento,
+                          onTapFormField: () async {
+                            DateTime data = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.utc(2000, 1, 1),
+                              firstDate: DateTime(1910, 1, 1),
+                              lastDate: DateTime.now(),
+                            );
+                            setState(() {
+                              //controller.setDataHora(data);
+                              _controllerDataNascimento.text = data.formated ?? "";
+                            });
+                          },
+                          onTapClear: () {
+                            setState(() {
+                              //controller.setFormaRecebimento(null);
+                              _controllerDataNascimento.clear();
+                            });
+                          },
                         ),
                       ],
                     ),
@@ -91,36 +145,15 @@ class _UserPageState extends State<UserPage> {
           ),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: IconTextWidget(text: "REGISTRAR", icon: Icons.save),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: ElevatedButton(
+                onPressed: () {},
+                child: IconTextWidget(text: "REGISTRAR", icon: Icons.save),
+              ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _textFormField({
-    String label,
-    TextEditingController controller,
-    bool obscure = false,
-    TextInputType keyboardType = TextInputType.text,
-    List<TextInputFormatter> inputFormatter,
-  }) {
-    return TextFormField(
-      controller: controller,
-      cursorColor: Colors.white,
-      style: TextStyle(color: Colors.white, fontSize: 18),
-      obscureText: obscure,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatter,
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.only(bottom: 8),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
-        labelText: label,
-        labelStyle: TextStyle(fontSize: 18, color: Colors.white54),
       ),
     );
   }

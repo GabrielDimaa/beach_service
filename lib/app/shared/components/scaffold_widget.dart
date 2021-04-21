@@ -26,6 +26,7 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.appBar,
+      resizeToAvoidBottomInset: false,
       floatingActionButton: widget.floatingActionButton,
       floatingActionButtonLocation: widget.floatingActionButtonLocation,
       drawer: widget.drawer,

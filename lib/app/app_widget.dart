@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AppWidget extends StatelessWidget {
@@ -20,11 +21,19 @@ class AppWidget extends StatelessWidget {
           headline1: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
           headline2: TextStyle(color: Colors.white, fontSize: 42, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
           headline3: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
+          // bodyText1: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
+          // bodyText2: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
         ),
         iconTheme: IconThemeData(
           color: Colors.white,
           size: 24,
         ),
+        colorScheme: ColorScheme.light(
+          primary: PaletaCores.primary,
+          onPrimary: Colors.white,
+          onSurface: Colors.black,
+        ),
+        dialogBackgroundColor: Colors.white,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             primary: Colors.white,
@@ -34,6 +43,12 @@ class AppWidget extends StatelessWidget {
           ),
         ),
       ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('pt', 'BR')],
     ).modular();
   }
 }
