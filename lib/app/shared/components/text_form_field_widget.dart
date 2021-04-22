@@ -36,7 +36,7 @@ class TextFormFieldWidget extends StatelessWidget {
       onChanged: onChanged,
       keyboardType: keyboardType,
       onTap: onTapFormField,
-      inputFormatters: inputFormatters ?? [TextInputFormatter.withFunction((oldValue, newValue) => oldValue)],
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.only(bottom: 8),
         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white54)),

@@ -1,4 +1,5 @@
 import 'package:beach_service/app/app_widget.dart';
+import 'package:beach_service/app/modules/user/user_controller.dart';
 import 'package:beach_service/app/shared/components/app_bar/app_bar_title.dart';
 import 'package:beach_service/app/shared/components/busca_widget.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
@@ -8,8 +9,8 @@ import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:beach_service/app/shared/extensions/date_extension.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class UserPage extends StatefulWidget {
   final String title;
@@ -20,7 +21,7 @@ class UserPage extends StatefulWidget {
   _UserPageState createState() => _UserPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class _UserPageState extends ModularState<UserPage, UserController> {
   //TextEditingControllers
   final TextEditingController _controllerNome = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
@@ -32,11 +33,18 @@ class _UserPageState extends State<UserPage> {
   @override
   void initState() {
     super.initState();
-    init();
+
+    controller.setUpdateTextControllers(_updateTextControllers);
+    controller.load();
   }
 
-  void init() {
-    // Update TextEditingController
+  void _updateTextControllers() {
+    _controllerNome.text = controller.userStore?.nome ?? "";
+    _controllerEmail.text = controller.userStore?.email ?? "";
+    _controllerPassword.text = controller.userStore?.password ?? "";
+    _controllerCep.text = controller.userStore?.cep ?? "";
+    _controllerDataNascimento.text = controller.userStore?.dataNascimento ?? "";
+    _controllerTelefone.text = controller.userStore?.telefone ?? "";
   }
 
   @override
@@ -75,70 +83,7 @@ class _UserPageState extends State<UserPage> {
                   ),
                   DefaultSizedBox(),
                   DefaultSizedBox(),
-                  Form(
-                    child: Column(
-                      children: [
-                        TextFormFieldWidget(
-                          label: "Nome completo",
-                          keyboardType: TextInputType.name,
-                          controller: _controllerNome,
-                        ),
-                        DefaultSizedBox(),
-                        TextFormFieldWidget(
-                          label: "Email",
-                          keyboardType: TextInputType.emailAddress,
-                          controller: _controllerEmail,
-                        ),
-                        DefaultSizedBox(),
-                        TextFormFieldWidget(
-                          label: "Senha",
-                          obscure: true,
-                          controller: _controllerPassword,
-                        ),
-                        DefaultSizedBox(),
-                        TextFormFieldWidget(
-                          label: "CEP",
-                          controller: _controllerCep,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            CepInputFormatter(),
-                          ],
-                        ),
-                        DefaultSizedBox(),
-                        TextFormFieldWidget(
-                          label: "Telefone",
-                          keyboardType: TextInputType.phone,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            TelefoneInputFormatter(),
-                          ],
-                        ),
-                        DefaultSizedBox(),
-                        BuscaWidget(
-                          label: "Data de nascimento",
-                          textEditingController: _controllerDataNascimento,
-                          onTapFormField: () async {
-                            DateTime data = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.utc(2000, 1, 1),
-                              firstDate: DateTime(1910, 1, 1),
-                              lastDate: DateTime.now(),
-                            );
-                            setState(() {
-                              //controller.setDataHora(data);
-                              _controllerDataNascimento.text = data.formated ?? "";
-                            });
-                          },
-                          onTapClear: () {
-                            setState(() {
-                              //controller.setFormaRecebimento(null);
-                              _controllerDataNascimento.clear();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                  _form(),
                 ],
               ),
             ),
@@ -156,5 +101,84 @@ class _UserPageState extends State<UserPage> {
         ],
       ),
     );
+  }
+
+  Widget _form() {
+    return Form(
+      child: Column(
+        children: [
+          TextFormFieldWidget(
+            label: "Nome completo",
+            controller: _controllerNome,
+            keyboardType: TextInputType.name,
+          ),
+          DefaultSizedBox(),
+          TextFormFieldWidget(
+            label: "Email",
+            controller: _controllerEmail,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          DefaultSizedBox(),
+          TextFormFieldWidget(
+            label: "Senha",
+            controller: _controllerPassword,
+            obscure: true,
+          ),
+          DefaultSizedBox(),
+          TextFormFieldWidget(
+            label: "CEP",
+            controller: _controllerCep,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              CepInputFormatter(),
+            ],
+          ),
+          DefaultSizedBox(),
+          TextFormFieldWidget(
+            label: "Telefone",
+            controller: _controllerTelefone,
+            keyboardType: TextInputType.phone,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              TelefoneInputFormatter(),
+            ],
+          ),
+          DefaultSizedBox(),
+          BuscaWidget(
+            label: "Data de nascimento",
+            textEditingController: _controllerDataNascimento,
+            onTapFormField: () async {
+              DateTime data = await showDatePicker(
+                context: context,
+                initialDate: DateTime.utc(2000, 1, 1),
+                firstDate: DateTime(1910, 1, 1),
+                lastDate: DateTime.now(),
+              );
+              setState(() {
+                //controller.setDataHora(data);
+                _controllerDataNascimento.text = data.formated ?? "";
+              });
+            },
+            onTapClear: () {
+              setState(() {
+                //controller.setFormaRecebimento(null);
+                _controllerDataNascimento.clear();
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controllerNome.dispose();
+    _controllerEmail.dispose();
+    _controllerPassword.dispose();
+    _controllerCep.dispose();
+    _controllerDataNascimento.dispose();
+    _controllerTelefone.dispose();
+    super.dispose();
   }
 }
