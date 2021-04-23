@@ -1,4 +1,4 @@
-import 'package:beach_service/app/shared/components/text_form_field_widget.dart';
+import 'package:beach_service/app/shared/components/form/text_form_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:beach_service/app/shared/extensions/string_extension.dart';
@@ -8,6 +8,7 @@ class BuscaWidget extends StatelessWidget {
   final TextEditingController textEditingController;
   final TextInputType textInputType;
   final Function(String) onChanged;
+  final Function(String) validator;
   final Function onTapFormField;
   final Function onTapClear;
   final bool enabled;
@@ -20,6 +21,7 @@ class BuscaWidget extends StatelessWidget {
     this.onTapFormField,
     this.onTapClear,
     this.enabled = true,
+    this.validator,
   });
 
   @override
@@ -30,6 +32,7 @@ class BuscaWidget extends StatelessWidget {
           label: label,
           controller: textEditingController,
           onTapFormField: onTapFormField,
+          validator: validator,
           readOnly: true,
         ),
         Visibility(

@@ -1,33 +1,32 @@
+import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
+import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_controller.g.dart';
 
 class UserController = UserControllerBase with _$UserController;
 
-abstract class UserControllerBase with Store {
+abstract class UserControllerBase with Store implements IFormController {
   @observable
   UserStore userStore = UserStore();
-
-  @observable
-  Function updateTextControllers;
 
   @observable
   bool loading = false;
 
   @action
-  void setUpdateTextControllers(Function function) => updateTextControllers = function;
-
-  @action
   void setLoading(bool value) => loading = value;
 
   @action
-  void load() {
-    try {
-      loading = true;
-    } finally {
-      loading = false;
-      updateTextControllers?.call();
-    }
+  Future<void> load() {}
+
+  @action
+  Future<void> save() async {
+    UserDto userDto = userStore.toDto();
+
+    print(userDto);
   }
+
+  @action
+  Future<void> delete() {}
 }

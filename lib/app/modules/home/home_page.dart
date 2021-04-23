@@ -19,11 +19,11 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
         title: Text('Counter'),
       ),
       body: Observer(
-        builder: (context) => Text('${store.counter}'),
+        builder: (context) => Text('${controller.counter}'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          store.increment();
+          controller.increment();
         },
         child: Icon(Icons.add),
       ),

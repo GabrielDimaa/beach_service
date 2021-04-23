@@ -40,6 +40,9 @@ abstract class UserStoreBase with Store {
   void setPassword(String value) => password = value;
 
   @action
+  void setCep(String value) => cep = value;
+
+  @action
   void setTelefone(String value) => telefone = value;
 
   @action

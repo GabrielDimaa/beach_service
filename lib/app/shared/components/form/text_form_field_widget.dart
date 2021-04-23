@@ -6,6 +6,8 @@ class TextFormFieldWidget extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
   final Function(String) onChanged;
+  final Function(String) onSaved;
+  final Function(String) validator;
   final Function onTapFormField;
   final bool enabled;
   final bool readOnly;
@@ -16,13 +18,14 @@ class TextFormFieldWidget extends StatelessWidget {
     Key key,
     this.label = "",
     this.controller,
-    this.keyboardType = TextInputType.text,
+    this.keyboardType,
     this.onChanged,
+    this.onSaved,
     this.enabled,
     this.obscure = false,
     this.inputFormatters,
     this.onTapFormField,
-    this.readOnly = false,
+    this.readOnly = false, this.validator,
   }) : super(key: key);
 
   @override
@@ -34,9 +37,11 @@ class TextFormFieldWidget extends StatelessWidget {
       obscureText: obscure,
       readOnly: readOnly,
       onChanged: onChanged,
+      onSaved: onSaved,
       keyboardType: keyboardType,
       onTap: onTapFormField,
       inputFormatters: inputFormatters,
+      validator: validator,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.only(bottom: 8),
         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
