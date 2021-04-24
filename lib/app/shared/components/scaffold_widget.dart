@@ -7,6 +7,7 @@ class ScaffoldWidget extends StatefulWidget {
   final FloatingActionButtonLocation floatingActionButtonLocation;
   final Drawer drawer;
   final Widget body;
+  final EdgeInsets padding;
 
   const ScaffoldWidget({
     Key key,
@@ -15,6 +16,7 @@ class ScaffoldWidget extends StatefulWidget {
     this.floatingActionButton,
     this.floatingActionButtonLocation,
     this.drawer,
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -22,6 +24,7 @@ class ScaffoldWidget extends StatefulWidget {
 }
 
 class _ScaffoldWidgetState extends State<ScaffoldWidget> {
+  final defaultPadding = EdgeInsets.symmetric(vertical: 30, horizontal: 36);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +37,7 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
         widthFactor: 1,
         heightFactor: 1,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 36),
+          padding: widget.padding ?? defaultPadding,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,

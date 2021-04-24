@@ -38,7 +38,14 @@ class AppWidget extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             primary: Colors.white,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            padding: EdgeInsets.all(14),
+            padding: EdgeInsets.all(10),
+            textStyle: TextStyle(fontSize: 14, fontFamily: 'NotoSansJP'),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            onPrimary: PaletaCores.primary,
+            padding: EdgeInsets.all(10),
             textStyle: TextStyle(fontSize: 14, fontFamily: 'NotoSansJP'),
           ),
         ),
