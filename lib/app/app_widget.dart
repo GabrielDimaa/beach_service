@@ -57,8 +57,8 @@ abstract class PaletaCores {
   static Color primary = Color(0xFF5782F8);
   static Color primaryLight = Color(0xFF5FBAFE);
 
-  static Color dark = Color(0XFF170E97);
-  static Color light = Color(0XFF8AABFB);
+  static Color dark = Color(0xFF170E97);
+  static Color light = Color(0xFF8AABFB);
 
   static List<Color> gradiente = [primaryLight, primary];
 }
