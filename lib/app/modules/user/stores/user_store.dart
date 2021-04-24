@@ -1,5 +1,6 @@
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
+import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_store.g.dart';
@@ -64,7 +65,7 @@ abstract class UserStoreBase with Store {
 
   UserDto toDto() {
     return UserDto(
-      id,
+      BaseDto(id),
       nome,
       email,
       password,
@@ -77,7 +78,7 @@ abstract class UserStoreBase with Store {
 
   void fromDto(UserDto dto) {
     if (dto != null) {
-      this.id = dto.id;
+      this.id = dto.base.id;
       this.nome = dto.nome;
       this.email = dto.email;
       this.password = dto.password;

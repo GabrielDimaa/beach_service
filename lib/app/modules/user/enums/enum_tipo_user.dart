@@ -14,7 +14,7 @@ class EnumTipoUserHelper {
     EnumTipoUser.Vendedor: "Vendedor",
   };
 
-  static String getDescription(EnumTipoUser tipoUser) => _descriptions[tipoUser];
+  static String description(EnumTipoUser tipoUser) => _descriptions[tipoUser];
 
   static int getValue(EnumTipoUser tipoUser) => _values[tipoUser];
 
