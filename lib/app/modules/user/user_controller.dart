@@ -6,12 +6,12 @@ import 'package:mobx/mobx.dart';
 
 part 'user_controller.g.dart';
 
-class UserController = UserControllerBase with _$UserController;
+class UserController = _UserControllerBase with _$UserController;
 
-abstract class UserControllerBase with Store implements IFormController {
+abstract class _UserControllerBase with Store implements IFormController {
   final IUserService userService;
 
-  UserControllerBase(this.userService);
+  _UserControllerBase(this.userService);
 
   @observable
   UserStore userStore = UserStore();

@@ -5,9 +5,9 @@ import 'package:mobx/mobx.dart';
 
 part 'user_store.g.dart';
 
-class UserStore = UserStoreBase with _$UserStore;
+class UserStore = _UserStoreBase with _$UserStore;
 
-abstract class UserStoreBase with Store {
+abstract class _UserStoreBase with Store {
   int id;
 
   @observable
@@ -52,7 +52,7 @@ abstract class UserStoreBase with Store {
   @action
   void setIsVendedor(EnumTipoUser value) => tipoUser = value;
 
-  UserStoreBase({
+  _UserStoreBase({
     this.id,
     this.nome,
     this.email,
