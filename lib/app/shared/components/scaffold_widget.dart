@@ -30,17 +30,20 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
       floatingActionButton: widget.floatingActionButton,
       floatingActionButtonLocation: widget.floatingActionButtonLocation,
       drawer: widget.drawer,
-      body: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 36),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: PaletaCores.gradiente,
+      body: FractionallySizedBox(
+        widthFactor: 1,
+        heightFactor: 1,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 36),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: PaletaCores.gradiente,
+            ),
           ),
+          child: widget.body ?? Container(),
         ),
-        child: widget.body ?? Container(),
       ),
     );
   }
