@@ -1,3 +1,4 @@
+import 'package:beach_service/app/app_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -49,9 +50,12 @@ class TextFormFieldWidget extends StatelessWidget {
       validator: validator,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.only(bottom: 8),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: inputColor == null ? Colors.white54 : inputColor)),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: inputColor == null ? Colors.white24 : inputColor)),
+        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: inputColor == null ? Colors.white : inputColor)),
+        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: inputColor == null ? Colors.white54 : inputColor)),
         labelText: label,
+        errorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 0.9)),
+        focusedErrorBorder: UnderlineInputBorder(borderSide: BorderSide(color: inputColor == null ? Colors.white : inputColor)),
+        errorStyle: TextStyle(color: PaletaCores.error),
         labelStyle: TextStyle(fontSize: 18, color: inputColor == null ? Colors.white54 : inputColor),
       ),
     );
