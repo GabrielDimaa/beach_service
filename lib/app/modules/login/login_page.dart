@@ -1,4 +1,3 @@
-import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/login/login_controller.dart';
 import 'package:beach_service/app/shared/components/form/text_form_field_widget.dart';
 import 'package:beach_service/app/shared/components/form/validator.dart';
@@ -25,41 +24,44 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
     final ThemeData theme = Theme.of(context);
     return ScaffoldWidget(
       padding: EdgeInsets.all(0),
-      body: Column(
-        children: [
-          _logo(),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 36),
-            child: Column(
-              children: [
-                Text("Bem Vindo", style: theme.textTheme.headline1),
-                DefaultSizedBox(),
-                _login(),
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _logo(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 36),
+              child: Column(
+                children: [
+                  Text("Bem Vindo", style: theme.textTheme.headline1),
+                  DefaultSizedBox(),
+                  _login(),
+                  DefaultSizedBox(),
+                  Text("Não tem conta? Registre-se!"),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _logo() {
-    return AspectRatio(
-      aspectRatio: 3 / 2,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.vertical(bottom: Radius.elliptical(180, 230)),
-          color: Colors.white,
-        ),
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: Image.asset('assets/images/logo.png', scale: 1.2),
-            ),
-          ],
-        ),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.30,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.vertical(bottom: Radius.elliptical(180, 230)),
+        color: Colors.white,
+      ),
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Image.asset('assets/images/logo.png', scale: 1.2),
+          ),
+        ],
       ),
     );
   }
