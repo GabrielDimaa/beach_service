@@ -19,6 +19,26 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends ModularState<LoginPage, LoginController> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  //TextEditingControllers
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _login() async {
+    try {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        await controller.login();
+      }
+    } catch (e) {
+      print("ERRO SAVE");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -27,16 +47,18 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _logo(),
+            _logoWidget(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 36),
               child: Column(
                 children: [
                   Text("Bem Vindo", style: theme.textTheme.headline1),
                   DefaultSizedBox(),
-                  _login(),
+                  _loginWidget(),
                   DefaultSizedBox(),
                   Text("Não tem conta? Registre-se!"),
+                  DefaultSizedBox(),
+                  _registrarWidget(),
                 ],
               ),
             ),
@@ -46,7 +68,7 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
     );
   }
 
-  Widget _logo() {
+  Widget _logoWidget() {
     return Container(
       height: MediaQuery.of(context).size.height * 0.30,
       width: double.infinity,
@@ -66,7 +88,7 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
     );
   }
 
-  Widget _login() {
+  Widget _loginWidget() {
     return Column(
       children: [
         Form(
@@ -75,23 +97,23 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
             children: [
               TextFormFieldWidget(
                 label: "Email",
-                //controller: _controllerNome,
-                keyboardType: TextInputType.name,
-                //onSaved: controller.userStore.setNome,
+                controller: _controllerEmail,
+                keyboardType: TextInputType.emailAddress,
+                onSaved: controller.loginStore.setEmail,
                 validator: InputValidator(EmailValidator()).validate,
               ),
               DefaultSizedBox(),
               TextFormFieldWidget(
                 label: "Senha",
-                //controller: _controllerEmail,
-                keyboardType: TextInputType.emailAddress,
-                //onSaved: controller.userStore.setEmail,
+                controller: _controllerPassword,
+                obscure: true,
+                onSaved: controller.loginStore.setPassword,
                 validator: InputValidator(PasswordValidator()).validate,
               ),
             ],
           ),
         ),
-        SizedBox(height: 6),
+        SizedBox(height: 8),
         Align(
           alignment: Alignment.centerRight,
           child: TextButton(
@@ -100,15 +122,27 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
             style: ElevatedButton.styleFrom(onPrimary: Colors.white),
           ),
         ),
-        SizedBox(height: 6),
+        SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: _login,
             child: IconTextWidget(text: "ENTRAR", icon: Icons.login),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _registrarWidget() {
+    return TextButton(
+      onPressed: controller.registrar,
+      child: Text("REGISTRAR-SE"),
+      style: ElevatedButton.styleFrom(
+        onPrimary: Colors.white,
+        padding: EdgeInsets.all(16),
+        side: BorderSide(color: Colors.white),
+      ),
     );
   }
 }
