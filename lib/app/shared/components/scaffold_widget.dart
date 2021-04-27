@@ -25,6 +25,7 @@ class ScaffoldWidget extends StatefulWidget {
 
 class _ScaffoldWidgetState extends State<ScaffoldWidget> {
   final defaultPadding = EdgeInsets.symmetric(vertical: 30, horizontal: 36);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +39,6 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
         widthFactor: 1,
         heightFactor: 1,
         child: Container(
-          padding: widget.padding ?? defaultPadding,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -46,7 +46,15 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
               colors: PaletaCores.gradiente,
             ),
           ),
-          child: widget.body ?? Container(),
+          child: Stack(
+            children: [
+              Positioned(left: 5, top: 40, child: BackButton()),
+              Padding(
+                padding: widget.padding ?? defaultPadding,
+                child: widget.body ?? Container(),
+              )
+            ],
+          ),
         ),
       ),
     );
