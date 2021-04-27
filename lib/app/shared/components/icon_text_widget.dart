@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class IconTextWidget extends StatelessWidget {
   final String text;
   final IconData icon;
+  final Color color;
 
-  const IconTextWidget({Key key, this.text, this.icon}) : super(key: key);
+  const IconTextWidget({Key key, this.text, this.icon, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +15,9 @@ class IconTextWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: PaletaCores.primaryLight, size: 32),
+        Icon(icon, color: color ?? PaletaCores.primaryLight, size: 32),
         SizedBox(width: 12),
-        Text(text, style: TextStyle(color: Colors.blue)),
+        Text(text, style: TextStyle(color: color ?? PaletaCores.primaryLight)),
       ],
     );
   }

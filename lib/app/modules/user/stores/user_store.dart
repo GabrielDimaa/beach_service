@@ -50,7 +50,7 @@ abstract class _UserStoreBase with Store {
   void setDataNascimento(DateTime value) => dataNascimento = value;
 
   @action
-  void setIsVendedor(EnumTipoUser value) => tipoUser = value;
+  void setTipoUser(EnumTipoUser value) => tipoUser = value;
 
   _UserStoreBase({
     this.id,
