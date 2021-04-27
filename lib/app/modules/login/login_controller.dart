@@ -1,7 +1,6 @@
 import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
 import 'package:beach_service/app/modules/login/services/login_service_interface.dart';
 import 'package:beach_service/app/modules/login/stores/login_store.dart';
-import 'package:beach_service/app/modules/user/user_module.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';

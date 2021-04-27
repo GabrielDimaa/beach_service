@@ -1,7 +1,11 @@
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
+import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
+import 'package:beach_service/app/shared/routes/routes.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_controller.g.dart';
@@ -39,4 +43,12 @@ abstract class _UserControllerBase with Store implements IFormController {
 
   @action
   Future<void> delete() async {}
+
+  @action
+  void avancar(BuildContext context) {
+    if (userStore.isConsumidor || userStore.isVendedor)
+      Modular.to.pushNamed('/$USER_ROUTE');
+    else
+      AlertDialogWidget.show(context, content: "Você deve selecionar o tipo de conta 'CONSUMIDOR' ou 'VENDEDOR'.");
+  }
 }

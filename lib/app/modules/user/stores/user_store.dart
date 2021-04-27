@@ -52,6 +52,15 @@ abstract class _UserStoreBase with Store {
   @action
   void setTipoUser(EnumTipoUser value) => tipoUser = value;
 
+  @computed
+  bool get userIsNotNull => tipoUser != null;
+
+  @computed
+  bool get isConsumidor => userIsNotNull && tipoUser == EnumTipoUser.Consumidor;
+
+  @computed
+  bool get isVendedor => userIsNotNull && tipoUser == EnumTipoUser.Vendedor;
+
   _UserStoreBase({
     this.id,
     this.nome,

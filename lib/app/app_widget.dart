@@ -33,7 +33,13 @@ class AppWidget extends StatelessWidget {
           onPrimary: Colors.white,
           onSurface: Colors.black,
         ),
-        dialogBackgroundColor: Colors.white,
+        dialogTheme: DialogTheme(
+          backgroundColor: Colors.white,
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          titleTextStyle: TextStyle(fontSize: 20, color: Colors.black, fontFamily: 'NotoSansJP'),
+          contentTextStyle: TextStyle(fontSize: 14, color: Colors.black, fontFamily: 'NotoSansJP'),
+        ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             primary: Colors.white,
