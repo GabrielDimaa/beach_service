@@ -68,7 +68,6 @@ class _UserPageState extends ModularState<UserPage, UserController> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              reverse: true,
               padding: EdgeInsets.only(bottom: bottomScroll ?? 0),
               child: Column(
                 children: [
