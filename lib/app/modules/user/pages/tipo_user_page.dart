@@ -2,7 +2,6 @@ import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
 import 'package:beach_service/app/modules/user/user_controller.dart';
 import 'package:beach_service/app/shared/components/app_bar/app_bar_title.dart';
-import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
 import 'package:beach_service/app/shared/components/scaffold_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
