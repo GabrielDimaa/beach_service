@@ -23,7 +23,7 @@ abstract class _UserControllerBase with Store implements IFormController {
   void setLoading(bool value) => loading = value;
 
   @action
-  Future<void> load() {}
+  Future<void> load() async {}
 
   @action
   Future<void> save() async {
@@ -38,5 +38,5 @@ abstract class _UserControllerBase with Store implements IFormController {
   }
 
   @action
-  Future<void> delete() {}
+  Future<void> delete() async {}
 }

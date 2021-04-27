@@ -33,6 +33,7 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
       floatingActionButton: widget.floatingActionButton,
       floatingActionButtonLocation: widget.floatingActionButtonLocation,
       drawer: widget.drawer,
+      extendBody: true,
       body: FractionallySizedBox(
         widthFactor: 1,
         heightFactor: 1,

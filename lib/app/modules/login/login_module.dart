@@ -1,11 +1,17 @@
 import 'package:beach_service/app/modules/login/login_controller.dart';
 import 'package:beach_service/app/modules/login/login_page.dart';
+import 'package:beach_service/app/modules/login/repositories/login_repository.dart';
+import 'package:beach_service/app/modules/login/repositories/login_repository_interface.dart';
+import 'package:beach_service/app/modules/login/services/login_service.dart';
+import 'package:beach_service/app/modules/login/services/login_service_interface.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class LoginModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind((i) => LoginController()),
+    Bind((i) => LoginRepository()),
+    Bind((i) => LoginService(i.get<ILoginRepository>())),
+    Bind((i) => LoginController(i.get<ILoginService>())),
   ];
 
   @override

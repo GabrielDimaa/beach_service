@@ -9,7 +9,7 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       title: 'Beach Service',
       debugShowCheckedModeBanner: false,
-      initialRoute: Modular.initialRoute,
+      initialRoute: '/',
       theme: ThemeData(
         primaryColor: PaletaCores.primary,
         primaryColorLight: PaletaCores.light,
