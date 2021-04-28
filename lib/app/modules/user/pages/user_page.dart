@@ -49,7 +49,7 @@ class _UserPageState extends State<UserPage> {
     _controllerEmail.text = controller.userStore?.email ?? "";
     _controllerPassword.text = controller.userStore?.password ?? "";
     _controllerCep.text = controller.userStore?.cep ?? "";
-    _controllerDataNascimento.text = controller.userStore?.dataNascimento ?? "";
+    _controllerDataNascimento.text = controller.userStore?.dataNascimento?.formated ?? "";
     _controllerTelefone.text = controller.userStore?.telefone ?? "";
   }
 
