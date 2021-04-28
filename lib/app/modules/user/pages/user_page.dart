@@ -22,11 +22,14 @@ class UserPage extends StatefulWidget {
   _UserPageState createState() => _UserPageState();
 }
 
-class _UserPageState extends ModularState<UserPage, UserController> {
+class _UserPageState extends State<UserPage> {
+  UserController controller = Modular.get<UserController>();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   //TextEditingControllers
   final TextEditingController _controllerNome = TextEditingController();
+  final TextEditingController _controllerEmpresa = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final TextEditingController _controllerCep = TextEditingController();
@@ -42,6 +45,7 @@ class _UserPageState extends ModularState<UserPage, UserController> {
 
   void _updateTextControllers() {
     _controllerNome.text = controller.userStore?.nome ?? "";
+    _controllerEmpresa.text = controller.userStore?.empresa ?? "";
     _controllerEmail.text = controller.userStore?.email ?? "";
     _controllerPassword.text = controller.userStore?.password ?? "";
     _controllerCep.text = controller.userStore?.cep ?? "";
@@ -126,6 +130,21 @@ class _UserPageState extends ModularState<UserPage, UserController> {
             keyboardType: TextInputType.name,
             onSaved: controller.userStore.setNome,
             validator: InputValidator(DefaultValidator("Nome")).validate,
+          ),
+          Visibility(
+            visible: controller.userStore.isVendedor,
+            child: Column(
+              children: [
+                DefaultSizedBox(),
+                TextFormFieldWidget(
+                  label: "Empresa",
+                  controller: _controllerEmpresa,
+                  keyboardType: TextInputType.text,
+                  onSaved: controller.userStore.setEmpresa,
+                  validator: InputValidator(DefaultValidator("Empresa")).validate,
+                ),
+              ],
+            ),
           ),
           DefaultSizedBox(),
           TextFormFieldWidget(

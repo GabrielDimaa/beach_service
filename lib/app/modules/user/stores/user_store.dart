@@ -31,6 +31,9 @@ abstract class _UserStoreBase with Store {
   @observable
   EnumTipoUser tipoUser;
 
+  @observable
+  String empresa;
+
   @action
   void setNome(String value) => nome = value;
 
@@ -52,6 +55,9 @@ abstract class _UserStoreBase with Store {
   @action
   void setTipoUser(EnumTipoUser value) => tipoUser = value;
 
+  @action
+  void setEmpresa(String value) => empresa = value;
+
   @computed
   bool get userIsNotNull => tipoUser != null;
 
@@ -70,6 +76,7 @@ abstract class _UserStoreBase with Store {
     this.telefone,
     this.dataNascimento,
     this.tipoUser,
+    this.empresa,
   });
 
   UserDto toDto() {
@@ -82,6 +89,7 @@ abstract class _UserStoreBase with Store {
       telefone,
       dataNascimento,
       tipoUser,
+      empresa,
     );
   }
 
@@ -95,6 +103,7 @@ abstract class _UserStoreBase with Store {
       this.telefone = dto.telefone;
       this.dataNascimento = dto.dataNascimento;
       this.tipoUser = dto.tipoUser;
+      this.empresa = dto.empresa;
     }
   }
 }

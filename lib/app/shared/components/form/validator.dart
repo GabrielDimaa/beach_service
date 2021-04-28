@@ -36,7 +36,7 @@ class DefaultValidator extends Validator {
 
   @override
   bool isError(String value) {
-    if (value.notIsNullOrEmpty() && value.length >= 5) {
+    if (value.notIsNullOrEmpty()) {
       return false;
     } else {
       return true;

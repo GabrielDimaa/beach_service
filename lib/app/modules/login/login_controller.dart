@@ -37,6 +37,6 @@ abstract class _LoginControllerBase with Store {
 
   @action
   Future<void> registrar() async {
-    Modular.to.pushNamed(USER_ROUTE + TIPO_USER_ROUTE);
+    Modular.to.pushNamed("$USER_ROUTE/$TIPO_USER_ROUTE");
   }
 }

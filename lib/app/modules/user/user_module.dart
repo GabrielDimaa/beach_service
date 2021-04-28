@@ -19,6 +19,6 @@ class UserModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ChildRoute(Modular.initialRoute, child: (_, args) => UserPage()),
-    ChildRoute(TIPO_USER_ROUTE, child: (_, args) => TipoUserPage()),
+    ChildRoute("/$TIPO_USER_ROUTE", child: (_, args) => TipoUserPage()),
   ];
 }

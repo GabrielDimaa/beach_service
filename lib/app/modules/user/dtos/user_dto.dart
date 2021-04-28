@@ -13,6 +13,7 @@ class UserDto implements IBaseDto {
   String telefone;
   DateTime dataNascimento;
   EnumTipoUser tipoUser;
+  String empresa;
 
   UserDto(
     this.base,
@@ -23,5 +24,6 @@ class UserDto implements IBaseDto {
     this.telefone,
     this.dataNascimento,
     this.tipoUser,
+    this.empresa,
   );
 }

@@ -19,6 +19,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
     if (dto.telefone.isNullOrEmpty() || dto.telefone.extrairNum().length < 10) throw Exception("Informe um telefone válido.");
     if (dto.dataNascimento == null) throw Exception("Informe uma data de nascimento válida.");
     if (dto.tipoUser == null) throw Exception("Informe se você é Consumidor ou Vendedor.");
+    if (dto.tipoUser == EnumTipoUser.Vendedor && dto.empresa.isNullOrEmpty()) throw Exception("Informe o nome da empresa.");
   }
 
   @override
@@ -31,6 +32,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       'telefone': dto.telefone,
       'data_nascimento': dto.dataNascimento,
       'tipo_user': EnumTipoUserHelper.getValue(dto.tipoUser),
+      'empresa': dto.empresa,
     };
   }
 
@@ -45,6 +47,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       e['telefone'],
       DateTime.parse(e['dataNascimento']),
       EnumTipoUserHelper.get(e['tipoUser']),
+      e['empresa'],
     );
   }
 }
