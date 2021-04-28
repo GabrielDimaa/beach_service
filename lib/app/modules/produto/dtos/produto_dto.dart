@@ -6,8 +6,8 @@ class ProdutoDto implements IBaseDto {
   @override
   BaseDto base;
 
-  String nome;
+  String descricao;
   CategoriaDto categoriaDto;
 
-  ProdutoDto(this.base, this.nome, this.categoriaDto);
+  ProdutoDto(this.base, this.descricao, this.categoriaDto);
 }

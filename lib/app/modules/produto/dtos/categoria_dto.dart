@@ -5,7 +5,7 @@ class CategoriaDto implements IBaseDto {
   @override
   BaseDto base;
 
-  String nome;
+  String descricao;
 
-  CategoriaDto(this.base, this.nome);
+  CategoriaDto(this.base, this.descricao);
 }

@@ -13,7 +13,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
   _ProdutoControllerBase(this.produtoService);
 
   @observable
-  ProdutoStore produtoStore;
+  ProdutoStore produtoStore = ProdutoStore();
 
   @observable
   bool loading = false;

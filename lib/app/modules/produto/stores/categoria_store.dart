@@ -10,15 +10,15 @@ abstract class _CategoriaStoreBase with Store {
   int id;
 
   @observable
-  String nome;
+  String descricao;
 
   @action
-  void setNome(String value) => nome = value;
+  void setDescricao(String value) => descricao = value;
 
-  _CategoriaStoreBase(this.id, this.nome);
+  _CategoriaStoreBase({this.id, this.descricao});
 
   CategoriaDto toDto() {
-    return CategoriaDto(BaseDto(id), nome);
+    return CategoriaDto(BaseDto(id), descricao);
   }
 }
 
@@ -26,8 +26,8 @@ abstract class CategoriaStoreFactory {
   static CategoriaStore fromDto(CategoriaDto dto) {
     if (dto != null) {
       return CategoriaStore(
-        dto.base.id,
-        dto.nome,
+        id: dto.base.id,
+        descricao: dto.descricao,
       );
     }
   }

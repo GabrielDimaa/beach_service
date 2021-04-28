@@ -11,18 +11,18 @@ abstract class _ProdutoStoreBase with Store {
   int id;
 
   @observable
-  String nome;
+  String descricao;
 
   @observable
-  CategoriaStore categoriaStore;
+  CategoriaStore categoriaStore = CategoriaStore();
 
   @action
-  void setNome(String value) => nome = value;
+  void setNome(String value) => descricao = value;
 
-  _ProdutoStoreBase(this.id, this.nome, this.categoriaStore);
+  _ProdutoStoreBase({this.id, this.descricao, this.categoriaStore});
 
   ProdutoDto toDto() {
-    return ProdutoDto(BaseDto(id), nome, categoriaStore.toDto());
+    return ProdutoDto(BaseDto(id), descricao, categoriaStore.toDto());
   }
 }
 
@@ -30,9 +30,9 @@ abstract class ProdutoStoreFactory {
   static ProdutoStore fromDto(ProdutoDto dto) {
     if (dto != null) {
       return ProdutoStore(
-          dto.base.id,
-          dto.nome,
-          CategoriaStoreFactory.fromDto(dto.categoriaDto),
+          id: dto.base.id,
+          descricao: dto.descricao,
+          categoriaStore: CategoriaStoreFactory.fromDto(dto.categoriaDto),
       );
     }
   }
