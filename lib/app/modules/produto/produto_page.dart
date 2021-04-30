@@ -20,7 +20,7 @@ class ProdutoPageState extends State<ProdutoPage> {
   void initState() {
     super.initState();
 
-    listTest = List.generate(30, (index) => "ITEM $index");
+    listTest = List.generate(30, (index) => "Item $index");
   }
 
   @override
@@ -42,19 +42,9 @@ class ProdutoPageState extends State<ProdutoPage> {
                     child: Center(
                       child: RoundedButton(
                         onSurface: Colors.white,
-                        child: ,
+                        borderColor: Colors.white,
+                        child: Text("Item $index", style: TextStyle(color: Colors.white),),
                       ),
-                      // TextButton(
-                      //   style: ElevatedButton.styleFrom(
-                      //     onSurface: Colors.white,
-                      //     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      //     shape: RoundedRectangleBorder(side: BorderSide(
-                      //       color: Colors.white,
-                      //       width: 0.7,
-                      //     ), borderRadius: BorderRadius.circular(20)),
-                      //   ),
-                      //   child: Text("Item $index", style: TextStyle(color: Colors.white),),
-                      // ),
                     ),
                   );
                 },
@@ -67,7 +57,7 @@ class ProdutoPageState extends State<ProdutoPage> {
                 Expanded(
                   child: ListSeparated(
                     list: listTest,
-                    isSelected: true,
+                    isSelected: false,
                     onTap: () {},
                   ),
                 ),

@@ -12,10 +12,10 @@ class RoundedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ElevatedButton.styleFrom(
-        onSurface: onSurface,
+        onSurface: onSurface ?? Colors.transparent,
         padding: padding ?? EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: borderColor, width: 0.7),
+          side: BorderSide(color: borderColor ?? Colors.transparent, width: 0.7),
           borderRadius: BorderRadius.circular(20),
         ),
       ),
