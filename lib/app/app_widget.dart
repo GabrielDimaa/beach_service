@@ -17,6 +17,13 @@ class AppWidget extends StatelessWidget {
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: PaletaCores.dark,
         ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          elevation: 0.4,
+          centerTitle: true,
+          textTheme: TextTheme(headline6: TextStyle(color: PaletaCores.primaryLight, fontSize: 20, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP')),
+        ),
+        scaffoldBackgroundColor: Colors.white,
         textTheme: TextTheme(
           headline1: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
           headline2: TextStyle(color: Colors.white, fontSize: 42, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),

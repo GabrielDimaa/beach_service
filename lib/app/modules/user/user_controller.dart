@@ -23,22 +23,32 @@ abstract class _UserControllerBase with Store implements IFormController {
   @observable
   bool loading = false;
 
+  @observable
+  bool primeiroRegistro = false;
+
   @action
   void setLoading(bool value) => loading = value;
+
+  @action
+  void setPrimeiroRegistro(bool value) => primeiroRegistro = value;
 
   @action
   Future<void> load() async {}
 
   @action
   Future<void> save() async {
-    loading = true;
+    if (primeiroRegistro && userStore.isVendedor) {
+      Modular.to.pushNamed("/$PRODUTO_ROUTE");
+    } else {
+      loading = true;
 
-    if (userStore != null) {
-      UserDto userDto = userStore.toDto();
-      UserDto dto = await userService.saveOrUpdate(userDto);
+      if (userStore != null) {
+        UserDto userDto = userStore.toDto();
+        UserDto dto = await userService.saveOrUpdate(userDto);
+      }
+
+      loading = false;
     }
-
-    loading = false;
   }
 
   @action

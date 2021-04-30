@@ -1,4 +1,5 @@
 import 'package:beach_service/app/app_widget.dart';
+import 'package:beach_service/app/shared/defaults/default_padding.dart';
 import 'package:flutter/material.dart';
 
 class ScaffoldWidget extends StatefulWidget {
@@ -8,6 +9,7 @@ class ScaffoldWidget extends StatefulWidget {
   final Drawer drawer;
   final Widget body;
   final EdgeInsets padding;
+  final bool isBackButton;
 
   const ScaffoldWidget({
     Key key,
@@ -17,6 +19,7 @@ class ScaffoldWidget extends StatefulWidget {
     this.floatingActionButtonLocation,
     this.drawer,
     this.padding,
+    this.isBackButton = true,
   }) : super(key: key);
 
   @override
@@ -48,9 +51,12 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
           ),
           child: Stack(
             children: [
-              Positioned(left: 5, top: 40, child: BackButton()),
+              Visibility(
+                visible: widget.isBackButton,
+                child: Positioned(left: 5, top: 40, child: BackButton()),
+              ),
               Padding(
-                padding: widget.padding ?? defaultPadding,
+                padding: widget.padding ?? DefaultPadding.paddingScaffold,
                 child: widget.body ?? Container(),
               )
             ],

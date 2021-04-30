@@ -2,6 +2,7 @@ import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
 import 'package:beach_service/app/modules/user/user_controller.dart';
 import 'package:beach_service/app/shared/components/app_bar/app_bar_title.dart';
+import 'package:beach_service/app/shared/components/button/default_button.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
 import 'package:beach_service/app/shared/components/scaffold_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
@@ -19,6 +20,13 @@ class TipoUserPage extends StatefulWidget {
 }
 
 class TipoUserPageState extends ModularState<TipoUserPage, UserController> {
+  @override
+  void initState() {
+    super.initState();
+
+    controller.setPrimeiroRegistro(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldWidget(
@@ -61,12 +69,9 @@ class TipoUserPageState extends ModularState<TipoUserPage, UserController> {
               ],
             ),
           ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              child: IconTextWidget(text: "AVANÇAR", icon: Icons.navigate_next),
-              onPressed: () => controller.avancar(context),
-            ),
+          DefaultButton(
+            child: IconTextWidget(text: "AVANÇAR", icon: Icons.navigate_next),
+            onPressed: () => controller.avancar(context),
           ),
         ],
       ),

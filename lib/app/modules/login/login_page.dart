@@ -1,4 +1,5 @@
 import 'package:beach_service/app/modules/login/login_controller.dart';
+import 'package:beach_service/app/shared/components/button/default_button.dart';
 import 'package:beach_service/app/shared/components/form/text_form_field_widget.dart';
 import 'package:beach_service/app/shared/components/form/validator.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
@@ -123,12 +124,9 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
           ),
         ),
         SizedBox(height: 8),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _login,
-            child: IconTextWidget(text: "ENTRAR", icon: Icons.login),
-          ),
+        DefaultButton(
+          onPressed: _login,
+          child: IconTextWidget(text: "ENTRAR", icon: Icons.login),
         ),
       ],
     );

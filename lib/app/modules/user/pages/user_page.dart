@@ -2,6 +2,7 @@ import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/user/user_controller.dart';
 import 'package:beach_service/app/shared/components/app_bar/app_bar_title.dart';
 import 'package:beach_service/app/shared/components/busca_widget.dart';
+import 'package:beach_service/app/shared/components/button/default_button.dart';
 import 'package:beach_service/app/shared/components/form/text_form_field_widget.dart';
 import 'package:beach_service/app/shared/components/form/validator.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
@@ -104,15 +105,9 @@ class _UserPageState extends State<UserPage> {
               ),
             ),
           ),
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: ElevatedButton(
-                onPressed: _save,
-                child: IconTextWidget(text: "REGISTRAR", icon: Icons.save),
-              ),
-            ),
+          DefaultButton(
+            onPressed: _save,
+            child: IconTextWidget(text: "REGISTRAR", icon: Icons.save),
           ),
         ],
       ),
@@ -167,6 +162,7 @@ class _UserPageState extends State<UserPage> {
             label: "CEP",
             controller: _controllerCep,
             onSaved: controller.userStore.setCep,
+            keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               CepInputFormatter(),
@@ -177,7 +173,7 @@ class _UserPageState extends State<UserPage> {
           TextFormFieldWidget(
             label: "Telefone",
             controller: _controllerTelefone,
-            keyboardType: TextInputType.phone,
+            keyboardType: TextInputType.number,
             onSaved: controller.userStore.setTelefone,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
