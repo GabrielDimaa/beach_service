@@ -1,5 +1,5 @@
 class BaseDto {
   int id;
 
-  BaseDto(int id);
+  BaseDto(this.id);
 }
