@@ -5,10 +5,14 @@ import 'package:beach_service/app/shared/repositories/base_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:beach_service/app/shared/extensions/string_extension.dart';
 import 'package:beach_service/app/shared/extensions/email_extension.dart';
+import 'package:sqflite_common/sqlite_api.dart';
 
 class LoginRepository extends BaseRepository<LoginDto> implements ILoginRepository {
   @override
   String getRoute() {}
+
+  @override
+  String tableName() => "user";
 
   Dio dio = Dio();
 
@@ -37,4 +41,15 @@ class LoginRepository extends BaseRepository<LoginDto> implements ILoginReposito
 
   @override
   Future<void> auth(LoginDto dto) async {}
+
+  @override
+  Future<void> create(Batch batch) {
+    batch.execute('''
+      CREATE TABLE ${tableName()} (
+        id INTEGER PRIMARY KEY,
+        email TEXT,
+        password TEXT
+      );  
+    ''');
+  }
 }
