@@ -28,6 +28,7 @@ class AppWidget extends StatelessWidget {
           headline1: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
           headline2: TextStyle(color: Colors.white, fontSize: 42, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
           headline3: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
+          headline4: TextStyle(color: PaletaCores.primaryLight, fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'NotoSansJP'),
           bodyText1: TextStyle(color: Colors.grey[700], fontSize: 15, fontWeight: FontWeight.bold, fontFamily: 'NotoSansJP'),
           bodyText2: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP'),
         ),
@@ -61,6 +62,10 @@ class AppWidget extends StatelessWidget {
             padding: EdgeInsets.all(10),
             textStyle: TextStyle(fontSize: 14, fontFamily: 'NotoSansJP'),
           ),
+        ),
+        cardTheme: CardTheme(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         ),
       ),
       localizationsDelegates: [

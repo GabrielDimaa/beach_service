@@ -63,10 +63,10 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
   }
 
   @action
-  Future<void> save() {}
+  Future<void> save() async {}
 
   @action
-  Future<void> delete() {}
+  Future<void> delete() async {}
 
   @action
   void setProdutosSelect(ProdutoDto value) => produtosSelect.add(value);

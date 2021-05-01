@@ -7,6 +7,7 @@ import 'package:beach_service/app/shared/components/button/gradiente_button.dart
 import 'package:beach_service/app/shared/components/button/rounded_button.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_padding.dart';
+import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -18,19 +19,19 @@ class ProdutoPage extends StatefulWidget {
 }
 
 class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
-  List<String> listTest;
-  PageController _pageController = PageController(initialPage: 0);
+  PageController _pageController;
 
   @override
   void initState() {
     super.initState();
 
     _init();
+
+    _pageController = PageController(initialPage: controller.pageController);
   }
 
   Future<void> _init() async {
     await controller.load();
-    listTest = List.generate(30, (index) => "Item $index");
   }
 
   @override
@@ -43,78 +44,80 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
       appBar: AppBar(
         title: Row(
           children: [
-            Observer(
-              builder: (_) {
-                return TextButton(
-                    child: Text("Selecionar", style: controller.pageController == 0 ? themeAppBar : style),
-                    onPressed: () {
-                      _pageController.animateToPage(0, duration: Duration(milliseconds: 200), curve: Curves.linear);
-                      controller.setPageController(0);
-                    }
-                );
-              }
-            ),
-            Observer(
-              builder: (_) {
-                return TextButton(
-                    child: Text("Meus Produtos", style: controller.pageController == 1 ? themeAppBar : style),
-                    onPressed: () {
-                      _pageController.animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.linear);
-                      controller.setPageController(1);
-                    }
-                );
-              }
-            ),
+            Observer(builder: (_) {
+              return TextButton(
+                  child: Text("Selecionar", style: controller.pageController == 0 ? themeAppBar : style),
+                  onPressed: () {
+                    _pageController.animateToPage(0, duration: Duration(milliseconds: 200), curve: Curves.linear);
+                    controller.setPageController(0);
+                  });
+            }),
+            Observer(builder: (_) {
+              return TextButton(
+                  child: Text("Meus Produtos", style: controller.pageController == 1 ? themeAppBar : style),
+                  onPressed: () {
+                    _pageController.animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.linear);
+                    controller.setPageController(1);
+                  });
+            }),
           ],
         ),
+        titleSpacing: 0,
+        iconTheme: theme.iconTheme.copyWith(color: PaletaCores.primaryLight),
       ),
       body: PageView(
         controller: _pageController,
         physics: BouncingScrollPhysics(),
         allowImplicitScrolling: true,
-        children: [_listaProdutosPage(theme), Container()],
+        onPageChanged: (int page) => controller.setPageController(page),
+        children: [
+          _listaProdutosPage(context, theme),
+          _meusProdutosPage(context, theme),
+        ],
       ),
     );
   }
 
-  Widget _listaProdutosPage(ThemeData theme) {
+  Widget _listaProdutosPage(BuildContext context, ThemeData theme) {
     return Column(
       children: [
         Bar(
           child: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: ListView.builder(
-              itemCount: controller.categoriasAll?.length ?? 0,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (_, index) {
-                CategoriaDto catIndex = controller.categoriasAll[index];
+            child: Observer(
+              builder: (_) => ListView.builder(
+                itemCount: controller.categoriasAll?.length ?? 0,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (_, index) {
+                  CategoriaDto catIndex = controller.categoriasAll[index];
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: Center(
-                    child: Observer(
-                      builder: (_) => RoundedButton(
-                        background: controller.categoriaFiltro.base.id == catIndex.base.id ? Colors.white38 : Colors.transparent,
-                        borderColor: Colors.white,
-                        child: Text(
-                          catIndex.descricao,
-                          style: TextStyle(color: Colors.white),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    child: Center(
+                      child: Observer(
+                        builder: (_) => RoundedButton(
+                          background: controller.categoriaFiltro.base.id == catIndex.base.id ? Colors.white38 : Colors.transparent,
+                          borderColor: Colors.white,
+                          child: Text(
+                            catIndex.descricao,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () => controller.setCategoriaFiltro(catIndex),
                         ),
-                        onPressed: () => controller.setCategoriaFiltro(catIndex),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),
         Expanded(
-          child: Column(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: DefaultPadding.paddingList,
+          child: Padding(
+            padding: DefaultPadding.paddingList,
+            child: Column(
+              children: [
+                Expanded(
                   child: Observer(
                     builder: (_) => ListView.separated(
                       separatorBuilder: (_, __) => Container(height: 0.5, color: Colors.grey[300]),
@@ -149,23 +152,74 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: DefaultPadding.paddingButtonBottom,
-                child: GradienteButton(
-                  onPressed: () {},
-                  child: IconTextWidget(
-                    text: "SALVAR",
-                    icon: Icons.save,
-                    color: Colors.white,
-                  ),
-                  colors: PaletaCores.gradiente,
-                ),
-              )
-            ],
+                DefaultSizedBox(),
+                _bottomButton(),
+              ],
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _meusProdutosPage(BuildContext context, ThemeData theme) {
+    return Padding(
+      padding: DefaultPadding.paddingList,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Meus Produtos", style: theme.textTheme.headline4),
+                    ),
+                    DefaultSizedBox(),
+                    Expanded(
+                      child: Observer(
+                        builder: (_) => ListView.builder(
+                          itemCount: controller.produtosSelect.length,
+                          itemBuilder: (_, index) {
+                            ProdutoDto produto = controller.produtosSelect[index];
+
+                            return ListTile(
+                              contentPadding: EdgeInsets.all(0),
+                              title: Text(produto.descricao, style: theme.textTheme.bodyText1),
+                              subtitle: Text(produto.categoriaDto.descricao),
+                              trailing: IconButton(
+                                icon: Icon(Icons.cancel_outlined),
+                                onPressed: () => controller.removeProdutosSelect(produto),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          DefaultSizedBox(),
+          _bottomButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomButton() {
+    return GradienteButton(
+      onPressed: () {},
+      child: IconTextWidget(
+        text: "SALVAR",
+        icon: Icons.save,
+        color: Colors.white,
+      ),
+      colors: PaletaCores.gradiente,
     );
   }
 }
