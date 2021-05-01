@@ -17,6 +17,11 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   _ProdutoControllerBase(this.produtoService);
 
+  CategoriaDto categoriaTodos = CategoriaDto(BaseDto(0), "Todos");
+
+  @observable
+  int pageController = 0;
+
   @observable
   ProdutoStore produtoStore = ProdutoStore();
 
@@ -39,6 +44,9 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
   bool loading = false;
 
   @action
+  void setPageController(int value) => pageController = value;
+
+  @action
   void setLoading(bool value) => loading = value;
 
   @action
@@ -49,7 +57,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
       produtosAll = await produtoService.getAll().asObservable();
 
       _getCategorias();
-    } catch(e) {
+    } catch (e) {
       AlertDialogWidget(content: "$e");
     }
   }
@@ -61,7 +69,19 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
   Future<void> delete() {}
 
   @action
-  void setCategoriaFiltro(CategoriaDto value) => categoriaFiltro = value;
+  void setProdutosSelect(ProdutoDto value) => produtosSelect.add(value);
+
+  @action
+  void removeProdutosSelect(ProdutoDto value) {
+    if (isSelect(value))
+      produtosSelect.remove(value);
+  }
+
+  @action
+  void setCategoriaFiltro(CategoriaDto value) {
+    categoriaFiltro = value;
+    _filtrar();
+  }
 
   @action
   void _getCategorias() {
@@ -69,15 +89,35 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
     categoriasAll = [];
 
     produtosAll.forEach((e) {
-      if (!categorias.any((element) => element.base.id == e.categoriaDto.base.id))
-        categorias.add(e.categoriaDto);
+      if (!categorias.any((element) => element.base.id == e.categoriaDto.base.id)) categorias.add(e.categoriaDto);
     });
 
     categorias.sort((a, b) => removeDiacritics(a.descricao?.toLowerCase()).compareTo(b.descricao?.toLowerCase()));
 
-    categoriasAll.add(CategoriaDto(BaseDto(0), "Todos"));
+    categoriasAll.add(categoriaTodos);
 
     categoriasAll.addAll(categorias.asObservable());
     setCategoriaFiltro(categoriasAll[0]);
+  }
+
+  @action
+  void _filtrar() {
+    List<ProdutoDto> produtos = [];
+    produtosFiltrados = [];
+
+    //Se a categoria que está sendo filtrada for "Todos" recebe todos os produtos
+    //Senão filtra no produtosAll o produto que tem a categoria
+    if (categoriaFiltro.base.id == categoriaTodos.base.id)
+      produtos = produtosAll;
+    else
+      produtos = produtosAll.where((element) => element.categoriaDto.base.id == categoriaFiltro.base.id).toList().asObservable();
+
+    produtos.sort((a, b) => removeDiacritics(a.descricao?.toLowerCase()).compareTo(b.descricao?.toLowerCase()));
+
+    produtosFiltrados.addAll(produtos.asObservable());
+  }
+
+  bool isSelect(ProdutoDto value) {
+    return produtosSelect.any((element) => element.base.id == value.base.id);
   }
 }
