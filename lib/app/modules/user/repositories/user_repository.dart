@@ -1,6 +1,7 @@
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
+import 'package:beach_service/app/shared/api/api.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/repositories/base_repository.dart';
 import 'package:beach_service/app/shared/extensions/string_extension.dart';
@@ -8,7 +9,7 @@ import 'package:beach_service/app/shared/extensions/email_extension.dart';
 
 class UserRepository extends BaseRepository<UserDto> implements IUserRepository {
   @override
-  String getRoute() => "route";
+  String getRoute() => "${Api.baseURL}/register";
 
   @override
   void validate(UserDto dto) {

@@ -16,11 +16,16 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
 
   @override
   Future<List<T>> getAll() async {
-    Response response = await dio.get(getRoute());
+    List response = (await dio.get(getRoute())).data;
+    List<T> list = [];
 
-    print("<<<< $response");
-    print("ERROOOOOOOO");
-    throw Exception("ERROOOOOOOO");
+    if (response.isNotEmpty) {
+      response.map((e) {
+        list.add(fromMap(e));
+      });
+    }
+
+    return list;
   }
 
   @override
@@ -30,8 +35,8 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
     Response response = await dio.get("${getRoute()}/$id");
 
     print("<<<< $response");
-    print("ERROOOOOOOO");
-    throw Exception("ERROOOOOOOO");
+    print("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
+    throw Exception("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
   }
 
   @override
@@ -41,8 +46,8 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
     T t = listT.firstOrNull;
 
     print("<<<< $t");
-    print("ERROOOOOOOO");
-    throw Exception("ERROOOOOOOO");
+    print("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
+    throw Exception("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
   }
 
   @override
@@ -55,8 +60,8 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
 
       // ver retorno do response
       print("<<<< $response");
-      print("ERROOOOOOOO");
-      throw Exception("ERROOOOOOOO");
+      print("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
+      throw Exception("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
     } catch(e) {
       throw Exception(e);
     }
@@ -73,8 +78,8 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
 
     // ver retorno do response
     print("<<<< $response");
-    print("ERROOOOOOOO");
-    throw Exception("ERROOOOOOOO");
+    print("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
+    throw Exception("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
   }
 
   @override
@@ -85,7 +90,7 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
 
     // ver retorno do response
     print("<<<< $response");
-    print("ERROOOOOOOO");
-    throw Exception("ERROOOOOOOO");
+    print("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
+    throw Exception("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
   }
 }

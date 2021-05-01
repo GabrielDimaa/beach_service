@@ -59,11 +59,15 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
       _getCategorias();
     } catch (e) {
       AlertDialogWidget(content: "$e");
+    } finally {
+      loading = false;
     }
   }
 
   @action
-  Future<void> save() async {}
+  Future<void> save() async {
+
+  }
 
   @action
   Future<void> delete() async {}
