@@ -7,6 +7,7 @@ class LoginDto implements IBaseDto {
 
   String email;
   String password;
+  String token;
 
-  LoginDto(this.base, this.email, this.password);
+  LoginDto({this.base, this.email, this.password, this.token});
 }

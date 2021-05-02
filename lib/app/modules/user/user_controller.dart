@@ -38,7 +38,7 @@ abstract class _UserControllerBase with Store implements IFormController {
   @action
   Future<void> save() async {
     if (primeiroRegistro && userStore.isVendedor) {
-      Modular.to.pushNamed("/$PRODUTO_ROUTE");
+       await Modular.to.pushNamed("/$PRODUTO_ROUTE");
     } else {
       loading = true;
 

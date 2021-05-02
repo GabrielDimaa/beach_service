@@ -84,12 +84,12 @@ abstract class _UserStoreBase with Store {
       BaseDto(id),
       nome,
       email,
-      password,
       cep,
       telefone,
       dataNascimento,
       tipoUser,
       empresa,
+      password: password,
     );
   }
 

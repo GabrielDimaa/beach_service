@@ -34,6 +34,8 @@ abstract class ProdutoStoreFactory {
           descricao: dto.descricao,
           categoriaStore: CategoriaStoreFactory.fromDto(dto.categoriaDto),
       );
+    } else {
+      return null;
     }
   }
 }

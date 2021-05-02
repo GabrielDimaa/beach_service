@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:beach_service/app/modules/login/repositories/login_repository.dart';
+import 'package:beach_service/app/modules/user/repositories/user_repository.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -48,6 +49,7 @@ class SQFLiteHelper {
     var batch = db.batch();
 
     LoginRepository().create(batch);
+    UserRepository().create(batch);
 
     await batch.commit();
   }

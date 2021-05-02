@@ -25,9 +25,9 @@ abstract class _LoginStoreBase with Store {
 
   LoginDto toDto() {
     return LoginDto(
-      BaseDto(id),
-      email,
-      password,
+      base: BaseDto(id),
+      email: email,
+      password: password
     );
   }
 
@@ -35,7 +35,6 @@ abstract class _LoginStoreBase with Store {
     if (dto != null) {
       this.id = dto.base.id;
       this.email = dto.email;
-      this.password = dto.password;
     }
   }
 }

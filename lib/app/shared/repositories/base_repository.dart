@@ -20,7 +20,7 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
     List<T> list = [];
 
     if (response.isNotEmpty) {
-      response.map((e) {
+      response.forEach((e) {
         list.add(fromMap(e));
       });
     }
@@ -54,14 +54,12 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
   Future<T> save(T dto) async {
     try {
       this.validate(dto);
-      Map<String, dynamic> map = toMap(dto);
 
-      Response response =  await dio.post(getRoute(), queryParameters: map);
+      Map<String, dynamic> data = toMap(dto);
 
-      // ver retorno do response
-      print("<<<< $response");
-      print("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
-      throw Exception("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
+      dynamic response = (await dio.post(getRoute(), data: data)).data;
+
+      return fromMap(response);
     } catch(e) {
       throw Exception(e);
     }

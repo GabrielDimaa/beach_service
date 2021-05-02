@@ -19,11 +19,11 @@ class UserDto implements IBaseDto {
     this.base,
     this.nome,
     this.email,
-    this.password,
     this.cep,
     this.telefone,
     this.dataNascimento,
     this.tipoUser,
     this.empresa,
+    {this.password}
   );
 }

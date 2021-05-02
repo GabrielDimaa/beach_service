@@ -13,4 +13,8 @@ extension DatetimeExtension on DateTime {
 
     return DateFormat.yMd('pt_BR').format(this);
   }
+
+  String get formatedSql {
+    return DateFormat("yyyy-MM-dd").format(this);
+  }
 }

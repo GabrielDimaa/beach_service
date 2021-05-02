@@ -2,10 +2,14 @@ import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/produto/services/produto_service_interface.dart';
 import 'package:beach_service/app/modules/produto/stores/produto_store.dart';
+import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
+import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
+import 'package:beach_service/app/modules/user/user_controller.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:diacritic/diacritic.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
 part 'produto_controller.g.dart';
@@ -14,8 +18,10 @@ class ProdutoController = _ProdutoControllerBase with _$ProdutoController;
 
 abstract class _ProdutoControllerBase with Store implements IFormController {
   final IProdutoService produtoService;
+  final IUserService userService;
+  final UserController userController;
 
-  _ProdutoControllerBase(this.produtoService);
+  _ProdutoControllerBase(this.produtoService, this.userService, this.userController);
 
   CategoriaDto categoriaTodos = CategoriaDto(BaseDto(0), "Todos");
 
@@ -64,9 +70,20 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
     }
   }
 
-  @action
+  @override
   Future<void> save() async {
+    UserDto userDto = userController.userStore.toDto();
 
+    if (userController.primeiroRegistro) {
+      userDto = await userService.saveOrUpdate(userDto);
+
+      if (userDto.base.id != null)
+        await produtoService.saveProdutos(produtosSelect, userDto);
+    } else {
+      await produtoService.saveProdutos(produtosSelect, userDto);
+    }
+
+    print("<< FINALIZADO!!");
   }
 
   @action
@@ -123,5 +140,12 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   bool isSelect(ProdutoDto value) {
     return produtosSelect.any((element) => element.base.id == value.base.id);
+  }
+
+  void validate(BuildContext context) {
+    if (produtosSelect.isEmpty)
+      AlertDialogWidget.show(context, content: "Selecione ao menos um produto!");
+    else
+      save();
   }
 }

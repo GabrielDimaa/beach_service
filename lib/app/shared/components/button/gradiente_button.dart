@@ -19,7 +19,7 @@ class GradienteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0)),
         child: Container(
           width: width,

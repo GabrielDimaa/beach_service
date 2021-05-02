@@ -153,7 +153,7 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
                   ),
                 ),
                 DefaultSizedBox(),
-                _bottomButton(),
+                _bottomButton(context),
               ],
             ),
           ),
@@ -205,15 +205,15 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
             ),
           ),
           DefaultSizedBox(),
-          _bottomButton(),
+          _bottomButton(context),
         ],
       ),
     );
   }
 
-  Widget _bottomButton() {
+  Widget _bottomButton(BuildContext context) {
     return GradienteButton(
-      onPressed: () {},
+      onPressed: () => controller.validate(context),
       child: IconTextWidget(
         text: "SALVAR",
         icon: Icons.save,

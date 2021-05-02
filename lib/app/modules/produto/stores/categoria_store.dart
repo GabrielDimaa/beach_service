@@ -29,6 +29,8 @@ abstract class CategoriaStoreFactory {
         id: dto.base.id,
         descricao: dto.descricao,
       );
+    } else {
+      return null;
     }
   }
 }

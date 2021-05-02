@@ -6,10 +6,16 @@ import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/repositories/base_repository.dart';
 import 'package:beach_service/app/shared/extensions/string_extension.dart';
 import 'package:beach_service/app/shared/extensions/email_extension.dart';
+import 'package:beach_service/app/shared/extensions/date_extension.dart';
+import 'package:beach_service/app/shared/sqflite/sqflite_helper.dart';
+import 'package:sqflite_common/sqlite_api.dart';
 
 class UserRepository extends BaseRepository<UserDto> implements IUserRepository {
   @override
-  String getRoute() => "${Api.baseURL}/register";
+  String tableName() => "user";
+
+  @override
+  String getRoute() => "${Api.baseURL}/users";
 
   @override
   void validate(UserDto dto) {
@@ -31,7 +37,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       'password': dto.password,
       'cep': dto.cep,
       'telefone': dto.telefone,
-      'data_nascimento': dto.dataNascimento,
+      'data_nascimento': dto.dataNascimento.formatedSql,
       'tipo_user': EnumTipoUserHelper.getValue(dto.tipoUser),
       'empresa': dto.empresa,
     };
@@ -43,12 +49,43 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       BaseDto(e['id']),
       e['nome'],
       e['email'],
-      e['password'],
       e['cep'],
       e['telefone'],
-      DateTime.parse(e['dataNascimento']),
-      EnumTipoUserHelper.get(e['tipoUser']),
+      DateTime.parse(e['data_nascimento']),
+      EnumTipoUserHelper.get(e['tipo_user']),
       e['empresa'],
+      password: e['password'],
     );
   }
+
+  @override
+  Future<void> create(Batch batch) async {
+    batch.execute('''
+      CREATE TABLE ${tableName()} (
+        id INTEGER PRIMARY KEY,
+        nome TEXT,
+        email TEXT,
+        cep TEXT,
+        telefone TEXT,
+        data_nascimento DATE,
+        tipo_user TEXT,
+        empresa TEXT
+      );
+    ''');
+  }
+
+  @override
+  Future<UserDto> save(UserDto dto) async {
+    UserDto userDto = await super.save(dto);
+
+    if (userDto.base.id == null) throw Exception("Erro ao identificar usuário!");
+
+    var db = await SQFLiteHelper().getDb();
+    await db.insert(tableName(), toMap(userDto));
+
+    return userDto;
+  }
+
+  @override
+  Future<void> getInDb() {}
 }
