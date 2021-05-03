@@ -8,8 +8,10 @@ import 'package:beach_service/app/modules/user/user_controller.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
+import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
 part 'produto_controller.g.dart';
@@ -72,18 +74,23 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   @override
   Future<void> save() async {
+    if (produtosSelect.isEmpty) throw Exception("Selecione ao menos um produto!");
+
+    List<ProdutoDto> listProdDto = [];
+
     UserDto userDto = userController.userStore.toDto();
 
     if (userController.primeiroRegistro) {
       userDto = await userService.saveOrUpdate(userDto);
 
       if (userDto.base.id != null)
-        await produtoService.saveProdutos(produtosSelect, userDto);
+        listProdDto = await produtoService.saveProdutos(produtosSelect, userDto);
     } else {
-      await produtoService.saveProdutos(produtosSelect, userDto);
+      listProdDto = await produtoService.saveProdutos(produtosSelect, userDto);
     }
 
-    print("<< FINALIZADO!!");
+    if (listProdDto.isNotEmpty)
+      await Modular.to.pushNamed("/$HOME_ROUTE");
   }
 
   @action
@@ -140,12 +147,5 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   bool isSelect(ProdutoDto value) {
     return produtosSelect.any((element) => element.base.id == value.base.id);
-  }
-
-  void validate(BuildContext context) {
-    if (produtosSelect.isEmpty)
-      AlertDialogWidget.show(context, content: "Selecione ao menos um produto!");
-    else
-      save();
   }
 }

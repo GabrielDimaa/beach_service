@@ -15,6 +15,6 @@ extension DatetimeExtension on DateTime {
   }
 
   String get formatedSql {
-    return DateFormat("yyyy-MM-dd").format(this);
+    return DateFormat("yyyy-MM-dd").format(this).replaceAll('-', '/');
   }
 }

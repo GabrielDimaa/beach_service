@@ -5,6 +5,7 @@ import 'package:beach_service/app/modules/produto/produto_controller.dart';
 import 'package:beach_service/app/shared/components/bar.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
 import 'package:beach_service/app/shared/components/button/rounded_button.dart';
+import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_padding.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
@@ -213,7 +214,13 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
 
   Widget _bottomButton(BuildContext context) {
     return GradienteButton(
-      onPressed: () => controller.validate(context),
+      onPressed: () async {
+        try {
+          await controller.save();
+        } catch(e) {
+          AlertDialogWidget.show(context, content: "$e");
+        }
+      },
       child: IconTextWidget(
         text: "SALVAR",
         icon: Icons.save,

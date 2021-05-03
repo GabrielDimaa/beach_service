@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 extension StringExtension on String {
   bool isNullOrEmpty() => this == null || this.trim().isEmpty;
 
@@ -10,5 +12,9 @@ extension StringExtension on String {
 
     final iReg = RegExp(r'(\d+)');
     return iReg.allMatches(this).map((m) => m.group(0)).join('');
+  }
+
+  DateTime parseToDateTime() {
+    return DateFormat("yyyy-MM-dd").parse(this.replaceAll('/', '-'));
   }
 }

@@ -43,6 +43,18 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
     };
   }
 
+  Map<String, dynamic> toMapDb(UserDto dto) {
+    return {
+      'nome': dto.nome,
+      'email': dto.email,
+      'cep': dto.cep,
+      'telefone': dto.telefone,
+      'data_nascimento': dto.dataNascimento.formatedSql,
+      'tipo_user': EnumTipoUserHelper.getValue(dto.tipoUser),
+      'empresa': dto.empresa,
+    };
+  }
+
   @override
   UserDto fromMap(Map<String, dynamic> e) {
     return UserDto(
@@ -51,10 +63,23 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       e['email'],
       e['cep'],
       e['telefone'],
-      DateTime.parse(e['data_nascimento']),
+      (e['data_nascimento']).toString().parseToDateTime(),
       EnumTipoUserHelper.get(e['tipo_user']),
       e['empresa'],
       password: e['password'],
+    );
+  }
+
+  UserDto fromMapDb(Map<String, dynamic> e) {
+    return UserDto(
+      BaseDto(e['id']),
+      e['nome'],
+      e['email'],
+      e['cep'],
+      e['telefone'],
+      (e['data_nascimento']).toString().parseToDateTime(),
+      EnumTipoUserHelper.get(e['tipo_user']),
+      e['empresa'],
     );
   }
 
@@ -68,7 +93,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
         cep TEXT,
         telefone TEXT,
         data_nascimento DATE,
-        tipo_user TEXT,
+        tipo_user INTEGER,
         empresa TEXT
       );
     ''');
@@ -81,7 +106,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
     if (userDto.base.id == null) throw Exception("Erro ao identificar usuário!");
 
     var db = await SQFLiteHelper().getDb();
-    await db.insert(tableName(), toMap(userDto));
+    await db.insert(tableName(), toMapDb(userDto));
 
     return userDto;
   }
