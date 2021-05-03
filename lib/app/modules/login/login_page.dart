@@ -32,6 +32,12 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
   @override
   void initState() {
     super.initState();
+
+    _init();
+  }
+
+  void _init() async {
+    await controller.load();
   }
 
   Future<void> _login() async {

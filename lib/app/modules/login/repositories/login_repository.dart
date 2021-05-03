@@ -60,7 +60,7 @@ class LoginRepository extends BaseRepository<LoginDto> implements ILoginReposito
   Future<LoginDto> auth(LoginDto dto) async {
     validate(dto);
 
-    Map<String, dynamic> response = (await api.post("http://127.0.0.1:3333/users/auth", data: toMap(dto))).data;
+    Map<String, dynamic> response = (await api.post(getRoute(), data: toMap(dto))).data;
 
     LoginDto dtoDb = fromMap(response);
     dtoDb.email = dto.email;

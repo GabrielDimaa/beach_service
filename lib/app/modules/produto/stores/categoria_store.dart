@@ -33,4 +33,11 @@ abstract class CategoriaStoreFactory {
       return null;
     }
   }
+
+  static CategoriaStore novo() {
+    return CategoriaStore(
+      id: null,
+      descricao: null,
+    );
+  }
 }

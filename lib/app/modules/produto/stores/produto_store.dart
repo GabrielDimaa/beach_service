@@ -30,12 +30,20 @@ abstract class ProdutoStoreFactory {
   static ProdutoStore fromDto(ProdutoDto dto) {
     if (dto != null) {
       return ProdutoStore(
-          id: dto.base.id,
-          descricao: dto.descricao,
-          categoriaStore: CategoriaStoreFactory.fromDto(dto.categoriaDto),
+        id: dto.base.id,
+        descricao: dto.descricao,
+        categoriaStore: CategoriaStoreFactory.fromDto(dto.categoriaDto),
       );
     } else {
       return null;
     }
+  }
+
+  static ProdutoStore novo() {
+    return ProdutoStore(
+      id: null,
+      descricao: null,
+      categoriaStore: CategoriaStoreFactory.novo(),
+    );
   }
 }

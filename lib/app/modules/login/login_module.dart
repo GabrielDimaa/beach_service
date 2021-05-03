@@ -4,10 +4,12 @@ import 'package:beach_service/app/modules/login/repositories/login_repository.da
 import 'package:beach_service/app/modules/login/repositories/login_repository_interface.dart';
 import 'package:beach_service/app/modules/login/services/login_service.dart';
 import 'package:beach_service/app/modules/login/services/login_service_interface.dart';
+import 'package:beach_service/app/modules/produto/produto_controller.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
 import 'package:beach_service/app/modules/user/services/user_service.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
+import 'package:beach_service/app/modules/user/user_controller.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class LoginModule extends Module {
@@ -22,7 +24,12 @@ class LoginModule extends Module {
     Bind((i) => UserService(i.get<IUserRepository>())),
 
     //Controllers
-    Bind((i) => LoginController(i.get<ILoginService>(), i.get<IUserService>())),
+    Bind((i) => LoginController(
+          i.get<ILoginService>(),
+          i.get<IUserService>(),
+          i.get<UserController>(),
+          i.get<ProdutoController>(),
+        )),
   ];
 
   @override

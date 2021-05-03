@@ -92,18 +92,38 @@ abstract class _UserStoreBase with Store {
       password: password,
     );
   }
+}
 
-  void fromDto(UserDto dto) {
+abstract class UserStoreFactory {
+  static UserStore fromDto(UserDto dto) {
     if (dto != null) {
-      this.id = dto.base.id;
-      this.nome = dto.nome;
-      this.email = dto.email;
-      this.password = dto.password;
-      this.cep = dto.cep;
-      this.telefone = dto.telefone;
-      this.dataNascimento = dto.dataNascimento;
-      this.tipoUser = dto.tipoUser;
-      this.empresa = dto.empresa;
+      return UserStore(
+        id: dto.base.id,
+        nome: dto.nome,
+        email: dto.email,
+        password: dto.password,
+        cep: dto.cep,
+        telefone: dto.telefone,
+        dataNascimento: dto.dataNascimento,
+        tipoUser: dto.tipoUser,
+        empresa: dto.empresa,
+      );
+    } else {
+      return null;
     }
+  }
+
+  static UserStore novo() {
+    return UserStore(
+      id: null,
+      nome: null,
+      email: null,
+      password: null,
+      cep: null,
+      telefone: null,
+      dataNascimento: null,
+      tipoUser: null,
+      empresa: null,
+    );
   }
 }
