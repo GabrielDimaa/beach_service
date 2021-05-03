@@ -9,17 +9,12 @@ import 'package:dio/dio.dart';
 
 class ProdutoRepository extends BaseRepository<ProdutoDto> implements IProdutoRepository {
   @override
-  String getRoute() => "${Api.baseURL}/produtos";
+  String getRoute() => "${BaseURL.baseURL}/produtos";
 
-  Dio dio = Dio();
+  static Api api = Api();
 
   @override
-  Map<String, dynamic> toMap(ProdutoDto dto) {
-    return {
-      'id_produto': dto.base.id,
-      'id_user': 0
-    };
-  }
+  Map<String, dynamic> toMap(ProdutoDto dto) {}
 
   @override
   ProdutoDto fromMap(Map<String, dynamic> e) {
@@ -37,11 +32,14 @@ class ProdutoRepository extends BaseRepository<ProdutoDto> implements IProdutoRe
   Future<List<ProdutoDto>> saveOrUpdate(List<ProdutoDto> listDto, UserDto userDto) async {
     if (listDto.isEmpty) throw Exception("Nem um produto selecionado!");
 
-    List<Map<String, dynamic>> data = [
-      for(ProdutoDto it in listDto) {'${it.base.id}': '${userDto.base.id}'}
-    ];
+    Map<String, dynamic> data = {"produtos": [
+      for(ProdutoDto it in listDto) {
+        'produtos_id': '${it.base.id}',
+        'user_id': '${userDto.base.id}'
+      }
+    ]};
 
-    List response = (await dio.post(getRoute(), data: data)).data;
+    List response = (await api.post(getRoute(), data: data)).data;
 
     if (response.isNotEmpty)
       return listDto;

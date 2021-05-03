@@ -1,3 +1,4 @@
+import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
 import 'package:beach_service/app/shared/dtos/base_dto_interface.dart';
 import 'package:beach_service/app/shared/repositories/base_repository_interface.dart';
 import 'package:beach_service/app/shared/services/base_service_interface.dart';
@@ -11,7 +12,7 @@ class BaseService<T extends IBaseDto, Y extends IBaseRepository<T>> implements I
   Future<List<T>> getAll() async => await baseRepository.getAll();
 
   @override
-  Future<T> getById(int id) async => await baseRepository.getById(id);
+  Future<T> getById(int id, {LoginDto loginDto}) async => await baseRepository.getById(id, loginDto: loginDto);
 
   @override
   Future<T> getFirst() async => await baseRepository.getFirst();

@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
@@ -15,7 +18,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
   String tableName() => "user";
 
   @override
-  String getRoute() => "${Api.baseURL}/users";
+  String getRoute() => "${BaseURL.baseURL}/users";
 
   @override
   void validate(UserDto dto) {
@@ -105,8 +108,8 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
 
     if (userDto.base.id == null) throw Exception("Erro ao identificar usuário!");
 
-    var db = await SQFLiteHelper().getDb();
-    await db.insert(tableName(), toMapDb(userDto));
+    //var db = await SQFLiteHelper().getDb();
+    //await db.insert(tableName(), toMapDb(userDto));
 
     return userDto;
   }

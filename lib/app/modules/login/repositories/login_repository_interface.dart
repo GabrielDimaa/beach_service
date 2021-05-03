@@ -3,7 +3,7 @@ import 'package:beach_service/app/shared/repositories/base_repository_interface.
 import 'package:sqflite/sqflite.dart';
 
 abstract class ILoginRepository implements IBaseRepository<LoginDto> {
-  Future<void> auth(LoginDto dto);
+  Future<LoginDto> auth(LoginDto dto);
   Future<void> create(Batch batch);
   String tableName();
 }

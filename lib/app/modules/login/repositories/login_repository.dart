@@ -4,7 +4,6 @@ import 'package:beach_service/app/shared/api/api.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/repositories/base_repository.dart';
 import 'package:beach_service/app/shared/sqflite/sqflite_helper.dart';
-import 'package:dio/dio.dart';
 import 'package:beach_service/app/shared/extensions/string_extension.dart';
 import 'package:beach_service/app/shared/extensions/email_extension.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -12,12 +11,12 @@ import 'package:sqflite_common/sqlite_api.dart';
 
 class LoginRepository extends BaseRepository<LoginDto> implements ILoginRepository {
   @override
-  String getRoute() => "${Api.baseURL}/users/auth";
+  String getRoute() => "${BaseURL.baseURL}/users/auth";
 
   @override
   String tableName() => "auth";
 
-  Dio dio = Dio();
+  static Api api = Api();
 
   @override
   void validate(LoginDto dto) {
@@ -44,7 +43,7 @@ class LoginRepository extends BaseRepository<LoginDto> implements ILoginReposito
   @override
   LoginDto fromMap(Map<String, dynamic> e) {
     return LoginDto(
-      base: BaseDto(e['uid']),
+      base: BaseDto(JwtDecoder.decode(e['token'])['uid']),
       token: e['token'],
     );
   }
@@ -58,15 +57,17 @@ class LoginRepository extends BaseRepository<LoginDto> implements ILoginReposito
   }
 
   @override
-  Future<void> auth(LoginDto dto) async {
+  Future<LoginDto> auth(LoginDto dto) async {
     validate(dto);
 
-    Map<String, dynamic> response = (await dio.post(getRoute(), data: toMap(dto))).data;
+    Map<String, dynamic> response = (await api.post("http://127.0.0.1:3333/users/auth", data: toMap(dto))).data;
 
-    LoginDto dtoDb = fromMap(JwtDecoder.decode(response['token']));
+    LoginDto dtoDb = fromMap(response);
     dtoDb.email = dto.email;
 
-    return await save(dtoDb);
+    //await save(dtoDb);
+
+    return dtoDb;
   }
 
   @override

@@ -7,5 +7,5 @@ class LoginService extends BaseService<LoginDto, ILoginRepository> implements IL
   LoginService(ILoginRepository baseRepository) : super(baseRepository);
 
   @override
-  Future<void> auth(LoginDto dto) async => await baseRepository.auth(dto);
+  Future<LoginDto> auth(LoginDto dto) async => await baseRepository.auth(dto);
 }

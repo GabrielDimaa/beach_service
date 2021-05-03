@@ -90,7 +90,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
     }
 
     if (listProdDto.isNotEmpty)
-      await Modular.to.pushNamed("/$HOME_ROUTE");
+      Modular.to.pushNamed(Modular.initialRoute);
   }
 
   @action

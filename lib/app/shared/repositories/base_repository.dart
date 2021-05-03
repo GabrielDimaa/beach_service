@@ -1,7 +1,8 @@
+import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
+import 'package:beach_service/app/shared/api/api.dart';
 import 'package:beach_service/app/shared/dtos/base_dto_interface.dart';
 import 'package:beach_service/app/shared/repositories/base_repository_interface.dart';
 import 'package:beach_service/app/shared/extensions/list_extension.dart';
-import 'package:beach_service/app/shared/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
 
 abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> {
@@ -13,11 +14,11 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
 
   T fromMap(Map<String, dynamic> e);
 
-  static Dio dio = Dio();
+  static Api api = Api();
 
   @override
   Future<List<T>> getAll() async {
-    List response = (await dio.get(getRoute())).data;
+    List response = (await api.get(getRoute())).data;
     List<T> list = [];
 
     if (response.isNotEmpty) {
@@ -30,14 +31,16 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
   }
 
   @override
-  Future<T> getById(int id) async {
+  Future<T> getById(int id, {LoginDto loginDto}) async {
     if (id == null) throw Exception("Não encontrado!");
 
-    Response response = await dio.get("${getRoute()}/$id");
+    dynamic response = (await api.get("${getRoute()}/$id")).data;
 
-    print("<<<< $response");
-    print("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
-    throw Exception("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
+    if (response != null) {
+      return fromMap(response);
+    }
+
+    return null;
   }
 
   @override
@@ -58,10 +61,13 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
 
       Map<String, dynamic> data = toMap(dto);
 
-      dynamic response = (await dio.post(getRoute(), data: data)).data;
+      dynamic response = (await api.post(getRoute(), data: data)).data;
 
-      return fromMap(response);
-    } catch(e) {
+      if (response != null)
+        return fromMap(response);
+
+      return null;
+    } catch (e) {
       throw Exception(e);
     }
   }
@@ -73,7 +79,7 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
     this.validate(dto);
     Map<String, dynamic> map = toMap(dto);
 
-    Response response =  await dio.put("${getRoute()}/${dto.base.id}", queryParameters: map);
+    Response response = await api.put("${getRoute()}/${dto.base.id}", queryParameters: map);
 
     // ver retorno do response
     print("<<<< $response");
@@ -85,7 +91,7 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
   Future<bool> delete(int id) async {
     if (id == null) throw Exception("Não foi possível fazer a exclusão!");
 
-    Response response =  await dio.delete("${getRoute()}/$id");
+    Response response = await api.delete("${getRoute()}/$id");
 
     // ver retorno do response
     print("<<<< $response");

@@ -45,6 +45,9 @@ abstract class _UserControllerBase with Store implements IFormController {
       if (userStore != null) {
         UserDto userDto = userStore.toDto();
         UserDto dto = await userService.saveOrUpdate(userDto);
+
+        if (dto != null)
+          Modular.to.pushNamed(Modular.initialRoute);
       }
 
       loading = false;

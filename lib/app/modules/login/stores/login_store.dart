@@ -15,26 +15,40 @@ abstract class _LoginStoreBase with Store {
   @observable
   String password;
 
+  @observable
+  String token;
+
   @action
   void setEmail(String value) => email = value;
 
   @action
   void setPassword(String value) => password = value;
 
-  _LoginStoreBase({this.id, this.email, this.password});
+  @action
+  void setToken(String value) => token = value;
+
+  _LoginStoreBase({this.id, this.email, this.password, this.token});
 
   LoginDto toDto() {
     return LoginDto(
       base: BaseDto(id),
       email: email,
-      password: password
+      password: password,
+      token: token,
     );
   }
+}
 
-  void fromDto(LoginDto dto) {
+abstract class LoginStoreFactory {
+  static LoginStore fromDto(LoginDto dto) {
     if (dto != null) {
-      this.id = dto.base.id;
-      this.email = dto.email;
+      return LoginStore(
+        id: dto.base.id,
+        email: dto.email,
+        token: dto.token,
+      );
+    } else {
+      return null;
     }
   }
 }
