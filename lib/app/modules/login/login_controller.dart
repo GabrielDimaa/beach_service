@@ -50,7 +50,7 @@ abstract class _LoginControllerBase with Store implements IFormController {
       UserDto userDto = await userService.getById(loginDto.base.id, loginDto: loginDto);
 
       if (userDto != null)
-        Modular.to.pushNamed('/$HOME_ROUTE');
+        Modular.to.pushNamed('/$HOME_ROUTE', arguments: userDto);
     }
 
     loading = false;

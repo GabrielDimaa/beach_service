@@ -53,6 +53,6 @@ class AppModule extends Module {
     ModuleRoute(Modular.initialRoute, module: LoginModule()),
     ModuleRoute("/$USER_ROUTE", module: UserModule()),
     ModuleRoute("/$PRODUTO_ROUTE", module: ProdutoModule()),
-    ModuleRoute("/$HOME_ROUTE", module: HomeModule()),
+    ModuleRoute("/$HOME_ROUTE", module: HomeModule(), ),
   ];
 }
