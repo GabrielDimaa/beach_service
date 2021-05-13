@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
+import 'package:beach_service/app/shared/components/loading.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -60,7 +61,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       body: Observer(
         builder: (_) => Stack(
           children: [
-            Visibility(visible: controller.loading, child: Center(child: CircularProgressIndicator())),
+            Visibility(visible: controller.loading, child: LoadingWidget(description: "Aguarde...\nEstamos buscando sua localização.",)),
             Visibility(
               visible: !controller.loading,
               child: Observer(
