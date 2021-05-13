@@ -1,53 +1,83 @@
-import 'package:beach_service/app/app_widget.dart';
-import 'package:beach_service/app/modules/home/home_store.dart';
+import 'dart:async';
+import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
-import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
-import 'package:beach_service/app/shared/defaults/default_padding.dart';
+import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
-  final String title;
   final UserDto dto;
 
-  const HomePage({Key key, this.title = "Home", this.dto}) : super(key: key);
+  const HomePage({Key key, this.dto}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends ModularState<HomePage, HomeStore> {
+class _HomePageState extends ModularState<HomePage, HomeController> {
+  Completer<GoogleMapController> _controllerMap = Completer<GoogleMapController>();
+  CameraPosition _cameraPosition;
+  Set<Marker> markers = Set<Marker>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  Future<void> _init() async {
+    await controller.load();
+
+    _cameraPosition = _cameraPositionInitial();
+    markers.add(_createMarker());
+  }
+
+  CameraPosition _cameraPositionInitial() {
+    return CameraPosition(
+      target: LatLng(controller.lat ?? DefaultMap.lat, controller.lng ?? DefaultMap.lng),
+      zoom: DefaultMap.zoom,
+    );
+  }
+
+  Marker _createMarker() {
+    return Marker(
+      markerId: MarkerId("1234"),
+      position: LatLng(controller.lat, controller.lng),
+      infoWindow: InfoWindow(title: "My Location"),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Counter'),
+        title: Text("Home"),
       ),
-      body: Padding(
-        padding: DefaultPadding.paddingScaffold,
-        child: Center(
-          child: Column(
-            children: [
-              _row("ID", "${widget.dto.base.id}"),
-              _row("NOME", "${widget.dto.nome}"),
-              _row("EMAIL", "${widget.dto.email}"),
-              _row("TELEFONE", "${widget.dto.telefone}"),
-              _row("CEP", "${widget.dto.cep}"),
-              _row("TIPO DE USER", "${EnumTipoUserHelper.getValue(widget.dto.tipoUser)}"),
-              _row("EMPRESA", "${widget.dto.empresa ?? ""}"),
-            ],
-          ),
+      drawer: Drawer(),
+      body: Observer(
+        builder: (_) => Stack(
+          children: [
+            Visibility(visible: controller.loading, child: Center(child: CircularProgressIndicator())),
+            Visibility(
+              visible: !controller.loading,
+              child: Observer(
+                builder: (_) => GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: _cameraPosition,
+                  onTap: (LatLng latLng) {},
+                  onMapCreated: (GoogleMapController controllerMap) {
+                    if (controller.enabledLocalization) _controllerMap.complete(controllerMap);
+                  },
+                  markers: markers,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _row(String left, String right) {
-    TextStyle style = TextStyle(color: PaletaCores.primaryLight, fontSize: 16, fontWeight: FontWeight.bold);
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [Text(left, style: style), Text(right, style: style,)],
     );
   }
 }

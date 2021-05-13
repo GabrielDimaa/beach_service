@@ -16,12 +16,11 @@ dependencies:
   dio: ^4.0.0
   flutter_mobx: ^1.1.0
   flutter_modular: ^3.1.0
+  geolocator: ^7.0.3
+  google_maps_flutter: ^2.0.3
   jwt_decoder: ^2.0.1
   mobx: ^1.2.1+4
   sqflite: ^2.0.0+3
-
-  path_provider: ^1.6.27
-  share_extend: ^1.1.9
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:beach_service/app/modules/login/login_controller.dart';
 import 'package:beach_service/app/shared/components/button/default_button.dart';
 import 'package:beach_service/app/shared/components/form/text_form_field_widget.dart';
@@ -7,11 +5,8 @@ import 'package:beach_service/app/shared/components/form/validator.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
 import 'package:beach_service/app/shared/components/scaffold_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
-import 'package:beach_service/app/shared/sqflite/sqflite_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_extend/share_extend.dart';
 
 class LoginPage extends StatefulWidget {
   final String title;
