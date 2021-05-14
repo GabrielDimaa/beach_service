@@ -3,18 +3,13 @@ import 'package:beach_service/app/modules/login/repositories/login_repository_in
 import 'package:beach_service/app/shared/api/api.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/repositories/base_repository.dart';
-import 'package:beach_service/app/shared/sqflite/sqflite_helper.dart';
 import 'package:beach_service/app/shared/extensions/string_extension.dart';
 import 'package:beach_service/app/shared/extensions/email_extension.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 
 class LoginRepository extends BaseRepository<LoginDto> implements ILoginRepository {
   @override
   String getRoute() => "${BaseURL.baseURL}/users/auth";
-
-  @override
-  String tableName() => "auth";
 
   static Api api = Api();
 
@@ -32,26 +27,10 @@ class LoginRepository extends BaseRepository<LoginDto> implements ILoginReposito
     };
   }
 
-  Map<String, dynamic> toMapDb(LoginDto dto) {
-    return {
-      'id': dto.base.id,
-      'email': dto.email,
-      'token': dto.token
-    };
-  }
-
   @override
   LoginDto fromMap(Map<String, dynamic> e) {
     return LoginDto(
       base: BaseDto(JwtDecoder.decode(e['token'])['uid']),
-      token: e['token'],
-    );
-  }
-
-  LoginDto fromMapDb(Map<String, dynamic> e) {
-    return LoginDto(
-      base: BaseDto(e['id']),
-      email: e['email'],
       token: e['token'],
     );
   }
@@ -65,27 +44,6 @@ class LoginRepository extends BaseRepository<LoginDto> implements ILoginReposito
     LoginDto dtoDb = fromMap(response);
     dtoDb.email = dto.email;
 
-    //await save(dtoDb);
-
     return dtoDb;
-  }
-
-  @override
-  Future<LoginDto> save(LoginDto dto) async {
-    var db = await SQFLiteHelper().getDb();
-    await db.insert(tableName(), toMapDb(dto));
-
-    return dto;
-  }
-
-  @override
-  Future<void> create(Batch batch) async {
-    batch.execute('''
-      CREATE TABLE ${tableName()} (
-        id INTEGER PRIMARY KEY,
-        email TEXT,
-        token TEXT
-      );
-    ''');
   }
 }

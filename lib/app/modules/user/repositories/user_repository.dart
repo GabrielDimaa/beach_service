@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
@@ -10,13 +7,8 @@ import 'package:beach_service/app/shared/repositories/base_repository.dart';
 import 'package:beach_service/app/shared/extensions/string_extension.dart';
 import 'package:beach_service/app/shared/extensions/email_extension.dart';
 import 'package:beach_service/app/shared/extensions/date_extension.dart';
-import 'package:beach_service/app/shared/sqflite/sqflite_helper.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 
 class UserRepository extends BaseRepository<UserDto> implements IUserRepository {
-  @override
-  String tableName() => "user";
-
   @override
   String getRoute() => "${BaseURL.baseURL}/users";
 
@@ -46,18 +38,6 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
     };
   }
 
-  Map<String, dynamic> toMapDb(UserDto dto) {
-    return {
-      'nome': dto.nome,
-      'email': dto.email,
-      'cep': dto.cep,
-      'telefone': dto.telefone,
-      'data_nascimento': dto.dataNascimento.formatedSql,
-      'tipo_user': EnumTipoUserHelper.getValue(dto.tipoUser),
-      'empresa': dto.empresa,
-    };
-  }
-
   @override
   UserDto fromMap(Map<String, dynamic> e) {
     return UserDto(
@@ -69,37 +49,10 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       (e['data_nascimento']).toString().parseToDateTime(),
       EnumTipoUserHelper.get(e['tipo_user']),
       e['empresa'],
+      e['lat'],
+      e['lng'],
       password: e['password'],
     );
-  }
-
-  UserDto fromMapDb(Map<String, dynamic> e) {
-    return UserDto(
-      BaseDto(e['id']),
-      e['nome'],
-      e['email'],
-      e['cep'],
-      e['telefone'],
-      (e['data_nascimento']).toString().parseToDateTime(),
-      EnumTipoUserHelper.get(e['tipo_user']),
-      e['empresa'],
-    );
-  }
-
-  @override
-  Future<void> create(Batch batch) async {
-    batch.execute('''
-      CREATE TABLE ${tableName()} (
-        id INTEGER PRIMARY KEY,
-        nome TEXT,
-        email TEXT,
-        cep TEXT,
-        telefone TEXT,
-        data_nascimento DATE,
-        tipo_user INTEGER,
-        empresa TEXT
-      );
-    ''');
   }
 
   @override
@@ -108,12 +61,6 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
 
     if (userDto.base.id == null) throw Exception("Erro ao identificar usuário!");
 
-    //var db = await SQFLiteHelper().getDb();
-    //await db.insert(tableName(), toMapDb(userDto));
-
     return userDto;
   }
-
-  @override
-  Future<void> getInDb() {}
 }
