@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
+import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/components/loading.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:flutter/material.dart';
@@ -30,11 +31,16 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
   }
 
   Future<void> _init() async {
-    await controller.load();
+    try {
+      await controller.load();
 
-    _cameraPosition = _cameraPositionInitial();
-    markers.add(_MyMarker());
-    markers.addAll(_VendedoresMakers());
+      _cameraPosition = _cameraPositionInitial();
+      markers.add(_MyMarker());
+      markers.addAll(_VendedoresMakers());
+      print(markers);
+    } catch (e) {
+      AlertDialogWidget.show(context, content: e.toString());
+    }
   }
 
   CameraPosition _cameraPositionInitial() {
@@ -46,33 +52,32 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
 
   Marker _MyMarker() {
     return Marker(
-      markerId: MarkerId("1234"),
+      markerId: MarkerId(controller.userStore.id.toString()),
       position: controller.latLng,
-      infoWindow: InfoWindow(title: "Você está aqui"),
+      infoWindow: InfoWindow(title: "Você está aqui!"),
     );
   }
 
   List<Marker> _VendedoresMakers() {
-    return [
-      Marker(
-        markerId: MarkerId("1245345334"),
-        position: LatLng(-29.338411, -49.722292),
-        infoWindow: InfoWindow(
-          title: controller.userStore.nome ?? "Testando 1",
-          snippet: "Ver perfil",
-          onTap: () {},
-        ),
-      ),
-      Marker(
-        markerId: MarkerId("534"),
-        position: LatLng(-29.337892, -49.722017),
-        infoWindow: InfoWindow(
-          title: controller.userStore.nome ?? "Testando 2",
-          snippet: "Ver perfil",
-          onTap: () {},
-        ),
-      )
-    ];
+    List<Marker> listMakers = [];
+
+    controller.users.forEach((element) {
+      if (element.lat != null && element.lng != null) {
+        listMakers.add(
+          Marker(
+            markerId: MarkerId(element.base.id.toString()),
+            position: LatLng(element.lat, element.lng),
+            infoWindow: InfoWindow(
+              title: element.nome,
+              snippet: "Ver perfil",
+              onTap: () {print(element.nome);},
+            ),
+          ),
+        );
+      }
+    });
+
+    return listMakers;
   }
 
   @override

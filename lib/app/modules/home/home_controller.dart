@@ -1,7 +1,14 @@
+import 'dart:async';
+
+import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
+import 'package:beach_service/app/modules/login/stores/login_store.dart';
+import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
+import 'package:beach_service/app/shared/preferences/auth_preferences.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobx/mobx.dart';
@@ -19,16 +26,22 @@ abstract class _HomeController with Store implements IFormController {
   UserStore userStore = UserStore();
 
   @observable
+  List<UserDto> users = ObservableList<UserDto>();
+
+  @observable
+  LoginStore loginStore = LoginStore();
+
+  @observable
   bool loading = false;
 
   @observable
   bool enabledLocalization = false;
 
   @action
-  void setUserStore(UserStore value) => userStore = value;
+  void setLoading(bool value) => loading = value;
 
   @action
-  void setLoading(bool value) => loading = value;
+  void setEnabledLocalization(bool value) => enabledLocalization = value;
 
   @computed
   LatLng get latLng => LatLng(userStore?.lat ?? DefaultMap.lat, userStore?.lng ?? DefaultMap.lng);
@@ -38,16 +51,25 @@ abstract class _HomeController with Store implements IFormController {
     try {
       loading = true;
 
-      //userStore = UserStoreFactory.fromDto(await userService.getById(id));
+      // Timer.periodic(Duration(milliseconds: 10), (timer) {
+      //   print(timer.toString());
+      // });
+
+      loginStore = LoginStoreFactory.fromDto(await AuthPreferences().get());
+      if (loginStore == null) Modular.to.pushNamed(Modular.initialRoute);
+
+      userStore = UserStoreFactory.fromDto(await userService.getById(loginStore.id));
+
+      users = await userService.getAll().asObservable();
+      users.removeWhere((element) => element.base.id == userStore.id);
 
       Position position = await getLocalization();
 
       userStore.setLat(position.latitude);
       userStore.setLng(position.longitude);
 
-
     } catch (e) {
-      print(e);
+      rethrow;
     } finally {
       loading = false;
     }
@@ -60,7 +82,7 @@ abstract class _HomeController with Store implements IFormController {
   Future<void> delete() async {}
 
   Future<void> _verificarPermissao() async {
-    enabledLocalization = await Geolocator.isLocationServiceEnabled();
+    setEnabledLocalization(await Geolocator.isLocationServiceEnabled());
 
     if (!enabledLocalization) return Future.error('Os serviços de localização estão desativados.');
 

@@ -1,10 +1,8 @@
-import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
 import 'package:beach_service/app/shared/api/api.dart';
 import 'package:beach_service/app/shared/dtos/base_dto_interface.dart';
-import 'package:beach_service/app/shared/repositories/base_repository_interface.dart';
 import 'package:beach_service/app/shared/extensions/list_extension.dart';
+import 'package:beach_service/app/shared/repositories/base_repository_interface.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> {
   String getRoute();
@@ -18,8 +16,8 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
   static Api api = Api();
 
   @override
-  Future<List<T>> getAll() async {
-    List response = (await api.get(getRoute())).data;
+  Future<List<T>> getAll({dynamic params}) async {
+    List response = (await api.get(getRoute(), queryParameters: params)).data;
     List<T> list = [];
 
     if (response.isNotEmpty) {
@@ -32,16 +30,23 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
   }
 
   @override
-  Future<T> getById(int id, {LoginDto loginDto}) async {
-    if (id == null) throw Exception("Não encontrado!");
+  Future<T> getById(int id) async {
+    try {
+      if (id == null) throw Exception("Não encontrado!");
 
-    dynamic response = (await api.get("${getRoute()}/$id")).data;
+      dynamic response = await api.get("${getRoute()}/$id");
 
-    if (response != null) {
-      return fromMap(response);
+      if (response != null) {
+        return fromMap(response.data);
+      }
+
+      return null;
+    } on DioError catch(e) {
+      if (e.response != null) throw Exception(e.response.data[0]['message']);
+      throw Exception(e);
+    } catch(e) {
+      throw Exception(e);
     }
-
-    return null;
   }
 
   @override

@@ -9,10 +9,10 @@ class BaseService<T extends IBaseDto, Y extends IBaseRepository<T>> implements I
   BaseService(this.baseRepository);
 
   @override
-  Future<List<T>> getAll() async => await baseRepository.getAll();
+  Future<List<T>> getAll({dynamic params}) async => await baseRepository.getAll(params: params);
 
   @override
-  Future<T> getById(int id, {LoginDto loginDto}) async => await baseRepository.getById(id, loginDto: loginDto);
+  Future<T> getById(int id) async => await baseRepository.getById(id);
 
   @override
   Future<T> getFirst() async => await baseRepository.getFirst();

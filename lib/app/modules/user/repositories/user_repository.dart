@@ -63,4 +63,9 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
 
     return userDto;
   }
+
+  @override
+  Future<List<UserDto>> getAll({dynamic params}) {
+    return super.getAll(params: {'tipo_user': params});
+  }
 }
