@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
 import 'package:beach_service/app/modules/login/stores/login_store.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';

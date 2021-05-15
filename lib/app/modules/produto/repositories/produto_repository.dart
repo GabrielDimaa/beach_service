@@ -13,7 +13,9 @@ class ProdutoRepository extends BaseRepository<ProdutoDto> implements IProdutoRe
   static Api api = Api();
 
   @override
-  Map<String, dynamic> toMap(ProdutoDto dto) {}
+  Map<String, dynamic> toMap(ProdutoDto dto) {
+    throw UnimplementedError();
+  }
 
   @override
   ProdutoDto fromMap(Map<String, dynamic> e) {

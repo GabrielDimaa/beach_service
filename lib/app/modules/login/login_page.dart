@@ -4,7 +4,6 @@ import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.d
 import 'package:beach_service/app/shared/components/form/text_form_field_widget.dart';
 import 'package:beach_service/app/shared/components/form/validator.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
-import 'package:beach_service/app/shared/components/loading.dart';
 import 'package:beach_service/app/shared/components/scaffold_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:flutter/material.dart';

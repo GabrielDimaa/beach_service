@@ -35,9 +35,8 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       await controller.load();
 
       _cameraPosition = _cameraPositionInitial();
-      markers.add(_MyMarker());
-      markers.addAll(_VendedoresMakers());
-      print(markers);
+      markers.add(_myMarker());
+      markers.addAll(_vendedoresMakers());
     } catch (e) {
       AlertDialogWidget.show(context, content: e.toString());
     }
@@ -50,7 +49,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
     );
   }
 
-  Marker _MyMarker() {
+  Marker _myMarker() {
     return Marker(
       markerId: MarkerId(controller.userStore.id.toString()),
       position: controller.latLng,
@@ -58,7 +57,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
     );
   }
 
-  List<Marker> _VendedoresMakers() {
+  List<Marker> _vendedoresMakers() {
     List<Marker> listMakers = [];
 
     controller.users.forEach((element) {
