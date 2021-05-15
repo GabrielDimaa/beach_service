@@ -6,8 +6,11 @@ import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/modules/user/user_controller.dart';
+import 'package:beach_service/app/shared/components/loading.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
+import 'package:beach_service/app/shared/preferences/auth_preferences.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
@@ -17,11 +20,8 @@ class LoginController = _LoginControllerBase with _$LoginController;
 
 abstract class _LoginControllerBase with Store implements IFormController {
   final ILoginService loginService;
-  final IUserService userService;
-  final UserController userController;
-  final ProdutoController produtoController;
 
-  _LoginControllerBase(this.loginService, this.userService, this.userController, this.produtoController);
+  _LoginControllerBase(this.loginService);
 
   @observable
   LoginStore loginStore = LoginStore();
@@ -33,27 +33,25 @@ abstract class _LoginControllerBase with Store implements IFormController {
   void setLoading(bool value) => loading = value;
 
   @override
-  Future<void> load() async {
-    userController.userStore = UserStoreFactory.novo();
-  }
+  Future<void> load() async {}
 
   @action
-  Future<void> login() async {
-    loading = true;
+  Future<void> login(BuildContext context) async {
+    try {
+      loading = true;
 
-    if (loginStore != null) {
-      LoginDto loginDto = loginStore.toDto();
-      loginDto = await loginService.auth(loginDto);
+      if (loginStore != null) {
+        await loginService.auth(loginStore.toDto());
 
-      loginStore.setToken(loginDto.token);
+        loading = false;
 
-      UserDto userDto = await userService.getById(loginDto.base.id, loginDto: loginDto);
-
-      if (userDto != null)
-        Modular.to.pushNamed('/$HOME_ROUTE', arguments: userDto);
+        Modular.to.pushNamed('/$HOME_ROUTE');
+      }
+    } catch(e) {
+      rethrow;
+    } finally {
+      loading = false;
     }
-
-    loading = false;
   }
 
   @action

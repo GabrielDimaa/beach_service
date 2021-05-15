@@ -1,11 +1,14 @@
 import 'package:beach_service/app/modules/login/login_controller.dart';
 import 'package:beach_service/app/shared/components/button/default_button.dart';
+import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/components/form/text_form_field_widget.dart';
 import 'package:beach_service/app/shared/components/form/validator.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
+import 'package:beach_service/app/shared/components/loading.dart';
 import 'package:beach_service/app/shared/components/scaffold_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,22 +30,16 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
   @override
   void initState() {
     super.initState();
-
-    _init();
   }
 
-  void _init() async {
-    await controller.load();
-  }
-
-  Future<void> _login() async {
+  Future<void> _login(BuildContext context) async {
     try {
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
-        await controller.login();
+        await controller.login(context);
       }
     } catch (e) {
-      print("ERRO SAVE");
+      AlertDialogWidget.show(context, content: e.toString());
     }
   }
 
@@ -102,20 +99,26 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormFieldWidget(
-                label: "Email",
-                controller: _controllerEmail,
-                keyboardType: TextInputType.emailAddress,
-                onSaved: controller.loginStore.setEmail,
-                validator: InputValidator(EmailValidator()).validate,
+              Observer(
+                builder: (_) => TextFormFieldWidget(
+                  label: "Email",
+                  controller: _controllerEmail,
+                  keyboardType: TextInputType.emailAddress,
+                  enabled: !controller.loading,
+                  onSaved: controller.loginStore.setEmail,
+                  validator: InputValidator(EmailValidator()).validate,
+                ),
               ),
               DefaultSizedBox(),
-              TextFormFieldWidget(
-                label: "Senha",
-                controller: _controllerPassword,
-                obscure: true,
-                onSaved: controller.loginStore.setPassword,
-                validator: InputValidator(PasswordValidator()).validate,
+              Observer(
+                builder: (_) => TextFormFieldWidget(
+                  label: "Senha",
+                  controller: _controllerPassword,
+                  obscure: true,
+                  enabled: !controller.loading,
+                  onSaved: controller.loginStore.setPassword,
+                  validator: InputValidator(PasswordValidator()).validate,
+                ),
               ),
             ],
           ),
@@ -130,22 +133,32 @@ class LoginPageState extends ModularState<LoginPage, LoginController> {
           ),
         ),
         SizedBox(height: 8),
-        DefaultButton(
-          onPressed: _login,
-          child: IconTextWidget(text: "ENTRAR", icon: Icons.login),
+        Observer(
+          builder: (_) => Visibility(
+            visible: controller.loading,
+            child: LinearProgressIndicator(),
+          ),
+        ),
+        Observer(
+          builder: (_) => DefaultButton(
+            onPressed: !controller.loading ? () => _login(context) : null,
+            child: IconTextWidget(text: "ENTRAR", icon: Icons.login),
+          ),
         ),
       ],
     );
   }
 
   Widget _registrarWidget() {
-    return TextButton(
-      onPressed: controller.registrar,
-      child: Text("REGISTRAR-SE"),
-      style: ElevatedButton.styleFrom(
-        onPrimary: Colors.white,
-        padding: EdgeInsets.all(16),
-        side: BorderSide(color: Colors.white),
+    return Observer(
+      builder: (_) => TextButton(
+        onPressed: !controller.loading ? controller.registrar : null,
+        child: Text("REGISTRAR-SE"),
+        style: ElevatedButton.styleFrom(
+          onPrimary: Colors.white,
+          padding: EdgeInsets.all(16),
+          side: BorderSide(color: Colors.white),
+        ),
       ),
     );
   }

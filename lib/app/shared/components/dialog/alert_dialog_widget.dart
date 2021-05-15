@@ -32,7 +32,7 @@ class _AlertDialogWidgetState extends State<AlertDialogWidget> {
         visible: widget.title.notIsNullOrEmpty(),
         child: Text(widget.title ?? ""),
       ),
-      content: Text(widget.content ?? ""),
+      content: Text(widget.content.replaceAll("Exception: ", "") ?? ""),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       actions: widget.actions ?? [TextButton(onPressed: Modular.to.pop, child: Text("OK"))],
     );

@@ -1,15 +1,15 @@
-import 'package:beach_service/app/modules/login/login_controller.dart';
+import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
+import 'package:beach_service/app/shared/preferences/auth_preferences.dart';
+import 'package:beach_service/app/shared/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class InterceptorsApi extends InterceptorsWrapper {
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    LoginController controller = Modular.get<LoginController>();
-    String token = controller?.loginStore?.token ?? "";
+  Future <void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    LoginDto dto = await AuthPreferences().get();
 
-    if (token != null && token.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $token';
+    if (dto!= null && dto.token.notIsNullOrEmpty()) {
+      options.headers['Authorization'] = 'Bearer ${dto.token}';
     }
 
     return super.onRequest(options, handler);

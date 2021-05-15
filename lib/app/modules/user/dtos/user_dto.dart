@@ -14,6 +14,8 @@ class UserDto implements IBaseDto {
   DateTime dataNascimento;
   EnumTipoUser tipoUser;
   String empresa;
+  double lat;
+  double lng;
 
   UserDto(
     this.base,
@@ -24,6 +26,8 @@ class UserDto implements IBaseDto {
     this.dataNascimento,
     this.tipoUser,
     this.empresa,
+    this.lat,
+    this.lng,
     {this.password}
   );
 }

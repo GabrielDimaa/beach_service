@@ -5,7 +5,6 @@ import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/shared/api/api.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/repositories/base_repository.dart';
-import 'package:dio/dio.dart';
 
 class ProdutoRepository extends BaseRepository<ProdutoDto> implements IProdutoRepository {
   @override

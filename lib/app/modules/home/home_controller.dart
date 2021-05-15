@@ -1,5 +1,9 @@
+import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
+import 'package:beach_service/app/modules/user/stores/user_store.dart';
+import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobx/mobx.dart';
 
 part 'home_controller.g.dart';
@@ -7,11 +11,12 @@ part 'home_controller.g.dart';
 class HomeController = _HomeController with _$HomeController;
 
 abstract class _HomeController with Store implements IFormController {
-  @observable
-  double lat;
+  final IUserService userService;
+
+  _HomeController(this.userService);
 
   @observable
-  double lng;
+  UserStore userStore = UserStore();
 
   @observable
   bool loading = false;
@@ -20,26 +25,27 @@ abstract class _HomeController with Store implements IFormController {
   bool enabledLocalization = false;
 
   @action
-  void setLat(double value) => lat = value;
-
-  @action
-  void setLng(double value) => lng = value;
+  void setUserStore(UserStore value) => userStore = value;
 
   @action
   void setLoading(bool value) => loading = value;
 
   @computed
-  String get latLng => "$lat, $lng";
+  LatLng get latLng => LatLng(userStore?.lat ?? DefaultMap.lat, userStore?.lng ?? DefaultMap.lng);
 
   @override
   Future<void> load() async {
     try {
       loading = true;
 
+      //userStore = UserStoreFactory.fromDto(await userService.getById(id));
+
       Position position = await getLocalization();
 
-      setLat(position.latitude);
-      setLng(position.longitude);
+      userStore.setLat(position.latitude);
+      userStore.setLng(position.longitude);
+
+
     } catch (e) {
       print(e);
     } finally {

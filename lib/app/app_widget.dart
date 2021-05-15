@@ -46,7 +46,7 @@ class AppWidget extends StatelessWidget {
           elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           titleTextStyle: TextStyle(fontSize: 20, color: Colors.black, fontFamily: 'NotoSansJP'),
-          contentTextStyle: TextStyle(fontSize: 14, color: Colors.black, fontFamily: 'NotoSansJP'),
+          contentTextStyle: TextStyle(fontSize: 16, color: Colors.black, fontFamily: 'NotoSansJP'),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(

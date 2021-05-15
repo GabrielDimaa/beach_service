@@ -34,6 +34,12 @@ abstract class _UserStoreBase with Store {
   @observable
   String empresa;
 
+  @observable
+  double lat;
+
+  @observable
+  double lng;
+
   @action
   void setNome(String value) => nome = value;
 
@@ -58,6 +64,12 @@ abstract class _UserStoreBase with Store {
   @action
   void setEmpresa(String value) => empresa = value;
 
+  @action
+  void setLat(double value) => lat = value;
+
+  @action
+  void setLng(double value) => lng = value;
+
   @computed
   bool get userIsNotNull => tipoUser != null;
 
@@ -77,6 +89,8 @@ abstract class _UserStoreBase with Store {
     this.dataNascimento,
     this.tipoUser,
     this.empresa,
+    this.lat,
+    this.lng
   });
 
   UserDto toDto() {
@@ -89,6 +103,8 @@ abstract class _UserStoreBase with Store {
       dataNascimento,
       tipoUser,
       empresa,
+      lat,
+      lng,
       password: password,
     );
   }
@@ -107,6 +123,8 @@ abstract class UserStoreFactory {
         dataNascimento: dto.dataNascimento,
         tipoUser: dto.tipoUser,
         empresa: dto.empresa,
+        lat: dto.lat,
+        lng: dto.lng,
       );
     } else {
       return null;
@@ -124,6 +142,8 @@ abstract class UserStoreFactory {
       dataNascimento: null,
       tipoUser: null,
       empresa: null,
+      lat: null,
+      lng: null,
     );
   }
 }

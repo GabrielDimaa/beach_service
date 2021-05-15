@@ -33,22 +33,46 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
     await controller.load();
 
     _cameraPosition = _cameraPositionInitial();
-    markers.add(_createMarker());
+    markers.add(_MyMarker());
+    markers.addAll(_VendedoresMakers());
   }
 
   CameraPosition _cameraPositionInitial() {
     return CameraPosition(
-      target: LatLng(controller.lat ?? DefaultMap.lat, controller.lng ?? DefaultMap.lng),
+      target: controller.latLng,
       zoom: DefaultMap.zoom,
     );
   }
 
-  Marker _createMarker() {
+  Marker _MyMarker() {
     return Marker(
       markerId: MarkerId("1234"),
-      position: LatLng(controller.lat, controller.lng),
-      infoWindow: InfoWindow(title: "My Location"),
+      position: controller.latLng,
+      infoWindow: InfoWindow(title: "Você está aqui"),
     );
+  }
+
+  List<Marker> _VendedoresMakers() {
+    return [
+      Marker(
+        markerId: MarkerId("1245345334"),
+        position: LatLng(-29.338411, -49.722292),
+        infoWindow: InfoWindow(
+          title: controller.userStore.nome ?? "Testando 1",
+          snippet: "Ver perfil",
+          onTap: () {},
+        ),
+      ),
+      Marker(
+        markerId: MarkerId("534"),
+        position: LatLng(-29.337892, -49.722017),
+        infoWindow: InfoWindow(
+          title: controller.userStore.nome ?? "Testando 2",
+          snippet: "Ver perfil",
+          onTap: () {},
+        ),
+      )
+    ];
   }
 
   @override
@@ -61,7 +85,10 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       body: Observer(
         builder: (_) => Stack(
           children: [
-            Visibility(visible: controller.loading, child: LoadingWidget(description: "Aguarde...\nEstamos buscando sua localização.",)),
+            Visibility(
+              visible: controller.loading,
+              child: LoadingWidget(description: "Aguarde...\nEstamos buscando sua localização."),
+            ),
             Visibility(
               visible: !controller.loading,
               child: Observer(

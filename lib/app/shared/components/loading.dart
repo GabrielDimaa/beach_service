@@ -6,7 +6,16 @@ import 'package:flutter/material.dart';
 class LoadingWidget extends StatelessWidget {
   final String description;
 
-  const LoadingWidget({Key key, this.description}) : super(key: key);
+  const LoadingWidget({this.description});
+
+  static show(BuildContext context, {String description}) async {
+    await showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        child: LoadingWidget(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,7 @@ class LoadingWidget extends StatelessWidget {
               SizedBox(height: 60, width: 60, child: CircularProgressIndicator(backgroundColor: PaletaCores.primaryLight)),
               DefaultSizedBox(),
               Text(
-                description,
+                description ?? "Aguarde...",
                 style: TextStyle(fontSize: 14, color: Colors.black, fontFamily: 'NotoSansJP'),
                 textAlign: TextAlign.center,
               ),

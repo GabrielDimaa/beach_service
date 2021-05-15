@@ -34,12 +34,7 @@ class AppModule extends Module {
     Bind((i) => ProdutoService(i.get<IProdutoRepository>())),
 
     //Controllers
-    Bind((i) => LoginController(
-          i.get<ILoginService>(),
-          i.get<IUserService>(),
-          i.get<UserController>(),
-          i.get<ProdutoController>(),
-        )),
+    Bind((i) => LoginController(i.get<ILoginService>())),
     Bind((i) => UserController(i.get<IUserService>())),
     Bind((i) => ProdutoController(
           i.get<IProdutoService>(),
@@ -50,10 +45,13 @@ class AppModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    //ModuleRoute(Modular.initialRoute, module: LoginModule()),
-    ModuleRoute(Modular.initialRoute, module: HomeModule()),
+    ModuleRoute(Modular.initialRoute, module: LoginModule()),
+    //ModuleRoute(Modular.initialRoute, module: HomeModule()),
     ModuleRoute("/$USER_ROUTE", module: UserModule()),
     ModuleRoute("/$PRODUTO_ROUTE", module: ProdutoModule()),
-    ModuleRoute("/$HOME_ROUTE", module: HomeModule(), ),
+    ModuleRoute(
+      "/$HOME_ROUTE",
+      module: HomeModule(),
+    ),
   ];
 }
