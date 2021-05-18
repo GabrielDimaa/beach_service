@@ -1,4 +1,8 @@
+import 'package:beach_service/app/app_controller.dart';
+import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/modules/home/home_module.dart';
+import 'package:beach_service/app/modules/home/services/sincronizacao_service.dart';
+import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
 import 'package:beach_service/app/modules/login/login_controller.dart';
 import 'package:beach_service/app/modules/login/login_module.dart';
 import 'package:beach_service/app/modules/login/repositories/login_repository.dart';
@@ -11,6 +15,8 @@ import 'package:beach_service/app/modules/produto/repositories/produto_repositor
 import 'package:beach_service/app/modules/produto/repositories/produto_repository_interface.dart';
 import 'package:beach_service/app/modules/produto/services/produto_service.dart';
 import 'package:beach_service/app/modules/produto/services/produto_service_interface.dart';
+import 'package:beach_service/app/modules/splach/splach_controller.dart';
+import 'package:beach_service/app/modules/splach/splach_module.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
 import 'package:beach_service/app/modules/user/services/user_service.dart';
@@ -32,8 +38,11 @@ class AppModule extends Module {
     Bind((i) => LoginService(i.get<ILoginRepository>())),
     Bind((i) => UserService(i.get<IUserRepository>())),
     Bind((i) => ProdutoService(i.get<IProdutoRepository>())),
+    Bind((i) => SincronizacaoService()),
 
     //Controllers
+    Bind((i) => AppController()),
+    Bind((i) => SplachController(i.get<AppController>())),
     Bind((i) => LoginController(i.get<ILoginService>())),
     Bind((i) => UserController(i.get<IUserService>())),
     Bind((i) => ProdutoController(
@@ -41,17 +50,15 @@ class AppModule extends Module {
           i.get<IUserService>(),
           i.get<UserController>(),
         )),
+    Bind((i) => HomeController(i.get<IUserService>(), i.get<ISincronizacaoService>(), i.get<AppController>())),
   ];
 
   @override
   final List<ModularRoute> routes = [
-    ModuleRoute(Modular.initialRoute, module: LoginModule()),
-    //ModuleRoute(Modular.initialRoute, module: HomeModule()),
+    ModuleRoute(Modular.initialRoute, module: SplachModule()),
+    ModuleRoute("/$LOGIN_ROUTE", module: LoginModule()),
     ModuleRoute("/$USER_ROUTE", module: UserModule()),
     ModuleRoute("/$PRODUTO_ROUTE", module: ProdutoModule()),
-    ModuleRoute(
-      "/$HOME_ROUTE",
-      module: HomeModule(),
-    ),
+    ModuleRoute("/$HOME_ROUTE", module: HomeModule()),
   ];
 }
