@@ -8,7 +8,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
 class SincronizacaoService implements ISincronizacaoService {
-
   static Timer _timer;
 
   @override
@@ -27,6 +26,10 @@ class SincronizacaoService implements ISincronizacaoService {
 
     controller.users = ObservableList();
     controller.users.addAll(listUsers);
+
+    controller.getMyMarker();
+    controller.getUsersMakers();
+    controller.addMarkers();
 
     print("## Sincronização Finalizada ##");
   }
@@ -48,5 +51,3 @@ class SincronizacaoService implements ISincronizacaoService {
     _timer?.cancel();
   }
 }
-
-
