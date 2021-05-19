@@ -34,11 +34,29 @@ abstract class _HomeController with Store implements IFormController {
   @observable
   bool enabledLocalization = false;
 
+  @observable
+  Set<Marker> markers = Set<Marker>().asObservable();
+
+  @observable
+  Marker myMarker;
+
+  @observable
+  List<Marker> userMarkers = ObservableList();
+
   @action
   void setLoading(bool value) => loading = value;
 
   @action
   void setEnabledLocalization(bool value) => enabledLocalization = value;
+
+  @action
+  void setMyMarker(Marker value) => myMarker = value;
+
+  @action
+  void setUserMarkers(List<Marker> value) => userMarkers.addAll(value);
+
+  @action
+  void setMarkers(List<Marker> value) => markers.addAll(value);
 
   @computed
   LatLng get latLng => LatLng(userStore?.lat ?? DefaultMap.lat, userStore?.lng ?? DefaultMap.lng);
@@ -57,6 +75,10 @@ abstract class _HomeController with Store implements IFormController {
 
       userStore.setLat(position.latitude);
       userStore.setLng(position.longitude);
+
+      getMyMarker();
+      getUsersMakers();
+      addMarkers();
     } catch (e) {
       rethrow;
     } finally {
@@ -92,5 +114,42 @@ abstract class _HomeController with Store implements IFormController {
     await _verificarPermissao();
 
     return await Geolocator.getCurrentPosition();
+  }
+
+  void getMyMarker() {
+    setMyMarker(
+      Marker(
+        markerId: MarkerId(userStore.id.toString()),
+        position: latLng,
+        infoWindow: InfoWindow(title: "Você está aqui!"),
+      ),
+    );
+  }
+
+  void getUsersMakers() {
+    userMarkers = ObservableList();
+
+    users.forEach((element) {
+      if (element.lat != null && element.lng != null) {
+        userMarkers.add(
+          Marker(
+            markerId: MarkerId(element.base.id.toString()),
+            position: LatLng(element.lat, element.lng),
+            infoWindow: InfoWindow(
+              title: element.nome,
+              snippet: "Ver perfil",
+              onTap: () {
+                print(element.nome);
+              },
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  void addMarkers() {
+    markers.add(myMarker);
+    markers.addAll(userMarkers);
   }
 }

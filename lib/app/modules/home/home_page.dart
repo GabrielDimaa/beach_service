@@ -21,7 +21,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends ModularState<HomePage, HomeController> {
   Completer<GoogleMapController> _controllerMap = Completer<GoogleMapController>();
   CameraPosition _cameraPosition;
-  Set<Marker> markers = Set<Marker>();
 
   @override
   void initState() {
@@ -35,8 +34,6 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       await controller.load();
 
       _cameraPosition = _cameraPositionInitial();
-      markers.add(_myMarker());
-      markers.addAll(_vendedoresMakers());
     } catch (e) {
       AlertDialogWidget.show(context, content: e.toString());
     }
@@ -47,36 +44,6 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       target: controller.latLng,
       zoom: DefaultMap.zoom,
     );
-  }
-
-  Marker _myMarker() {
-    return Marker(
-      markerId: MarkerId(controller.userStore.id.toString()),
-      position: controller.latLng,
-      infoWindow: InfoWindow(title: "Você está aqui!"),
-    );
-  }
-
-  List<Marker> _vendedoresMakers() {
-    List<Marker> listMakers = [];
-
-    controller.users.forEach((element) {
-      if (element.lat != null && element.lng != null) {
-        listMakers.add(
-          Marker(
-            markerId: MarkerId(element.base.id.toString()),
-            position: LatLng(element.lat, element.lng),
-            infoWindow: InfoWindow(
-              title: element.nome,
-              snippet: "Ver perfil",
-              onTap: () {print(element.nome);},
-            ),
-          ),
-        );
-      }
-    });
-
-    return listMakers;
   }
 
   @override
@@ -103,7 +70,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                   onMapCreated: (GoogleMapController controllerMap) {
                     if (controller.enabledLocalization) _controllerMap.complete(controllerMap);
                   },
-                  markers: markers,
+                  markers: controller.markers,
                 ),
               ),
             ),
