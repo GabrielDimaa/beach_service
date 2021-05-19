@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
+import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
@@ -25,7 +26,7 @@ abstract class _HomeController with Store implements IFormController {
   UserStore userStore = UserStore();
 
   @observable
-  List<UserDto> users = ObservableList<UserDto>();
+  List<UserProdDto> users = ObservableList<UserProdDto>();
 
   @observable
   bool loading = false;
@@ -49,7 +50,7 @@ abstract class _HomeController with Store implements IFormController {
 
       userStore = UserStoreFactory.fromDto(await userService.getById(appController.loginStore.id));
 
-      users = await userService.getAll().asObservable();
+      users = await userService.getAllUserProd(userStore.toDto()).asObservable();
       users.removeWhere((element) => element.base.id == userStore.id);
 
       Position position = await getLocalization();

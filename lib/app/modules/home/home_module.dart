@@ -18,7 +18,7 @@ class HomeModule extends Module {
 
     //Services
     Bind((i) => UserService(i.get<IUserRepository>())),
-    Bind((i) => SincronizacaoService()),
+    Bind.singleton((i) => SincronizacaoService()),
 
     //Controllers
     Bind((i) => AppController()),

@@ -38,7 +38,7 @@ class AppModule extends Module {
     Bind((i) => LoginService(i.get<ILoginRepository>())),
     Bind((i) => UserService(i.get<IUserRepository>())),
     Bind((i) => ProdutoService(i.get<IProdutoRepository>())),
-    Bind((i) => SincronizacaoService()),
+    Bind.singleton((i) => SincronizacaoService()),
 
     //Controllers
     Bind((i) => AppController()),

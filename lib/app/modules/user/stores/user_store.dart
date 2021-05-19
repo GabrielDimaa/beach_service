@@ -40,6 +40,9 @@ abstract class _UserStoreBase with Store {
   @observable
   double lng;
 
+  @observable
+  bool isOnline;
+
   @action
   void setNome(String value) => nome = value;
 
@@ -70,6 +73,9 @@ abstract class _UserStoreBase with Store {
   @action
   void setLng(double value) => lng = value;
 
+  @action
+  void setIsOnline(bool value) => isOnline = value;
+
   @computed
   bool get userIsNotNull => tipoUser != null;
 
@@ -90,7 +96,8 @@ abstract class _UserStoreBase with Store {
     this.tipoUser,
     this.empresa,
     this.lat,
-    this.lng
+    this.lng,
+    this.isOnline,
   });
 
   UserDto toDto() {
@@ -105,6 +112,7 @@ abstract class _UserStoreBase with Store {
       empresa,
       lat,
       lng,
+      isOnline,
       password: password,
     );
   }
@@ -125,6 +133,7 @@ abstract class UserStoreFactory {
         empresa: dto.empresa,
         lat: dto.lat,
         lng: dto.lng,
+        isOnline: dto.isOnline
       );
     } else {
       return null;
@@ -144,6 +153,7 @@ abstract class UserStoreFactory {
       empresa: null,
       lat: null,
       lng: null,
+      isOnline: null,
     );
   }
 }

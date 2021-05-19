@@ -1,4 +1,7 @@
+import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
+import 'package:beach_service/app/modules/produto/repositories/produto_repository.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
+import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
 import 'package:beach_service/app/shared/api/api.dart';
@@ -7,10 +10,13 @@ import 'package:beach_service/app/shared/repositories/base_repository.dart';
 import 'package:beach_service/app/shared/extensions/string_extension.dart';
 import 'package:beach_service/app/shared/extensions/email_extension.dart';
 import 'package:beach_service/app/shared/extensions/date_extension.dart';
+import 'package:dio/dio.dart';
 
 class UserRepository extends BaseRepository<UserDto> implements IUserRepository {
   @override
   String getRoute() => "${BaseURL.baseURL}/users";
+
+  static Api api = Api();
 
   @override
   void validate(UserDto dto) {
@@ -35,6 +41,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       'data_nascimento': dto.dataNascimento.formatedSql,
       'tipo_user': EnumTipoUserHelper.getValue(dto.tipoUser),
       'empresa': dto.empresa,
+      'online': dto.isOnline,
     };
   }
 
@@ -51,7 +58,28 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       e['empresa'],
       e['lat'],
       e['lng'],
+      e['online'],
       password: e['password'],
+    );
+  }
+
+  @override
+  UserProdDto fromMapUserProd(Map<String, dynamic> e) {
+    List<dynamic> produtosMap = e['produtos'];
+    List<ProdutoDto> produtos = [];
+
+    if (produtosMap.isNotEmpty)
+      produtosMap.forEach((element) => produtos.add(ProdutoRepository().fromMap(element)));
+
+    return UserProdDto(
+      base: BaseDto(e['id']),
+      nome: e['nome'],
+      email: e['email'],
+      telefone: e['telefone'],
+      empresa: e['empresa'],
+      lat: e['lat'],
+      lng: e['lng'],
+      produtos: produtos,
     );
   }
 
@@ -65,7 +93,22 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
   }
 
   @override
-  Future<List<UserDto>> getAll({dynamic params}) {
-    return super.getAll(params: {'tipo_user': params});
+  Future<UserProdDto> getAllUserProd(UserDto userDto) async {
+    try {
+      Response response = await api.get(
+        getRoute(),
+        queryParameters: {'tipo_user': EnumTipoUserHelper.getValue(userDto.tipoUser)},
+      );
+
+      if (response != null)
+        return fromMapUserProd(response.data);
+
+      return null;
+    } on DioError catch(e) {
+      if (e.response != null) throw Exception(e.response.data[0]['message']);
+      throw Exception(e);
+    } catch(e) {
+      throw Exception(e);
+    }
   }
 }

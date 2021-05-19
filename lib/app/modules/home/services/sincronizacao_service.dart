@@ -1,37 +1,42 @@
 import 'dart:async';
-import 'dart:isolate';
 import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
+import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
+import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
+import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
 class SincronizacaoService implements ISincronizacaoService {
-  static HomeController controller;
 
   static Timer _timer;
 
   @override
   Future<void> runner() async {
-    ReceivePort isolateListener = ReceivePort();
-    ReceivePort port = ReceivePort();
+    print("## Buscando Sincronização ##");
 
-    await Isolate.spawn(_entryPoint, port.sendPort);
-    SendPort newIsolate = await port.first;
+    HomeController controller = Modular.get<HomeController>();
 
-    newIsolate.send({'isolate': isolateListener.sendPort});
+    //Atualizar dados do usuário
+    UserDto userDto = await controller.userService.saveOrUpdate(controller.userStore.toDto());
+    controller.userStore = UserStoreFactory.fromDto(userDto);
 
-    return await isolateListener.first;
+    //Pegar usuários
+    List<UserProdDto> listUsers = await controller.userService.getAllUserProd(userDto).asObservable();
+    listUsers.removeWhere((element) => element.base.id == controller?.userStore?.id ?? 0);
+
+    controller.users = ObservableList();
+    controller.users.addAll(listUsers);
+
+    print("## Sincronização Finalizada ##");
   }
 
   @override
   Future<void> start() async {
-    print("== Iniciando sincronização ==");
-
-    controller = Modular.get<HomeController>();
+    print("## Iniciando sincronização ##");
 
     if (_timer == null || !_timer.isActive) {
-      _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
-        print("## Início Timer ##");
+      _timer = Timer.periodic(Duration(seconds: 40), (timer) async {
         await runner();
       });
     }
@@ -39,24 +44,8 @@ class SincronizacaoService implements ISincronizacaoService {
 
   @override
   void stop() {
-    print("== Parando sincronização ==");
+    print("## Parando sincronização ##");
     _timer?.cancel();
-  }
-
-  static void _entryPoint(SendPort message) {
-    ReceivePort _receivePort = ReceivePort();
-    message.send(_receivePort.sendPort);
-
-    _receivePort.listen((message) {
-      SendPort externalIsolate = message['isolate'];
-      externalIsolate.send(_getUsers());
-    });
-  }
-
-  static Future _getUsers() async {
-    print(controller.userStore.nome);
-    controller.users = await controller.userService.getAll().asObservable();
-    controller.users.removeWhere((element) => element.base.id == controller?.userStore?.id ?? 0);
   }
 }
 
