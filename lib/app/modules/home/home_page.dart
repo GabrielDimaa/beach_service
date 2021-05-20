@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
+import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
 import 'package:beach_service/app/shared/components/loading.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:flutter/material.dart';
@@ -48,11 +50,14 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
+        iconTheme: theme.appBarTheme.iconTheme.copyWith(color: PaletaCores.primaryLight),
+        elevation: 1,
       ),
-      drawer: Drawer(),
+      drawer: DrawerWidget(),
       body: Observer(
         builder: (_) => Stack(
           children: [

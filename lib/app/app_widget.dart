@@ -22,6 +22,7 @@ class AppWidget extends StatelessWidget {
           elevation: 0.4,
           centerTitle: true,
           textTheme: TextTheme(headline6: TextStyle(color: PaletaCores.primaryLight, fontSize: 20, fontWeight: FontWeight.w500, fontFamily: 'NotoSansJP')),
+          iconTheme: IconThemeData(color: Colors.white),
         ),
         scaffoldBackgroundColor: Colors.white,
         textTheme: TextTheme(

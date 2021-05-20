@@ -6,6 +6,7 @@ import 'package:beach_service/app/shared/components/bar.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
 import 'package:beach_service/app/shared/components/button/rounded_button.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
+import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_padding.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
@@ -42,6 +43,7 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
     final themeAppBar = theme.appBarTheme.textTheme.headline6.copyWith(fontSize: 18, fontWeight: FontWeight.bold);
     final style = themeAppBar.copyWith(color: Colors.grey);
     return Scaffold(
+      drawer: DrawerWidget(),
       appBar: AppBar(
         title: Row(
           children: [
