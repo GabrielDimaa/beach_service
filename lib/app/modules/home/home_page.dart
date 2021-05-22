@@ -28,6 +28,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
   void initState() {
     super.initState();
 
+    controller.setContext(context);
     _init();
   }
 
@@ -51,35 +52,37 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Home"),
-        iconTheme: theme.appBarTheme.iconTheme.copyWith(color: PaletaCores.primaryLight),
-        elevation: 1,
-      ),
-      drawer: DrawerWidget(),
-      body: Observer(
-        builder: (_) => Stack(
-          children: [
-            Visibility(
-              visible: controller.loading,
-              child: LoadingWidget(description: "Aguarde...\nEstamos buscando sua localização."),
-            ),
-            Visibility(
-              visible: !controller.loading,
-              child: Observer(
-                builder: (_) => GoogleMap(
-                  mapType: MapType.normal,
-                  initialCameraPosition: _cameraPosition,
-                  onTap: (LatLng latLng) {},
-                  onMapCreated: (GoogleMapController controllerMap) {
-                    if (controller.enabledLocalization) _controllerMap.complete(controllerMap);
-                  },
-                  markers: controller.markers,
+    return Observer(
+      builder: (_) => Scaffold(
+        appBar: AppBar(
+          title: Text("Home"),
+          iconTheme: theme.appBarTheme.iconTheme.copyWith(color: PaletaCores.primaryLight),
+          elevation: 1,
+        ),
+        drawer: !controller.loading ? DrawerWidget() : null,
+        body: Observer(
+          builder: (_) => Stack(
+            children: [
+              Visibility(
+                visible: controller.loading,
+                child: LoadingWidget(description: "Aguarde...\nEstamos buscando sua localização."),
+              ),
+              Visibility(
+                visible: !controller.loading,
+                child: Observer(
+                  builder: (_) => GoogleMap(
+                    mapType: MapType.normal,
+                    initialCameraPosition: _cameraPosition,
+                    onTap: (LatLng latLng) {},
+                    onMapCreated: (GoogleMapController controllerMap) {
+                      if (controller.enabledLocalization) _controllerMap.complete(controllerMap);
+                    },
+                    markers: controller.markers,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

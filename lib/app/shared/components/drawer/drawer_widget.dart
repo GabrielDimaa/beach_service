@@ -1,5 +1,6 @@
 import 'package:beach_service/app/app_controller.dart';
-import 'package:beach_service/app/app_widget.dart';
+import 'package:beach_service/app/modules/home/home_controller.dart';
+import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/bar.dart';
 import 'package:beach_service/app/shared/components/drawer/item_drawer.dart';
 import 'package:beach_service/app/shared/constants/page.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class DrawerWidget extends StatelessWidget {
   AppController appController = Modular.get<AppController>();
+  HomeController homeController = Modular.get<HomeController>();
 
   EdgeInsets get padding => EdgeInsets.all(16);
 
@@ -40,19 +42,12 @@ class DrawerWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: 68,
-                            height: 68,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Icon(Icons.person, size: 48, color: PaletaCores.primaryLight),
-                            ),
-                          ),
+                          AvatarWidget(),
                         ],
                       ),
                       DefaultSizedBox(),
-                      Text("Gabriel de Matos", style: theme.bodyText2.copyWith(fontSize: 16, fontWeight: FontWeight.bold)),
-                      Text("gabriel@gmail.com", style: theme.bodyText2.copyWith(fontSize: 16)),
+                      Text(homeController.userStore.nome, style: theme.bodyText2.copyWith(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(homeController.userStore.email, style: theme.bodyText2.copyWith(fontSize: 16)),
                     ],
                   ),
                 ),
@@ -69,14 +64,17 @@ class DrawerWidget extends StatelessWidget {
                         Modular.to.navigate("/$HOME_ROUTE");
                       },
                     ),
-                    ItemDrawer(
-                      icon: Icons.rv_hookup,
-                      label: "Meus Produtos",
-                      isSelected: appController.page == PRODUTO_PAGE,
-                      onTap: () {
-                        appController.setPage(PRODUTO_PAGE);
-                        Modular.to.navigate("/$PRODUTO_ROUTE");
-                      },
+                    Visibility(
+                      visible: homeController.userStore.isVendedor,
+                      child: ItemDrawer(
+                        icon: Icons.rv_hookup,
+                        label: "Meus Produtos",
+                        isSelected: appController.page == PRODUTO_PAGE,
+                        onTap: () {
+                          appController.setPage(PRODUTO_PAGE);
+                          Modular.to.navigate("/$PRODUTO_ROUTE");
+                        },
+                      ),
                     ),
                     ItemDrawer(
                       icon: Icons.person,

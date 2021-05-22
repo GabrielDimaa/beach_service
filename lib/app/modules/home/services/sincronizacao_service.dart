@@ -4,6 +4,7 @@ import 'package:beach_service/app/modules/home/services/sincronizacao_service_in
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
@@ -35,7 +36,7 @@ class SincronizacaoService implements ISincronizacaoService {
   }
 
   @override
-  Future<void> start() async {
+  Future<void> start({BuildContext context}) async {
     print("## Iniciando sincronização ##");
 
     if (_timer == null || !_timer.isActive) {

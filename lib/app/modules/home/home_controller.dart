@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:beach_service/app/app_controller.dart';
+import 'package:beach_service/app/modules/home/components/vendedor_dialog.dart';
 import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
-import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobx/mobx.dart';
@@ -15,7 +16,7 @@ part 'home_controller.g.dart';
 
 class HomeController = _HomeController with _$HomeController;
 
-abstract class _HomeController with Store implements IFormController {
+abstract class _HomeController with Store implements IFormController{
   final IUserService userService;
   final ISincronizacaoService sincronizacaoService;
   final AppController appController;
@@ -43,6 +44,9 @@ abstract class _HomeController with Store implements IFormController {
   @observable
   List<Marker> userMarkers = ObservableList();
 
+  @observable
+  BuildContext context;
+
   @action
   void setLoading(bool value) => loading = value;
 
@@ -57,6 +61,9 @@ abstract class _HomeController with Store implements IFormController {
 
   @action
   void setMarkers(List<Marker> value) => markers.addAll(value);
+
+  @action
+  void setContext(BuildContext value) => context = value;
 
   @computed
   LatLng get latLng => LatLng(userStore?.lat ?? DefaultMap.lat, userStore?.lng ?? DefaultMap.lng);
@@ -139,8 +146,8 @@ abstract class _HomeController with Store implements IFormController {
               title: element.nome,
               snippet: "Ver perfil",
               onTap: () {
-                print(element.nome);
-              },
+                VendedorDialog.show(context, userProdDto: element);
+              }
             ),
           ),
         );
