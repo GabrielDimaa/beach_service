@@ -4,7 +4,7 @@ import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_cont
 import 'package:beach_service/app/shared/components/app_bar/app_bar_title.dart';
 import 'package:beach_service/app/shared/components/button/default_button.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
-import 'package:beach_service/app/shared/components/scaffold_widget.dart';
+import 'package:beach_service/app/shared/components/scaffold/scaffold_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';

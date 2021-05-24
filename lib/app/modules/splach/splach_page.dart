@@ -1,5 +1,5 @@
 import 'package:beach_service/app/modules/splach/splach_controller.dart';
-import 'package:beach_service/app/shared/components/scaffold_widget.dart';
+import 'package:beach_service/app/shared/components/scaffold/scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 

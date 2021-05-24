@@ -4,7 +4,7 @@ import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
-import 'package:beach_service/app/shared/components/loading.dart';
+import 'package:beach_service/app/shared/components/loading/loading.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';

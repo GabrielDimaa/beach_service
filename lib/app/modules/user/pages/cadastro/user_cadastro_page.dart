@@ -6,7 +6,7 @@ import 'package:beach_service/app/shared/components/button/default_button.dart';
 import 'package:beach_service/app/shared/components/form/text_form_field_widget.dart';
 import 'package:beach_service/app/shared/components/form/validator.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
-import 'package:beach_service/app/shared/components/scaffold_widget.dart';
+import 'package:beach_service/app/shared/components/scaffold/scaffold_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
