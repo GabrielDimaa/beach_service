@@ -21,7 +21,7 @@ import 'package:beach_service/app/modules/user/repositories/user_repository.dart
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
 import 'package:beach_service/app/modules/user/services/user_service.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
-import 'package:beach_service/app/modules/user/user_controller.dart';
+import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_controller.dart';
 import 'package:beach_service/app/modules/user/user_module.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -44,20 +44,21 @@ class AppModule extends Module {
     Bind((i) => AppController()),
     Bind((i) => SplachController(i.get<AppController>())),
     Bind((i) => LoginController(i.get<ILoginService>())),
-    Bind((i) => UserController(i.get<IUserService>())),
+    Bind((i) => UserCadastroController(i.get<IUserService>())),
     Bind((i) => ProdutoController(
           i.get<IProdutoService>(),
           i.get<IUserService>(),
-          i.get<UserController>(),
+          i.get<UserCadastroController>(),
         )),
     Bind((i) => HomeController(i.get<IUserService>(), i.get<ISincronizacaoService>(), i.get<AppController>())),
   ];
 
   @override
   final List<ModularRoute> routes = [
-    ModuleRoute(Modular.initialRoute, module: SplachModule()),
+    //ModuleRoute(Modular.initialRoute, module: SplachModule()),
+    ModuleRoute(Modular.initialRoute, module: UserModule()),
     ModuleRoute("/$LOGIN_ROUTE", module: LoginModule()),
-    ModuleRoute("/$USER_ROUTE", module: UserModule()),
+    ModuleRoute("/$USER_ROUTE", module: UserModule(),),
     ModuleRoute("/$PRODUTO_ROUTE", module: ProdutoModule()),
     ModuleRoute("/$HOME_ROUTE", module: HomeModule()),
   ];

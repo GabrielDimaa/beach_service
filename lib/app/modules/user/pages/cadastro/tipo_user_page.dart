@@ -1,6 +1,6 @@
 import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
-import 'package:beach_service/app/modules/user/user_controller.dart';
+import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_controller.dart';
 import 'package:beach_service/app/shared/components/app_bar/app_bar_title.dart';
 import 'package:beach_service/app/shared/components/button/default_button.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
@@ -19,7 +19,7 @@ class TipoUserPage extends StatefulWidget {
   TipoUserPageState createState() => TipoUserPageState();
 }
 
-class TipoUserPageState extends ModularState<TipoUserPage, UserController> {
+class TipoUserPageState extends ModularState<TipoUserPage, UserCadastroController> {
   @override
   void initState() {
     super.initState();

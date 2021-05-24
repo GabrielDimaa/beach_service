@@ -4,7 +4,7 @@ import 'package:beach_service/app/modules/produto/services/produto_service_inter
 import 'package:beach_service/app/modules/produto/stores/produto_store.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
-import 'package:beach_service/app/modules/user/user_controller.dart';
+import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_controller.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
@@ -19,7 +19,7 @@ class ProdutoController = _ProdutoControllerBase with _$ProdutoController;
 abstract class _ProdutoControllerBase with Store implements IFormController {
   final IProdutoService produtoService;
   final IUserService userService;
-  final UserController userController;
+  final UserCadastroController userController;
 
   _ProdutoControllerBase(this.produtoService, this.userService, this.userController);
 

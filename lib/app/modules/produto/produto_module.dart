@@ -8,7 +8,7 @@ import 'package:beach_service/app/modules/user/repositories/user_repository.dart
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
 import 'package:beach_service/app/modules/user/services/user_service.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
-import 'package:beach_service/app/modules/user/user_controller.dart';
+import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_controller.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class ProdutoModule extends Module {
@@ -23,11 +23,11 @@ class ProdutoModule extends Module {
     Bind((i) => UserService(i.get<IUserRepository>())),
 
     //Controllers
-    Bind((i) => UserController(i.get<IUserService>())),
+    Bind((i) => UserCadastroController(i.get<IUserService>())),
     Bind((i) => ProdutoController(
           i.get<IProdutoService>(),
           i.get<IUserService>(),
-          i.get<UserController>(),
+          i.get<UserCadastroController>(),
         )),
   ];
 

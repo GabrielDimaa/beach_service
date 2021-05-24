@@ -80,7 +80,10 @@ class DrawerWidget extends StatelessWidget {
                       icon: Icons.person,
                       label: "Minha Conta",
                       isSelected: appController.page == MINHA_CONTA_PAGE,
-                      onTap: () {},
+                      onTap: () {
+                        appController.setPage(MINHA_CONTA_PAGE);
+                        Modular.to.navigate("/$USER_ROUTE");
+                      },
                     ),
                     ItemDrawer(
                       icon: Icons.ballot,

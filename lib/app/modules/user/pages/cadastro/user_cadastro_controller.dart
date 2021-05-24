@@ -8,14 +8,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
-part 'user_controller.g.dart';
+part 'user_cadastro_controller.g.dart';
 
-class UserController = _UserControllerBase with _$UserController;
+class UserCadastroController = _UserCadastroControllerBase with _$UserCadastroController;
 
-abstract class _UserControllerBase with Store implements IFormController {
+abstract class _UserCadastroControllerBase with Store implements IFormController {
   final IUserService userService;
 
-  _UserControllerBase(this.userService);
+  _UserCadastroControllerBase(this.userService);
 
   @observable
   UserStore userStore = UserStore();
@@ -60,7 +60,7 @@ abstract class _UserControllerBase with Store implements IFormController {
   @action
   void avancar(BuildContext context) {
     if (userStore.isConsumidor || userStore.isVendedor)
-      Modular.to.pushNamed('/$USER_ROUTE');
+      Modular.to.pushNamed('/$USER_ROUTE/$USER_CADASTRO_ROUTE');
     else
       AlertDialogWidget.show(context, content: "Você deve selecionar o tipo de conta 'CONSUMIDOR' ou 'VENDEDOR'.");
   }
