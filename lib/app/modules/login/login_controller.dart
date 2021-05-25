@@ -1,3 +1,5 @@
+import 'package:beach_service/app/app_controller.dart';
+import 'package:beach_service/app/modules/login/dtos/login_dto.dart';
 import 'package:beach_service/app/modules/login/services/login_service_interface.dart';
 import 'package:beach_service/app/modules/login/stores/login_store.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
@@ -12,8 +14,9 @@ class LoginController = _LoginControllerBase with _$LoginController;
 
 abstract class _LoginControllerBase with Store implements IFormController {
   final ILoginService loginService;
+  final AppController appController;
 
-  _LoginControllerBase(this.loginService);
+  _LoginControllerBase(this.loginService, this.appController);
 
   @observable
   LoginStore loginStore = LoginStore();
@@ -33,7 +36,8 @@ abstract class _LoginControllerBase with Store implements IFormController {
       loading = true;
 
       if (loginStore != null) {
-        await loginService.auth(loginStore.toDto());
+        LoginDto dto = await loginService.auth(loginStore.toDto());
+        appController.loginStore = LoginStoreFactory.fromDto(dto);
 
         loading = false;
 

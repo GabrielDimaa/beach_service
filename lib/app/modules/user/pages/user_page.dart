@@ -55,6 +55,8 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                 child: Column(
                   children: [
                     AvatarWidget(
+                      circleSize: 100,
+                      iconSize: 68,
                       iconColor: Colors.white,
                       backgroundColor: PaletaCores.primary,
                     ),
@@ -70,7 +72,7 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                     ),
                     DefaultSizedBox(),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Expanded(child: _estatisticas(title: "Vendas", numeros: "154", theme: theme)),
                         Container(
@@ -85,7 +87,7 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                       alignment: WrapAlignment.center,
                       children: _categorias(),
                     ),
-                    DefaultSizedBox(),
+                    SizedBox(height: 10),
                     Expanded(
                       child: ListView.builder(
                         itemCount: controller.userProdStore?.produtos?.length ?? 0,

@@ -1,3 +1,4 @@
+import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/login/login_controller.dart';
 import 'package:beach_service/app/modules/login/login_page.dart';
 import 'package:beach_service/app/modules/login/repositories/login_repository.dart';
@@ -16,7 +17,8 @@ class LoginModule extends Module {
     Bind((i) => LoginService(i.get<ILoginRepository>())),
 
     //Controllers
-    Bind((i) => LoginController(i.get<ILoginService>())),
+    Bind((i) => AppController()),
+    Bind((i) => LoginController(i.get<ILoginService>(), i.get<AppController>())),
   ];
 
   @override

@@ -12,7 +12,7 @@ class AppController = _AppController with _$AppController;
 
 abstract class _AppController with Store {
   @observable
-  LoginStore loginStore;
+  LoginStore loginStore = LoginStore();
 
   @observable
   int page = HOME_PAGE;
@@ -22,7 +22,7 @@ abstract class _AppController with Store {
 
   Future<void> _getAuth() async => loginStore = LoginStoreFactory.fromDto(await AuthPreferences().get());
 
-  Future<void> chechAuth({bool aberturaApp = false}) async {
+  Future<void> checkAuth({bool aberturaApp = false}) async {
     await _getAuth();
 
     if (loginStore?.id != null && loginStore?.token != null) {
@@ -32,5 +32,5 @@ abstract class _AppController with Store {
     }
   }
 
-  Future<void> load() async => await chechAuth(aberturaApp: true);
+  Future<void> load() async => await checkAuth(aberturaApp: true);
 }
