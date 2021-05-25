@@ -3,9 +3,11 @@ import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
-import 'package:diacritic/diacritic.dart';
+import 'package:beach_service/app/shared/routes/routes.dart';
+import 'package:beach_service/app/shared/utils/produtos_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class VendedorDialog extends StatefulWidget {
   final UserProdDto userProdDto;
@@ -32,7 +34,8 @@ class _VendedorDialogState extends State<VendedorDialog> {
   void initState() {
     super.initState();
 
-    categorias.addAll(_getCategorias());
+    categorias.clear();
+    categorias.addAll(ProdutosUtils.getCategorias(widget.userProdDto.produtos));
   }
 
   @override
@@ -47,7 +50,7 @@ class _VendedorDialogState extends State<VendedorDialog> {
             Row(
               children: [
                 AvatarWidget(
-                  backgroundColor: PaletaCores.light,
+                  backgroundColor: PaletaCores.primary,
                   iconColor: Colors.white,
                 ),
                 Expanded(
@@ -99,7 +102,10 @@ class _VendedorDialogState extends State<VendedorDialog> {
             ),
             SizedBox(height: 10),
             GradienteButton(
-              onPressed: () {},
+              onPressed: () async {
+                Modular.to.pop();
+                Modular.to.pushNamed("/$USER_ROUTE", arguments: widget.userProdDto);
+              },
               width: MediaQuery.of(context).size.width * 0.5,
               colors: PaletaCores.gradiente,
               child: Text("Visualizar perfil"),
@@ -108,18 +114,5 @@ class _VendedorDialogState extends State<VendedorDialog> {
         ),
       ),
     );
-  }
-
-  List<CategoriaDto> _getCategorias() {
-    List<CategoriaDto> categorias = [];
-    this.categorias.clear();
-
-    widget.userProdDto.produtos.forEach((e) {
-      if (!categorias.any((element) => element.base.id == e.categoriaDto.base.id)) categorias.add(e.categoriaDto);
-    });
-
-    categorias.sort((a, b) => removeDiacritics(a.descricao?.toLowerCase()).compareTo(b.descricao?.toLowerCase()));
-
-    return categorias;
   }
 }

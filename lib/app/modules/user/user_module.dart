@@ -21,7 +21,7 @@ class UserModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute(Modular.initialRoute, child: (_, args) => UserPage()),
+    ChildRoute(Modular.initialRoute, child: (_, args) => UserPage(userProdDto: args.data)),
     ChildRoute("/$USER_CADASTRO_ROUTE", child: (_, args) => UserCadastroPage()),
     ChildRoute("/$TIPO_USER_ROUTE", child: (_, args) => TipoUserPage()),
   ];
