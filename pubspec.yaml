@@ -34,6 +34,8 @@ flutter:
 
   assets:
     - assets/images/logo.png
+    - assets/images/user-marker.png
+    - assets/images/local-marker.png
   fonts:
     - family: NotoSansJP
       fonts:

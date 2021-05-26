@@ -28,9 +28,7 @@ class SincronizacaoService implements ISincronizacaoService {
     controller.users = ObservableList();
     controller.users.addAll(listUsers);
 
-    controller.getMyMarker();
-    controller.getUsersMakers();
-    controller.addMarkers();
+    controller.updateMarkers();
 
     print("## Sincronização Finalizada ##");
   }

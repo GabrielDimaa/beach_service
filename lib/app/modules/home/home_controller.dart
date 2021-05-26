@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/home/components/vendedor_dialog.dart';
 import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
@@ -8,6 +10,8 @@ import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobx/mobx.dart';
@@ -83,9 +87,7 @@ abstract class _HomeController with Store implements IFormController{
       userStore.setLat(position.latitude);
       userStore.setLng(position.longitude);
 
-      getMyMarker();
-      getUsersMakers();
-      addMarkers();
+      await updateMarkers();
     } catch (e) {
       rethrow;
     } finally {
@@ -123,40 +125,47 @@ abstract class _HomeController with Store implements IFormController{
     return await Geolocator.getCurrentPosition();
   }
 
-  void getMyMarker() {
+  Future<void> updateMarkers() async {
+    final Uint8List markerIconLocal = await _getBytesFromAsset('assets/images/local-marker.png', 90);
+    final Uint8List markerIconUsers = await _getBytesFromAsset('assets/images/user-marker.png', 120);
+
     setMyMarker(
       Marker(
         markerId: MarkerId(userStore.id.toString()),
         position: latLng,
+        icon: BitmapDescriptor.fromBytes(markerIconLocal),
         infoWindow: InfoWindow(title: "Você está aqui!"),
       ),
     );
-  }
 
-  void getUsersMakers() {
     userMarkers = ObservableList();
-
-    users.forEach((element) {
+    users.forEach((element) async {
       if (element.lat != null && element.lng != null) {
         userMarkers.add(
           Marker(
             markerId: MarkerId(element.base.id.toString()),
             position: LatLng(element.lat, element.lng),
+            icon: BitmapDescriptor.fromBytes(markerIconUsers),
             infoWindow: InfoWindow(
-              title: element.nome,
-              snippet: "Ver perfil",
-              onTap: () {
-                VendedorDialog.show(context, userProdDto: element);
-              }
+                title: element.nome,
+                snippet: "Ver perfil",
+                onTap: () {
+                  VendedorDialog.show(context, userProdDto: element);
+                }
             ),
           ),
         );
       }
     });
-  }
 
-  void addMarkers() {
     markers.add(myMarker);
     markers.addAll(userMarkers);
+  }
+
+  Future<Uint8List> _getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
   }
 }
