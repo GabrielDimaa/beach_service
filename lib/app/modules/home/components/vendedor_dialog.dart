@@ -3,6 +3,7 @@ import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
+import 'package:beach_service/app/shared/components/categorias_tile.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:beach_service/app/shared/utils/produtos_utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,28 +78,14 @@ class _VendedorDialogState extends State<VendedorDialog> {
               ],
             ),
             SizedBox(height: 10),
-            Container(
-              height: 50,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categorias.length,
-                itemBuilder: (_, index) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: PaletaCores.light, width: 2),
-                    ),
-                    child: Center(
-                      child: Text(
-                        categorias[index].descricao,
-                        style: theme.textTheme.bodyText1.copyWith(color: PaletaCores.light, fontSize: 14),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            Wrap(
+              alignment: WrapAlignment.center,
+              children: categorias.map((e) {
+                return CategoriasTile(
+                  label: e.descricao,
+                  margin: EdgeInsets.all(4),
+                );
+              }).toList(),
             ),
             SizedBox(height: 10),
             GradienteButton(

@@ -43,7 +43,7 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
     final themeAppBar = theme.appBarTheme.textTheme.headline6.copyWith(fontSize: 18, fontWeight: FontWeight.bold);
     final style = themeAppBar.copyWith(color: Colors.grey);
     return Scaffold(
-      drawer: DrawerWidget(),
+      drawer: controller.userController?.primeiroRegistro ?? false ? null : DrawerWidget(),
       appBar: AppBar(
         title: Row(
           children: [

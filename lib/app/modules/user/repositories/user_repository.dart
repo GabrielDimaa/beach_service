@@ -41,7 +41,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       'data_nascimento': dto.dataNascimento.formatedSql,
       'tipo_user': EnumTipoUserHelper.getValue(dto.tipoUser),
       'empresa': dto.empresa,
-      'online': dto.isOnline,
+      'online': dto.isOnline ?? false,
     };
   }
 

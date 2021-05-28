@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class DrawerWidget extends StatelessWidget {
-  AppController appController = Modular.get<AppController>();
-  HomeController homeController = Modular.get<HomeController>();
+  final AppController appController = Modular.get<AppController>();
+  final HomeController homeController = Modular.get<HomeController>();
 
   EdgeInsets get padding => EdgeInsets.all(16);
 

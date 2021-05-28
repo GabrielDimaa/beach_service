@@ -10,7 +10,6 @@ import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

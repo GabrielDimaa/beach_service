@@ -1,5 +1,4 @@
 import 'package:beach_service/app/modules/login/stores/login_store.dart';
-import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/constants/page.dart';
 import 'package:beach_service/app/shared/preferences/auth_preferences.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
