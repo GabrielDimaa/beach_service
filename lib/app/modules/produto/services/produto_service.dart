@@ -8,5 +8,8 @@ class ProdutoService extends BaseService<ProdutoDto, IProdutoRepository> impleme
   ProdutoService(IProdutoRepository baseRepository) : super(baseRepository);
 
   @override
-  Future<List<ProdutoDto>> saveProdutos(List<ProdutoDto> listDto, UserDto userDto) => baseRepository.saveOrUpdate(listDto, userDto);
+  Future<List<ProdutoDto>> saveProdutos(List<ProdutoDto> listDto, UserDto userDto) async => await baseRepository.saveOrUpdate(listDto, userDto);
+
+  @override
+  Future<List<ProdutoDto>> getProdutosById(int id) async => await baseRepository.getProdutosById(id);
 }

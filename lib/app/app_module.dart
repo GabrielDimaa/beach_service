@@ -46,7 +46,11 @@ class AppModule extends Module {
     Bind((i) => SplachController(i.get<AppController>())),
     Bind((i) => LoginController(i.get<ILoginService>(), i.get<AppController>())),
     Bind((i) => UserCadastroController(i.get<IUserService>())),
-    Bind((i) => UserController(i.get<HomeController>(), i.get<IUserService>())),
+    Bind((i) => UserController(
+          i.get<HomeController>(),
+          i.get<IUserService>(),
+          i.get<IProdutoService>(),
+        )),
     Bind((i) => ProdutoController(
           i.get<IProdutoService>(),
           i.get<IUserService>(),

@@ -5,6 +5,7 @@ import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/shared/api/api.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/repositories/base_repository.dart';
+import 'package:dio/dio.dart';
 
 class ProdutoRepository extends BaseRepository<ProdutoDto> implements IProdutoRepository {
   @override
@@ -23,8 +24,8 @@ class ProdutoRepository extends BaseRepository<ProdutoDto> implements IProdutoRe
       BaseDto(e['id']),
       e['descricao'],
       CategoriaDto(
-        BaseDto(e['categorias']['id']),
-        e['categorias']['descricao'],
+        BaseDto(e['categoria']['id']),
+        e['categoria']['descricao'],
       ),
     );
   }
@@ -46,6 +47,30 @@ class ProdutoRepository extends BaseRepository<ProdutoDto> implements IProdutoRe
       return listDto;
     else
       return null;
+  }
+
+  @override
+  Future<List<ProdutoDto>> getProdutosById(int id) async {
+    try {
+      if (id == null) throw Exception("Não encontrado!");
+
+      List<ProdutoDto> produtos = [];
+
+      dynamic response = await api.get("${getRoute()}/$id");
+
+      if (response != null) {
+        (response.data as List).forEach((element) {
+          produtos.add(fromMap(element));
+        });
+      }
+
+      return produtos;
+    } on DioError catch(e) {
+      if (e.response != null) throw Exception(e.response.data[0]['message']);
+      throw Exception(e);
+    } catch(e) {
+      throw Exception(e);
+    }
   }
 
   @override

@@ -4,4 +4,5 @@ import 'package:beach_service/app/shared/repositories/base_repository_interface.
 
 abstract class IProdutoRepository implements IBaseRepository<ProdutoDto> {
   Future<List<ProdutoDto>> saveOrUpdate(List<ProdutoDto> listDto, UserDto userDto);
+  Future<List<ProdutoDto>> getProdutosById(int id);
 }

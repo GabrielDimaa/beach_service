@@ -1,6 +1,10 @@
 import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
+import 'package:beach_service/app/modules/produto/repositories/produto_repository.dart';
+import 'package:beach_service/app/modules/produto/repositories/produto_repository_interface.dart';
+import 'package:beach_service/app/modules/produto/services/produto_service.dart';
+import 'package:beach_service/app/modules/produto/services/produto_service_interface.dart';
 import 'package:beach_service/app/modules/user/pages/cadastro/tipo_user_page.dart';
 import 'package:beach_service/app/modules/user/pages/user_controller.dart';
 import 'package:beach_service/app/modules/user/pages/user_page.dart';
@@ -18,13 +22,15 @@ class UserModule extends Module {
   final List<Bind> binds = [
     //Repositories
     Bind((i) => UserRepository()),
+    Bind((i) => ProdutoRepository()),
 
     //Services
     Bind((i) => UserService(i.get<IUserRepository>())),
+    Bind((i) => ProdutoService(i.get<IProdutoRepository>())),
 
     //Controllers
     Bind((i) => AppController()),
-    Bind((i) => UserController(i.get<HomeController>(), i.get<IUserService>())),
+    Bind((i) => UserController(i.get<HomeController>(), i.get<IUserService>(), i.get<IProdutoService>())),
     Bind((i) => UserCadastroController(i.get<IUserService>())),
     Bind((i) => HomeController(
           i.get<IUserService>(),

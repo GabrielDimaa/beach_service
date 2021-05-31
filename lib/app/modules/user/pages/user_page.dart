@@ -9,6 +9,7 @@ import 'package:beach_service/app/shared/defaults/default_padding.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class UserPage extends StatefulWidget {
@@ -45,77 +46,97 @@ class _UserPageState extends ModularState<UserPage, UserController> {
           ),
         ],
       ),
-      drawer: widget.userProdDto == null ? DrawerWidget() : Container(),
+      drawer: widget.userProdDto == null ? DrawerWidget() : null,
       body: Align(
         alignment: Alignment.center,
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 36),
-                child: Column(
-                  children: [
-                    AvatarWidget(
-                      circleSize: 100,
-                      iconSize: 68,
-                      iconColor: Colors.white,
-                      backgroundColor: PaletaCores.primary,
-                    ),
-                    SizedBox(height: 10),
-                    Text(controller.userProdStore.nome, style: theme.textTheme.headline1.copyWith(color: Colors.black, fontSize: 28)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+        child: Observer(builder: (_) {
+          if (controller.loading) {
+            return CircularProgressIndicator();
+          } else {
+            return Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 36),
+                    child: Column(
                       children: [
-                        Icon(Icons.star, color: PaletaCores.primary),
-                        Icon(Icons.star, color: PaletaCores.primary),
-                        Icon(Icons.star, color: PaletaCores.primary),
-                      ],
-                    ),
-                    DefaultSizedBox(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Expanded(child: _estatisticas(title: "Vendas", numeros: "154", theme: theme)),
-                        Container(
-                          height: 50,
-                          child: VerticalDivider(width: 2, color: Colors.black),
+                        AvatarWidget(
+                          circleSize: 100,
+                          iconSize: 68,
+                          iconColor: Colors.white,
+                          backgroundColor: PaletaCores.primary,
                         ),
-                        Expanded(child: _estatisticas(title: "Avaliações", numeros: "127", theme: theme)),
+                        SizedBox(height: 10),
+                        Observer(
+                          builder: (_) => Text(
+                            controller.userProdStore.nome,
+                            style: theme.textTheme.headline1.copyWith(color: Colors.black, fontSize: 28),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.star, color: PaletaCores.primary),
+                            Icon(Icons.star, color: PaletaCores.primary),
+                            Icon(Icons.star, color: PaletaCores.primary),
+                          ],
+                        ),
+                        DefaultSizedBox(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Expanded(child: _estatisticas(title: "Vendas", numeros: "154", theme: theme)),
+                            Container(
+                              height: 50,
+                              child: VerticalDivider(width: 2, color: Colors.black),
+                            ),
+                            Expanded(child: _estatisticas(title: "Avaliações", numeros: "127", theme: theme)),
+                          ],
+                        ),
+                        DefaultSizedBox(),
+                        Observer(builder: (_) {
+                          List<Widget> categorias = _categorias();
+                          return Wrap(
+                            alignment: WrapAlignment.center,
+                            children: categorias,
+                          );
+                        }),
+                        SizedBox(height: 10),
+                        Expanded(
+                          child: Observer(builder: (_) {
+                            if (!controller.loading) {
+                              return ListView.builder(
+                                itemCount: controller.userProdStore?.produtos?.length ?? 0,
+                                itemBuilder: (_, index) {
+                                  return ListTile(
+                                    title: Text(controller.userProdStore.produtos[index].descricao, style: theme.textTheme.bodyText1),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                  );
+                                },
+                              );
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          }),
+                        ),
                       ],
                     ),
-                    DefaultSizedBox(),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      children: _categorias(),
-                    ),
-                    SizedBox(height: 10),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: controller.userProdStore?.produtos?.length ?? 0,
-                        itemBuilder: (_, index) {
-                          return ListTile(
-                            title: Text(controller.userProdStore.produtos[index].descricao, style: theme.textTheme.bodyText1),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: DefaultPadding.paddingButtonBottom,
-              child: GradienteButton(
-                child: Text(
-                  "FAZER PEDIDO",
-                  style: theme.textTheme.bodyText2,
+                Padding(
+                  padding: DefaultPadding.paddingButtonBottom,
+                  child: GradienteButton(
+                    child: Text(
+                      "FAZER PEDIDO",
+                      style: theme.textTheme.bodyText2,
+                    ),
+                    colors: PaletaCores.gradiente,
+                  ),
                 ),
-                colors: PaletaCores.gradiente,
-              ),
-            ),
-          ],
-        ),
+              ],
+            );
+          }
+        }),
       ),
     );
   }
