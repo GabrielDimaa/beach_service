@@ -10,6 +10,7 @@ import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -66,6 +67,9 @@ abstract class _HomeController with Store implements IFormController{
   void setMarkers(List<Marker> value) => markers.addAll(value);
 
   @action
+  void removeMarkers() => markers = Set<Marker>().asObservable();
+
+  @action
   void setContext(BuildContext value) => context = value;
 
   @computed
@@ -81,11 +85,7 @@ abstract class _HomeController with Store implements IFormController{
       users = await userService.getAllUserProd(userStore.toDto()).asObservable();
       users.removeWhere((element) => element.base.id == userStore.id);
 
-      Position position = await getLocalization();
-
-      userStore.setLat(position.latitude);
-      userStore.setLng(position.longitude);
-
+      userStore.setIsOnline(true);
       await updateMarkers();
     } catch (e) {
       rethrow;
@@ -118,10 +118,12 @@ abstract class _HomeController with Store implements IFormController{
     if (permission == LocationPermission.deniedForever) return Future.error('As permissões de localização são negadas permanentemente, não podemos solicitar permissões.');
   }
 
-  Future<Position> getLocalization() async {
+  Future<void> getLocalization() async {
     await _verificarPermissao();
+    Position position = await Geolocator.getCurrentPosition();
 
-    return await Geolocator.getCurrentPosition();
+    userStore.setLat(position.latitude);
+    userStore.setLng(position.longitude);
   }
 
   Future<void> updateMarkers() async {
@@ -157,8 +159,9 @@ abstract class _HomeController with Store implements IFormController{
       }
     });
 
-    markers.add(myMarker);
-    markers.addAll(userMarkers);
+    removeMarkers();
+    setMarkers([myMarker]);
+    setMarkers(userMarkers);
   }
 
   Future<Uint8List> _getBytesFromAsset(String path, int width) async {

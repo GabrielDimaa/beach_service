@@ -41,6 +41,8 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       'data_nascimento': dto.dataNascimento.formatedSql,
       'tipo_user': EnumTipoUserHelper.getValue(dto.tipoUser),
       'empresa': dto.empresa,
+      'lat': dto.lat,
+      'lng': dto.lng,
       'online': dto.isOnline ?? false,
     };
   }
@@ -58,7 +60,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       e['empresa'],
       e['lat'],
       e['lng'],
-      e['online'],
+      e['online'] == 0 ? false : e['online'] == 1 ? true : null,
       password: e['password'],
     );
   }
@@ -68,7 +70,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
     List<dynamic> produtosMap = e['produtos'];
     List<ProdutoDto> produtos = [];
 
-    if (produtosMap.isNotEmpty)
+    if (produtosMap != null && produtosMap.isNotEmpty)
       produtosMap.forEach((element) => produtos.add(ProdutoRepository().fromMap(element)));
 
     return UserProdDto(
@@ -93,17 +95,22 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
   }
 
   @override
-  Future<UserProdDto> getAllUserProd(UserDto userDto) async {
+  Future<List<UserProdDto>> getAllUserProd(UserDto userDto) async {
     try {
+      List<UserProdDto> listUsers = [];
+
       Response response = await api.get(
         getRoute(),
         queryParameters: {'tipo_user': EnumTipoUserHelper.getValue(userDto.tipoUser)},
       );
 
-      if (response != null)
-        return fromMapUserProd(response.data);
+      if (response?.data == null) throw Exception("Houve um problema ao sincronizar com o mapa!");
 
-      return null;
+      (response.data as List).forEach((element) {
+        listUsers.add(fromMapUserProd(element));
+      });
+
+      return listUsers;
     } on DioError catch(e) {
       if (e.response != null) throw Exception(e.response.data[0]['message']);
       throw Exception(e);

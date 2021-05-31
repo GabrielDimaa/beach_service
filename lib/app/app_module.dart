@@ -17,6 +17,7 @@ import 'package:beach_service/app/modules/produto/services/produto_service.dart'
 import 'package:beach_service/app/modules/produto/services/produto_service_interface.dart';
 import 'package:beach_service/app/modules/splach/splach_controller.dart';
 import 'package:beach_service/app/modules/splach/splach_module.dart';
+import 'package:beach_service/app/modules/user/pages/user_controller.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
 import 'package:beach_service/app/modules/user/services/user_service.dart';
@@ -45,19 +46,27 @@ class AppModule extends Module {
     Bind((i) => SplachController(i.get<AppController>())),
     Bind((i) => LoginController(i.get<ILoginService>(), i.get<AppController>())),
     Bind((i) => UserCadastroController(i.get<IUserService>())),
+    Bind((i) => UserController(i.get<HomeController>(), i.get<IUserService>())),
     Bind((i) => ProdutoController(
           i.get<IProdutoService>(),
           i.get<IUserService>(),
           i.get<UserCadastroController>(),
         )),
-    Bind((i) => HomeController(i.get<IUserService>(), i.get<ISincronizacaoService>(), i.get<AppController>())),
+    Bind((i) => HomeController(
+          i.get<IUserService>(),
+          i.get<ISincronizacaoService>(),
+          i.get<AppController>(),
+        )),
   ];
 
   @override
   final List<ModularRoute> routes = [
     ModuleRoute(Modular.initialRoute, module: SplachModule()),
     ModuleRoute("/$LOGIN_ROUTE", module: LoginModule()),
-    ModuleRoute("/$USER_ROUTE", module: UserModule(),),
+    ModuleRoute(
+      "/$USER_ROUTE",
+      module: UserModule(),
+    ),
     ModuleRoute("/$PRODUTO_ROUTE", module: ProdutoModule()),
     ModuleRoute("/$HOME_ROUTE", module: HomeModule()),
   ];

@@ -57,7 +57,7 @@ class _VendedorDialogState extends State<VendedorDialog> {
                 Expanded(
                   child: ListTile(
                     title: Text(widget.userProdDto.nome, style: theme.textTheme.bodyText1),
-                    subtitle: Text(widget.userProdDto.empresa),
+                    subtitle: Text(widget.userProdDto.empresa ?? ""),
                   ),
                 ),
                 Column(

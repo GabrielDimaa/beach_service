@@ -17,17 +17,23 @@ class SincronizacaoService implements ISincronizacaoService {
 
     HomeController controller = Modular.get<HomeController>();
 
-    //Atualizar dados do usuário
-    UserDto userDto = await controller.userService.saveOrUpdate(controller.userStore.toDto());
-    controller.userStore = UserStoreFactory.fromDto(userDto);
+    //region Sincronizar dados do usuário local
+    await controller.getLocalization();
+    controller.userStore.setIsOnline(true);
 
-    //Pegar usuários
+    UserDto userDto = controller.userStore.toDto();
+    controller.userStore = UserStoreFactory.fromDto(await controller.userService.saveOrUpdate(userDto));
+    //endregion
+
+    //region Sincronizar dados de todos usuários
     List<UserProdDto> listUsers = await controller.userService.getAllUserProd(userDto).asObservable();
     listUsers.removeWhere((element) => element.base.id == controller?.userStore?.id ?? 0);
 
     controller.users = ObservableList();
     controller.users.addAll(listUsers);
+    //endregion
 
+    //Atualizar localizações no mapa
     controller.updateMarkers();
 
     print("## Sincronização Finalizada ##");
@@ -38,7 +44,7 @@ class SincronizacaoService implements ISincronizacaoService {
     print("## Iniciando sincronização ##");
 
     if (_timer == null || !_timer.isActive) {
-      _timer = Timer.periodic(Duration(seconds: 40), (timer) async {
+      _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
         await runner();
       });
     }

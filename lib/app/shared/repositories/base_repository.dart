@@ -73,6 +73,9 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
         return fromMap(response);
 
       return null;
+    } on DioError catch(e) {
+      if (e.response != null) throw Exception(e.response.data[0]['message']);
+      throw Exception(e);
     } catch (e) {
       throw Exception(e);
     }
@@ -80,17 +83,25 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
 
   @override
   Future<T> update(T dto) async {
-    if (dto == null || dto.base.id == null) throw Exception("Não foi possível editar!");
+    try {
+      if (dto?.base?.id == null) throw Exception("Não foi possível editar!");
 
-    this.validate(dto);
-    Map<String, dynamic> map = toMap(dto);
+      this.validate(dto);
 
-    Response response = await api.put("${getRoute()}/${dto.base.id}", queryParameters: map);
+      Map<String, dynamic> data = toMap(dto);
 
-    // ver retorno do response
-    print("<<<< $response");
-    print("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
-    throw Exception("FALTA IMPLEMENTAR, APENAS QUANDO PRECISAR");
+      Response response = await api.put("${getRoute()}/${dto.base.id}", data: data);
+
+      if (response != null)
+        return fromMap(response.data);
+
+      return null;
+    } on DioError catch(e) {
+      if (e.response != null) throw Exception(e.response.data[0]['message']);
+      throw Exception(e);
+    } catch(e) {
+      throw Exception(e);
+    }
   }
 
   @override

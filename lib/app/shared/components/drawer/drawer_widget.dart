@@ -61,7 +61,7 @@ class DrawerWidget extends StatelessWidget {
                       isSelected: appController.page == HOME_PAGE,
                       onTap: () {
                         appController.setPage(HOME_PAGE);
-                        Modular.to.navigate("/$HOME_ROUTE");
+                        Modular.to.pushNamed("/$HOME_ROUTE");
                       },
                     ),
                     Visibility(
@@ -72,7 +72,7 @@ class DrawerWidget extends StatelessWidget {
                         isSelected: appController.page == PRODUTO_PAGE,
                         onTap: () {
                           appController.setPage(PRODUTO_PAGE);
-                          Modular.to.navigate("/$PRODUTO_ROUTE");
+                          Modular.to.pushNamed("/$PRODUTO_ROUTE");
                         },
                       ),
                     ),
@@ -82,7 +82,7 @@ class DrawerWidget extends StatelessWidget {
                       isSelected: appController.page == MINHA_CONTA_PAGE,
                       onTap: () {
                         appController.setPage(MINHA_CONTA_PAGE);
-                        Modular.to.navigate("/$USER_ROUTE");
+                        Modular.to.pushNamed("/$USER_ROUTE");
                       },
                     ),
                     ItemDrawer(

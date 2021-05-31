@@ -4,6 +4,7 @@ import 'package:beach_service/app/modules/user/pages/user_controller.dart';
 import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
 import 'package:beach_service/app/shared/components/categorias_tile.dart';
+import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_padding.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,7 +37,7 @@ class _UserPageState extends ModularState<UserPage, UserController> {
         iconTheme: theme.iconTheme.copyWith(color: PaletaCores.light),
         actions: [
           Visibility(
-            //visible: widget.isPerfilPessoal,
+            visible: widget.userProdDto == null,
             child: IconButton(
               icon: Icon(Icons.edit, color: PaletaCores.light),
               onPressed: () {},
@@ -44,7 +45,7 @@ class _UserPageState extends ModularState<UserPage, UserController> {
           ),
         ],
       ),
-      //drawer: DrawerWidget(),
+      drawer: widget.userProdDto == null ? DrawerWidget() : Container(),
       body: Align(
         alignment: Alignment.center,
         child: Column(

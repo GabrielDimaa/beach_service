@@ -1,3 +1,4 @@
+import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/modules/user/enums/enum_tipo_user.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/dtos/base_dto_interface.dart';
@@ -32,4 +33,17 @@ class UserDto implements IBaseDto {
     this.isOnline,
     {this.password}
   );
+
+  UserProdDto toUserProdDto() {
+    return UserProdDto(
+      base: BaseDto(this.base.id),
+      nome: this.nome,
+      email: this.email,
+      telefone: this.telefone,
+      empresa: this.empresa,
+      lat: this.lat,
+      lng: this.lng,
+      produtos: []
+    );
+  }
 }

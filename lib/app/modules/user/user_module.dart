@@ -1,3 +1,6 @@
+import 'package:beach_service/app/app_controller.dart';
+import 'package:beach_service/app/modules/home/home_controller.dart';
+import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
 import 'package:beach_service/app/modules/user/pages/cadastro/tipo_user_page.dart';
 import 'package:beach_service/app/modules/user/pages/user_controller.dart';
 import 'package:beach_service/app/modules/user/pages/user_page.dart';
@@ -13,10 +16,21 @@ import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_page
 class UserModule extends Module {
   @override
   final List<Bind> binds = [
+    //Repositories
     Bind((i) => UserRepository()),
+
+    //Services
     Bind((i) => UserService(i.get<IUserRepository>())),
-    Bind((i) => UserController()),
+
+    //Controllers
+    Bind((i) => AppController()),
+    Bind((i) => UserController(i.get<HomeController>(), i.get<IUserService>())),
     Bind((i) => UserCadastroController(i.get<IUserService>())),
+    Bind((i) => HomeController(
+          i.get<IUserService>(),
+          i.get<ISincronizacaoService>(),
+          i.get<AppController>(),
+        )),
   ];
 
   @override

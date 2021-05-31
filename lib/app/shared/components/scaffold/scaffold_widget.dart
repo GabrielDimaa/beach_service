@@ -6,7 +6,7 @@ class ScaffoldWidget extends StatefulWidget {
   final AppBar appBar;
   final FloatingActionButton floatingActionButton;
   final FloatingActionButtonLocation floatingActionButtonLocation;
-  final Drawer drawer;
+  final Widget drawer;
   final Widget body;
   final EdgeInsets padding;
   final bool isBackButton;

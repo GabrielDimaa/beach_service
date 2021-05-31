@@ -65,7 +65,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
             children: [
               Visibility(
                 visible: controller.loading,
-                child: LoadingWidget(description: "Aguarde...\nEstamos buscando sua localização."),
+                child: LoadingWidget(description: "Aguarde...\nBuscando sua localização."),
               ),
               Visibility(
                 visible: !controller.loading,

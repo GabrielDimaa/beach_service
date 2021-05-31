@@ -35,7 +35,7 @@ class ProdutoRepository extends BaseRepository<ProdutoDto> implements IProdutoRe
 
     Map<String, dynamic> data = {"produtos": [
       for(ProdutoDto it in listDto) {
-        'produtos_id': '${it.base.id}',
+        'produto_id': '${it.base.id}',
         'user_id': '${userDto.base.id}'
       }
     ]};
