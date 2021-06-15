@@ -6,8 +6,10 @@ import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
 import 'package:beach_service/app/modules/user/stores/user_prod_store.dart';
+import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:beach_service/app/shared/utils/produtos_utils.dart';
 import 'package:diacritic/diacritic.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_controller.g.dart';
@@ -61,5 +63,9 @@ abstract class _UserController with Store {
     } finally {
       setLoading(false);
     }
+  }
+
+  Future<void> fazerPedido() async {
+    Modular.to.pushNamed('/$PEDIDO_ROUTE', arguments: userProdStore.toDto());
   }
 }

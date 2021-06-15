@@ -1,3 +1,4 @@
+import 'package:beach_service/app/modules/pedido/pedido_controller.dart';
 import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/produto/services/produto_service_interface.dart';
@@ -8,6 +9,7 @@ import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_cont
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
+import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -20,8 +22,9 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
   final IProdutoService produtoService;
   final IUserService userService;
   final UserCadastroController userController;
+  final PedidoController pedidoController;
 
-  _ProdutoControllerBase(this.produtoService, this.userService, this.userController);
+  _ProdutoControllerBase(this.produtoService, this.userService, this.userController, this.pedidoController);
 
   CategoriaDto categoriaTodos = CategoriaDto(BaseDto(0), "Todos");
 
@@ -60,7 +63,11 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
     try {
       loading = true;
 
-      produtosAll = await produtoService.getAll().asObservable();
+      if ((pedidoController.pedidoStore?.userVendedor?.produtos?.length ?? 0) > 0) {
+        produtosAll.addAll(pedidoController.pedidoStore.userVendedor.produtos);
+      } else {
+        produtosAll = await produtoService.getAll().asObservable();
+      }
 
       _getCategorias();
     } catch (e) {
@@ -93,6 +100,19 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   @action
   Future<void> delete() async {}
+
+  @action
+  Future<void> avancarPedido() async {
+    pedidoController.pedidoStore.itensPedido.addAll(produtosSelect) as Observable;
+
+    Modular.to.pop();
+  }
+
+  @computed
+  bool get isPedido => pedidoController?.pedidoStore?.userVendedor != null;
+
+  @computed
+  bool get isDrawer => isPedido || (userController?.primeiroRegistro ?? false);
 
   @action
   void setProdutosSelect(ProdutoDto value) => produtosSelect.add(value);

@@ -2,6 +2,7 @@ import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/produto/produto_controller.dart';
+import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/shared/components/bar.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
 import 'package:beach_service/app/shared/components/button/rounded_button.dart';
@@ -42,41 +43,43 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
     // Theme para Button da AppBar
     final themeAppBar = theme.appBarTheme.textTheme.headline6.copyWith(fontSize: 18, fontWeight: FontWeight.bold);
     final style = themeAppBar.copyWith(color: Colors.grey);
-    return Scaffold(
-      drawer: controller.userController?.primeiroRegistro ?? false ? null : DrawerWidget(),
-      appBar: AppBar(
-        title: Row(
+    return Observer(
+      builder: (_) => Scaffold(
+        drawer: controller.isDrawer ? null : DrawerWidget(),
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Observer(builder: (_) {
+                return TextButton(
+                    child: Text(!controller.isPedido ? "Selecionar" : "Produtos", style: controller.pageController == 0 ? themeAppBar : style),
+                    onPressed: () {
+                      _pageController.animateToPage(0, duration: Duration(milliseconds: 200), curve: Curves.linear);
+                      controller.setPageController(0);
+                    });
+              }),
+              Observer(builder: (_) {
+                return TextButton(
+                    child: Text("Resumo", style: controller.pageController == 1 ? themeAppBar : style),
+                    onPressed: () {
+                      _pageController.animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.linear);
+                      controller.setPageController(1);
+                    });
+              }),
+            ],
+          ),
+          titleSpacing: 0,
+          iconTheme: theme.iconTheme.copyWith(color: PaletaCores.primaryLight),
+        ),
+        body: PageView(
+          controller: _pageController,
+          physics: BouncingScrollPhysics(),
+          allowImplicitScrolling: true,
+          onPageChanged: (int page) => controller.setPageController(page),
           children: [
-            Observer(builder: (_) {
-              return TextButton(
-                  child: Text("Selecionar", style: controller.pageController == 0 ? themeAppBar : style),
-                  onPressed: () {
-                    _pageController.animateToPage(0, duration: Duration(milliseconds: 200), curve: Curves.linear);
-                    controller.setPageController(0);
-                  });
-            }),
-            Observer(builder: (_) {
-              return TextButton(
-                  child: Text("Meus Produtos", style: controller.pageController == 1 ? themeAppBar : style),
-                  onPressed: () {
-                    _pageController.animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.linear);
-                    controller.setPageController(1);
-                  });
-            }),
+            _listaProdutosPage(context, theme),
+            _meusProdutosPage(context, theme),
           ],
         ),
-        titleSpacing: 0,
-        iconTheme: theme.iconTheme.copyWith(color: PaletaCores.primaryLight),
-      ),
-      body: PageView(
-        controller: _pageController,
-        physics: BouncingScrollPhysics(),
-        allowImplicitScrolling: true,
-        onPageChanged: (int page) => controller.setPageController(page),
-        children: [
-          _listaProdutosPage(context, theme),
-          _meusProdutosPage(context, theme),
-        ],
       ),
     );
   }
@@ -179,7 +182,7 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("Meus Produtos", style: theme.textTheme.headline4),
+                      child: Text(!controller.isPedido ? "Meus Produtos" : "Resumo", style: theme.textTheme.headline4),
                     ),
                     DefaultSizedBox(),
                     Expanded(
@@ -218,13 +221,17 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
     return GradienteButton(
       onPressed: () async {
         try {
-          await controller.save();
+          if (!controller.isPedido) {
+            await controller.save();
+          } else {
+            await controller.avancarPedido();
+          }
         } catch (e) {
           AlertDialogWidget.show(context, content: "$e");
         }
       },
       child: IconTextWidget(
-        text: "SALVAR",
+        text: !controller.isPedido ? "SALVAR" : "Confirmar itens",
         icon: Icons.save,
         color: Colors.white,
       ),

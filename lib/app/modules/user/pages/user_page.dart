@@ -113,7 +113,9 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                                 );
                               }).toList();
                             }
-                            return Column(children: produtos,);
+                            return Column(
+                              children: produtos,
+                            );
                           } else {
                             return CircularProgressIndicator();
                           }
@@ -125,11 +127,9 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                 Padding(
                   padding: DefaultPadding.paddingButtonBottom,
                   child: GradienteButton(
-                    child: Text(
-                      "FAZER PEDIDO",
-                      style: theme.textTheme.bodyText2,
-                    ),
                     colors: PaletaCores.gradiente,
+                    child: Text("FAZER PEDIDO", style: theme.textTheme.bodyText2),
+                    onPressed: controller.fazerPedido,
                   ),
                 ),
               ],
