@@ -15,9 +15,9 @@ class IconTextWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: color ?? PaletaCores.primaryLight, size: 32),
+        Icon(icon, color: color ?? PaletaCores.primaryLight, size: 28),
         SizedBox(width: 12),
-        Text(text, style: TextStyle(color: color ?? PaletaCores.primaryLight)),
+        Text(text, style: TextStyle(color: color ?? PaletaCores.primaryLight, fontSize: 16)),
       ],
     );
   }
