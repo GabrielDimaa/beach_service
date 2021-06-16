@@ -64,7 +64,9 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
       loading = true;
 
       if ((pedidoController.pedidoStore?.userVendedor?.produtos?.length ?? 0) > 0) {
-        produtosAll.addAll(pedidoController.pedidoStore.userVendedor.produtos);
+        produtosAll.addAll(pedidoController.pedidoStore.userVendedor.produtos) as ObservableList;
+
+        produtosSelect.addAll(pedidoController.pedidoStore.itensPedido ?? []) as ObservableList;
       } else {
         produtosAll = await produtoService.getAll().asObservable();
       }
@@ -103,6 +105,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   @action
   Future<void> avancarPedido() async {
+    pedidoController.pedidoStore.itensPedido.clear();
     pedidoController.pedidoStore.itensPedido.addAll(produtosSelect) as Observable;
 
     Modular.to.pop();

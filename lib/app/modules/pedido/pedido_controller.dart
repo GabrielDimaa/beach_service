@@ -22,7 +22,7 @@ abstract class _PedidoController with Store implements IFormController {
 
   @override
   Future<void> load() async {
-    await Modular.to.pushNamed('/$PRODUTO_ROUTE');
+    await toProdutoPage();
   }
 
   @override
@@ -30,4 +30,8 @@ abstract class _PedidoController with Store implements IFormController {
 
   @override
   Future<void> delete() async {}
+
+  Future<void> toProdutoPage() async {
+    await Modular.to.pushNamed('/$PRODUTO_ROUTE');
+  }
 }

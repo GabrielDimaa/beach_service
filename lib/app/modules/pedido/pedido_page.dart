@@ -62,7 +62,7 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                         SizedBox(width: 16),
                         TextButton(
                           child: Text("Alterar", style: theme.bodyText1.copyWith(color: PaletaCores.primaryLight)),
-                          onPressed: () {},
+                          onPressed: controller.toProdutoPage,
                         ),
                       ],
                     ),
