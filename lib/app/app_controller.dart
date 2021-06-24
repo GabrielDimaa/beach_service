@@ -1,4 +1,5 @@
 import 'package:beach_service/app/modules/login/stores/login_store.dart';
+import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/constants/page.dart';
 import 'package:beach_service/app/shared/preferences/auth_preferences.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
@@ -12,6 +13,9 @@ class AppController = _AppController with _$AppController;
 abstract class _AppController with Store {
   @observable
   LoginStore loginStore = LoginStore();
+
+  @observable
+  UserStore userStore = UserStore();
 
   @observable
   int page = HOME_PAGE;

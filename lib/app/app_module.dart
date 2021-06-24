@@ -55,9 +55,9 @@ class AppModule extends Module {
     Bind((i) => LoginController(i.get<ILoginService>(), i.get<AppController>())),
     Bind((i) => UserCadastroController(i.get<IUserService>())),
     Bind((i) => UserController(
-          i.get<HomeController>(),
           i.get<IUserService>(),
           i.get<IProdutoService>(),
+          i.get<AppController>()
         )),
     Bind((i) => ProdutoController(
           i.get<IProdutoService>(),
@@ -70,7 +70,7 @@ class AppModule extends Module {
           i.get<ISincronizacaoService>(),
           i.get<AppController>(),
         )),
-    Bind((i) => PedidoController(i.get<IPedidoService>()))
+    Bind((i) => PedidoController(i.get<IPedidoService>(), i.get<AppController>()))
   ];
 
   @override

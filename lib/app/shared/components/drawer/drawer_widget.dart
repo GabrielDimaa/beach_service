@@ -1,7 +1,7 @@
 import 'package:beach_service/app/app_controller.dart';
-import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/bar.dart';
+import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/components/drawer/item_drawer.dart';
 import 'package:beach_service/app/shared/constants/page.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
@@ -11,7 +11,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class DrawerWidget extends StatelessWidget {
   final AppController appController = Modular.get<AppController>();
-  final HomeController homeController = Modular.get<HomeController>();
 
   EdgeInsets get padding => EdgeInsets.all(16);
 
@@ -46,8 +45,8 @@ class DrawerWidget extends StatelessWidget {
                         ],
                       ),
                       DefaultSizedBox(),
-                      Text(homeController.userStore.nome, style: theme.bodyText2.copyWith(fontSize: 16, fontWeight: FontWeight.bold)),
-                      Text(homeController.userStore.email, style: theme.bodyText2.copyWith(fontSize: 16)),
+                      Text(appController.userStore.nome, style: theme.bodyText2.copyWith(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(appController.userStore.email, style: theme.bodyText2.copyWith(fontSize: 16)),
                     ],
                   ),
                 ),
@@ -61,18 +60,18 @@ class DrawerWidget extends StatelessWidget {
                       isSelected: appController.page == HOME_PAGE,
                       onTap: () {
                         appController.setPage(HOME_PAGE);
-                        Modular.to.pushNamed("/$HOME_ROUTE");
+                        Modular.to.navigate("/$HOME_ROUTE");
                       },
                     ),
                     Visibility(
-                      visible: homeController.userStore.isVendedor,
+                      visible: appController.userStore.isVendedor,
                       child: ItemDrawer(
                         icon: Icons.rv_hookup,
                         label: "Meus Produtos",
                         isSelected: appController.page == PRODUTO_PAGE,
                         onTap: () {
                           appController.setPage(PRODUTO_PAGE);
-                          Modular.to.pushNamed("/$PRODUTO_ROUTE");
+                          Modular.to.navigate("/$PRODUTO_ROUTE");
                         },
                       ),
                     ),
@@ -82,26 +81,26 @@ class DrawerWidget extends StatelessWidget {
                       isSelected: appController.page == MINHA_CONTA_PAGE,
                       onTap: () {
                         appController.setPage(MINHA_CONTA_PAGE);
-                        Modular.to.pushNamed("/$USER_ROUTE");
+                        Modular.to.navigate("/$USER_ROUTE");
                       },
                     ),
                     ItemDrawer(
                       icon: Icons.ballot,
                       label: "Pedidos",
                       isSelected: appController.page == PEDIDOS_PAGE,
-                      onTap: () {},
+                      onTap: () => AlertDialogWidget.show(context, content: "Não clica aí meu, vai explodir teu celular!"),
                     ),
                     ItemDrawer(
                       icon: Icons.notifications,
                       label: "Avisos",
                       isSelected: appController.page == AVISOS_PAGE,
-                      onTap: () {},
+                      onTap: () => AlertDialogWidget.show(context, content: "Não clica aí meu, vai explodir teu celular!"),
                     ),
                     ItemDrawer(
                       icon: Icons.settings,
                       label: "Configurações",
                       isSelected: appController.page == CONFIG_PAGE,
-                      onTap: () {},
+                      onTap: () => AlertDialogWidget.show(context, content: "Não clica aí meu, vai explodir teu celular!"),
                     ),
                   ],
                 ),

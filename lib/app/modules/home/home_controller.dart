@@ -10,7 +10,6 @@ import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/defaults/default_map.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,9 +25,6 @@ abstract class _HomeController with Store implements IFormController{
   final AppController appController;
 
   _HomeController(this.userService, this.sincronizacaoService, this.appController);
-
-  @observable
-  UserStore userStore = UserStore();
 
   @observable
   List<UserProdDto> users = ObservableList<UserProdDto>();
@@ -73,19 +69,19 @@ abstract class _HomeController with Store implements IFormController{
   void setContext(BuildContext value) => context = value;
 
   @computed
-  LatLng get latLng => LatLng(userStore?.lat ?? DefaultMap.lat, userStore?.lng ?? DefaultMap.lng);
+  LatLng get latLng => LatLng(appController.userStore?.lat ?? DefaultMap.lat, appController.userStore?.lng ?? DefaultMap.lng);
 
   @override
   Future<void> load() async {
     try {
       loading = true;
 
-      userStore = UserStoreFactory.fromDto(await userService.getById(appController.loginStore.id));
+      appController.userStore = UserStoreFactory.fromDto(await userService.getById(appController.loginStore.id));
 
-      users = await userService.getAllUserProd(userStore.toDto()).asObservable();
-      users.removeWhere((element) => element.base.id == userStore.id);
+      users = await userService.getAllUserProd(appController.userStore.toDto()).asObservable();
+      users.removeWhere((element) => element.base.id == appController.userStore.id);
 
-      userStore.setIsOnline(true);
+      appController.userStore.setIsOnline(true);
       await updateMarkers();
     } catch (e) {
       rethrow;
@@ -122,8 +118,8 @@ abstract class _HomeController with Store implements IFormController{
     await _verificarPermissao();
     Position position = await Geolocator.getCurrentPosition();
 
-    userStore.setLat(position.latitude);
-    userStore.setLng(position.longitude);
+    appController.userStore.setLat(position.latitude);
+    appController.userStore.setLng(position.longitude);
   }
 
   Future<void> updateMarkers() async {
@@ -132,7 +128,7 @@ abstract class _HomeController with Store implements IFormController{
 
     setMyMarker(
       Marker(
-        markerId: MarkerId(userStore.id.toString()),
+        markerId: MarkerId(appController.userStore.id.toString()),
         position: latLng,
         icon: BitmapDescriptor.fromBytes(markerIconLocal),
         infoWindow: InfoWindow(title: "Você está aqui!"),
