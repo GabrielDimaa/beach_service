@@ -9,7 +9,6 @@ import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_cont
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
-import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';

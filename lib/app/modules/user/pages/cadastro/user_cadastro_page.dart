@@ -3,7 +3,6 @@ import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_cont
 import 'package:beach_service/app/shared/components/app_bar/app_bar_title.dart';
 import 'package:beach_service/app/shared/components/busca_widget.dart';
 import 'package:beach_service/app/shared/components/button/default_button.dart';
-import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
 import 'package:beach_service/app/shared/components/form/text_form_field_widget.dart';
 import 'package:beach_service/app/shared/components/form/validator.dart';
 import 'package:beach_service/app/shared/components/icon_text_widget.dart';
@@ -13,7 +12,6 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:beach_service/app/shared/extensions/date_extension.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class UserCadastroPage extends StatefulWidget {

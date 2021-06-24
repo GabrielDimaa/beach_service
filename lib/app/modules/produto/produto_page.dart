@@ -2,7 +2,6 @@ import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/produto/produto_controller.dart';
-import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/shared/components/bar.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
 import 'package:beach_service/app/shared/components/button/rounded_button.dart';
