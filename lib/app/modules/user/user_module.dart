@@ -30,7 +30,7 @@ class UserModule extends Module {
 
     //Controllers
     Bind((i) => AppController()),
-    Bind((i) => UserController(i.get<HomeController>(), i.get<IUserService>(), i.get<IProdutoService>())),
+    Bind((i) => UserController(i.get<IUserService>(), i.get<IProdutoService>(), i.get<AppController>())),
     Bind((i) => UserCadastroController(i.get<IUserService>())),
     Bind((i) => HomeController(
           i.get<IUserService>(),

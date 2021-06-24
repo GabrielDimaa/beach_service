@@ -1,7 +1,6 @@
 import 'package:beach_service/app/modules/pedido/dtos/pedido_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
-import 'package:beach_service/app/modules/user/stores/user_prod_store.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:mobx/mobx.dart';
@@ -36,13 +35,10 @@ abstract class _PedidoStore with Store {
   DateTime dataHoraFinalizado;
 
   @action
-  void setId(int value) => id = value;
+  void setLat(double value) => lat = value;
 
   @action
   void setLng(double value) => lng = value;
-
-  @action
-  void setLat(double value) => lat = value;
 
   @action
   void setUserConsumidor(UserStore value) => userConsumidor = value;

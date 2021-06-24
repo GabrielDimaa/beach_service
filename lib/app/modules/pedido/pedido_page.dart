@@ -98,6 +98,7 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                     descricaoWidget("Nome: ${controller.pedidoStore.userVendedor.nome}"),
                     descricaoWidget("Empresa: ${controller.pedidoStore.userVendedor.empresa}"),
                     descricaoWidget("Email: ${controller.pedidoStore.userVendedor.email}"),
+                    descricaoWidget("Email: ${controller.pedidoStore.userVendedor.telefone}"),
                     //endregion
 
                     DefaultSizedBox(),
@@ -115,8 +116,10 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
             ),
             GradienteButton(
               onPressed: () async {
-                try {} catch (e) {
-                  AlertDialogWidget.show(context, content: "$e");
+                try {
+                  await controller.save();
+                } catch (e) {
+                  AlertDialogWidget.show(context, title: "Alerta!", content: "$e");
                 }
               },
               child: IconTextWidget(

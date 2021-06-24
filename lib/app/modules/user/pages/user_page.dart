@@ -128,7 +128,7 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                   padding: DefaultPadding.paddingButtonBottom,
                   child: GradienteButton(
                     colors: PaletaCores.gradiente,
-                    child: Text("FAZER PEDIDO", style: theme.textTheme.bodyText2),
+                    child: Text("ESCOLHER PRODUTOS", style: theme.textTheme.bodyText2),
                     onPressed: controller.fazerPedido,
                   ),
                 ),

@@ -33,17 +33,35 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
   @override
   Map<String, dynamic> toMap(UserDto dto) {
     return {
+      'id': dto.base?.id,
       'nome': dto.nome,
       'email': dto.email,
       'password': dto.password,
       'cep': dto.cep,
       'telefone': dto.telefone,
-      'data_nascimento': dto.dataNascimento.formatedSql,
+      'data_nascimento': dto.dataNascimento?.formatedSql,
       'tipo_user': EnumTipoUserHelper.getValue(dto.tipoUser),
       'empresa': dto.empresa,
       'lat': dto.lat,
       'lng': dto.lng,
       'online': dto.isOnline ?? false,
+    };
+  }
+
+  @override
+  Map<String, dynamic> toMapUserProd(UserProdDto dto) {
+    List<Map<String, dynamic>> produtos = [];
+    dto.produtos.forEach((e) => produtos.add({'id': dto.base.id}));
+
+    return {
+      'id': dto.base?.id,
+      'nome': dto.nome,
+      'email': dto.email,
+      'telefone': dto.telefone,
+      'empresa': dto.empresa,
+      'lat': dto.lat,
+      'lng': dto.lng,
+      'produto': produtos,
     };
   }
 

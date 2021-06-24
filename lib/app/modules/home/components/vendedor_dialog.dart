@@ -4,6 +4,7 @@ import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
 import 'package:beach_service/app/shared/components/categorias_tile.dart';
+import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:beach_service/app/shared/utils/produtos_utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,7 +78,7 @@ class _VendedorDialogState extends State<VendedorDialog> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            DefaultSizedBox(),
             Wrap(
               alignment: WrapAlignment.center,
               children: categorias.map((e) {
@@ -87,7 +88,7 @@ class _VendedorDialogState extends State<VendedorDialog> {
                 );
               }).toList(),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 50),
             GradienteButton(
               onPressed: () async {
                 Modular.to.pop();

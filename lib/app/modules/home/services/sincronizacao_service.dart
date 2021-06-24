@@ -19,15 +19,15 @@ class SincronizacaoService implements ISincronizacaoService {
 
     //region Sincronizar dados do usuário local
     await controller.getLocalization();
-    controller.userStore.setIsOnline(true);
+    controller.appController.userStore.setIsOnline(true);
 
-    UserDto userDto = controller.userStore.toDto();
-    controller.userStore = UserStoreFactory.fromDto(await controller.userService.saveOrUpdate(userDto));
+    UserDto userDto = controller.appController.userStore.toDto();
+    controller.appController.userStore = UserStoreFactory.fromDto(await controller.userService.saveOrUpdate(userDto));
     //endregion
 
     //region Sincronizar dados de todos usuários
     List<UserProdDto> listUsers = await controller.userService.getAllUserProd(userDto).asObservable();
-    listUsers.removeWhere((element) => element.base.id == controller?.userStore?.id ?? 0);
+    listUsers.removeWhere((element) => element.base.id == controller?.appController?.userStore?.id ?? 0);
 
     controller.users = ObservableList();
     controller.users.addAll(listUsers);

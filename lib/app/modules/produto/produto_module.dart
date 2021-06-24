@@ -1,3 +1,4 @@
+import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/pedido/pedido_controller.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository_interface.dart';
@@ -31,7 +32,8 @@ class ProdutoModule extends Module {
 
     //Controllers
     Bind((i) => UserCadastroController(i.get<IUserService>())),
-    Bind((i) => PedidoController(i.get<IPedidoService>())),
+    Bind((i) => PedidoController(i.get<IPedidoService>(), i.get<AppController>())),
+    Bind((i) => AppController()),
     Bind((i) => ProdutoController(
           i.get<IProdutoService>(),
           i.get<IUserService>(),

@@ -1,4 +1,4 @@
-import 'package:beach_service/app/modules/home/home_controller.dart';
+import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/produto/services/produto_service_interface.dart';
@@ -17,11 +17,11 @@ part 'user_controller.g.dart';
 class UserController = _UserController with _$UserController;
 
 abstract class _UserController with Store {
-  final HomeController homeController;
   final IUserService userService;
   final IProdutoService produtoService;
+  final AppController appController;
 
-  _UserController(this.homeController, this.userService, this.produtoService);
+  _UserController(this.userService, this.produtoService, this.appController);
 
   @observable
   UserProdStore userProdStore = UserProdStore();
@@ -45,8 +45,8 @@ abstract class _UserController with Store {
         userProdStore.produtos.sort((a, b) => removeDiacritics(a.descricao?.toLowerCase()).compareTo(b.descricao?.toLowerCase()));
         categorias.addAll(ProdutosUtils.getCategorias(dto.produtos));
       } else {
-        if (homeController.userStore.isVendedor) {
-          UserDto userDto = await userService.getById(homeController.userStore.id);
+        if (appController.userStore.isVendedor) {
+          UserDto userDto = await userService.getById(appController.userStore.id);
           List<ProdutoDto> produtos = await produtoService.getProdutosById(userDto.base.id);
 
           userProdStore = UserProdStoreFactory.fromDto(userDto.toUserProdDto());
@@ -55,7 +55,7 @@ abstract class _UserController with Store {
           userProdStore.produtos.sort((a, b) => removeDiacritics(a.descricao?.toLowerCase()).compareTo(b.descricao?.toLowerCase()));
           categorias.addAll(ProdutosUtils.getCategorias(userProdStore.produtos));
         } else {
-          userProdStore = UserProdStoreFactory.fromDto(homeController.userStore.toDto().toUserProdDto());
+          userProdStore = UserProdStoreFactory.fromDto(appController.userStore.toDto().toUserProdDto());
         }
       }
     } catch(e) {
