@@ -1,4 +1,4 @@
-import 'package:beach_service/app/modules/pedido/pedido_controller.dart';
+import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
 import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/produto/services/produto_service_interface.dart';

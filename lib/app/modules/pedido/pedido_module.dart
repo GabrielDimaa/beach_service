@@ -1,6 +1,7 @@
 import 'package:beach_service/app/app_controller.dart';
-import 'package:beach_service/app/modules/pedido/pedido_controller.dart';
-import 'package:beach_service/app/modules/pedido/pedido_page.dart';
+import 'package:beach_service/app/modules/pedido/pages/busca/pedido_busca_controller.dart';
+import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
+import 'package:beach_service/app/modules/pedido/pages/pedido_page.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository_interface.dart';
 import 'package:beach_service/app/modules/pedido/services/pedido_service.dart';
@@ -13,6 +14,7 @@ class PedidoModule extends Module {
     Bind((i) => PedidoRepository()),
     Bind((i) => PedidoService(i.get<IPedidoRepository>())),
     Bind((i) => PedidoController(i.get<IPedidoService>(), i.get<AppController>())),
+    Bind((i) => PedidoBuscaController(i.get<PedidoController>(),)),
     Bind((i) => AppController()),
   ];
 

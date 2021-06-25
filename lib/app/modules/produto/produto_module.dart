@@ -1,5 +1,5 @@
 import 'package:beach_service/app/app_controller.dart';
-import 'package:beach_service/app/modules/pedido/pedido_controller.dart';
+import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository_interface.dart';
 import 'package:beach_service/app/modules/pedido/services/pedido_service.dart';

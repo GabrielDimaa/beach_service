@@ -1,4 +1,4 @@
-import 'package:beach_service/app/modules/pedido/pedido_controller.dart';
+import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
 import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/home/home_controller.dart';
 import 'package:beach_service/app/modules/home/home_module.dart';
