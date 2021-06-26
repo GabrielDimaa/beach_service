@@ -78,7 +78,11 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       e['empresa'],
       e['lat'],
       e['lng'],
-      e['online'] == 0 ? false : e['online'] == 1 ? true : null,
+      e['online'] == 0
+          ? false
+          : e['online'] == 1
+              ? true
+              : null,
       password: e['password'],
     );
   }
@@ -88,8 +92,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
     List<dynamic> produtosMap = e['produtos'];
     List<ProdutoDto> produtos = [];
 
-    if (produtosMap != null && produtosMap.isNotEmpty)
-      produtosMap.forEach((element) => produtos.add(ProdutoRepository().fromMap(element)));
+    if (produtosMap != null && produtosMap.isNotEmpty) produtosMap.forEach((element) => produtos.add(ProdutoRepository().fromMap(element)));
 
     return UserProdDto(
       base: BaseDto(e['id']),
@@ -115,11 +118,17 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
   @override
   Future<List<UserProdDto>> getAllUserProd(UserDto userDto) async {
     try {
+      if (userDto.lat == null || userDto.lng == null) throw Exception("Houve algum problema em buscar sua localização.");
+
       List<UserProdDto> listUsers = [];
 
       Response response = await api.get(
         getRoute(),
-        queryParameters: {'tipo_user': EnumTipoUserHelper.getValue(userDto.tipoUser)},
+        queryParameters: {
+          'tipo_user': EnumTipoUserHelper.getValue(userDto.tipoUser),
+          'lat': userDto.lat,
+          'lng': userDto.lng,
+        },
       );
 
       if (response?.data == null) throw Exception("Houve um problema ao sincronizar com o mapa!");
@@ -129,10 +138,10 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       });
 
       return listUsers;
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       if (e.response != null) throw Exception(e.response.data[0]['message']);
       throw Exception(e);
-    } catch(e) {
+    } catch (e) {
       throw Exception(e);
     }
   }

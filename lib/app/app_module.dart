@@ -53,7 +53,7 @@ class AppModule extends Module {
     Bind((i) => AppController()),
     Bind((i) => SplachController(i.get<AppController>())),
     Bind((i) => LoginController(i.get<ILoginService>(), i.get<AppController>())),
-    Bind((i) => UserCadastroController(i.get<IUserService>())),
+    Bind((i) => UserCadastroController(i.get<IUserService>(), i.get<AppController>())),
     Bind((i) => UserController(
           i.get<IUserService>(),
           i.get<IProdutoService>(),
@@ -64,6 +64,7 @@ class AppModule extends Module {
           i.get<IUserService>(),
           i.get<UserCadastroController>(),
           i.get<PedidoController>(),
+          i.get<AppController>(),
         )),
     Bind((i) => HomeController(
           i.get<IUserService>(),
@@ -75,7 +76,8 @@ class AppModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ModuleRoute(Modular.initialRoute, module: PedidoModule()),
+    //ModuleRoute(Modular.initialRoute, module: PedidoModule()),
+    ModuleRoute(Modular.initialRoute, module: SplachModule()),
     ModuleRoute("/$LOGIN_ROUTE", module: LoginModule()),
     ModuleRoute("/$USER_ROUTE", module: UserModule()),
     ModuleRoute("/$PRODUTO_ROUTE", module: ProdutoModule()),

@@ -1,3 +1,5 @@
+import 'package:beach_service/app/app_controller.dart';
+import 'package:beach_service/app/modules/home/services/sincronizacao_service.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
@@ -14,8 +16,9 @@ class UserCadastroController = _UserCadastroControllerBase with _$UserCadastroCo
 
 abstract class _UserCadastroControllerBase with Store implements IFormController {
   final IUserService userService;
+  final AppController appController;
 
-  _UserCadastroControllerBase(this.userService);
+  _UserCadastroControllerBase(this.userService, this.appController);
 
   @observable
   UserStore userStore = UserStore();
@@ -41,13 +44,20 @@ abstract class _UserCadastroControllerBase with Store implements IFormController
        await Modular.to.pushNamed("/$PRODUTO_ROUTE");
     } else {
       loading = true;
+      Modular.get<SincronizacaoService>().stop();
 
       if (userStore != null) {
         UserDto userDto = userStore.toDto();
         UserDto dto = await userService.saveOrUpdate(userDto);
 
-        if (dto != null)
+        if (primeiroRegistro && dto != null)
           Modular.to.pushNamed(Modular.initialRoute);
+        else {
+          appController.userStore = UserStoreFactory.fromDto(dto);
+          Modular.get<SincronizacaoService>().start();
+
+          Modular.to.pop();
+        }
       }
 
       loading = false;

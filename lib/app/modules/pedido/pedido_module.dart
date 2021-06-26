@@ -7,6 +7,7 @@ import 'package:beach_service/app/modules/pedido/repositories/pedido_repository.
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository_interface.dart';
 import 'package:beach_service/app/modules/pedido/services/pedido_service.dart';
 import 'package:beach_service/app/modules/pedido/services/pedido_service_interface.dart';
+import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class PedidoModule extends Module {
@@ -22,7 +23,12 @@ class PedidoModule extends Module {
   @override
   final List<ModularRoute> routes = [
     //ChildRoute(Modular.initialRoute, child: (_, args) => PedidoPage(userVendedor: args.data,)),
-    ChildRoute(Modular.initialRoute, child: (_, args) => PedidoBuscaPage()),
+    //ChildRoute(Modular.initialRoute, child: (_, args) => PedidoBuscaPage()),
+
+
+    ChildRoute(Modular.initialRoute, child: (_, args) => PedidoPage(userVendedor: args.data,)),
+    ChildRoute("/$PEDIDO_BUSCA_ROUTE", child: (_, args) => PedidoBuscaPage()),
+
   ];
 
 }

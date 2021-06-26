@@ -41,7 +41,7 @@ class _UserPageState extends ModularState<UserPage, UserController> {
             visible: widget.userProdDto == null,
             child: IconButton(
               icon: Icon(Icons.edit, color: PaletaCores.light),
-              onPressed: () {},
+              onPressed: () async => await controller.editarPerfil(),
             ),
           ),
         ],
@@ -124,12 +124,15 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: DefaultPadding.paddingButtonBottom,
-                  child: GradienteButton(
-                    colors: PaletaCores.gradiente,
-                    child: Text("ESCOLHER PRODUTOS", style: theme.textTheme.bodyText2),
-                    onPressed: controller.fazerPedido,
+                Visibility(
+                  visible: !(widget.userProdDto == null),
+                  child: Padding(
+                    padding: DefaultPadding.paddingButtonBottom,
+                    child: GradienteButton(
+                      colors: PaletaCores.gradiente,
+                      child: Text("ESCOLHER PRODUTOS", style: theme.textTheme.bodyText2),
+                      onPressed: controller.fazerPedido,
+                    ),
                   ),
                 ),
               ],

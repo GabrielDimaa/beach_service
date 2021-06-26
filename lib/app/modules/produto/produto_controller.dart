@@ -1,3 +1,4 @@
+import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
 import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
@@ -22,8 +23,15 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
   final IUserService userService;
   final UserCadastroController userController;
   final PedidoController pedidoController;
+  final AppController appController;
 
-  _ProdutoControllerBase(this.produtoService, this.userService, this.userController, this.pedidoController);
+  _ProdutoControllerBase(
+    this.produtoService,
+    this.userService,
+    this.userController,
+    this.pedidoController,
+    this.appController,
+  );
 
   CategoriaDto categoriaTodos = CategoriaDto(BaseDto(0), "Todos");
 
@@ -63,11 +71,13 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
       loading = true;
 
       if ((pedidoController.pedidoStore?.userVendedor?.produtos?.length ?? 0) > 0) {
-        produtosAll.addAll(pedidoController.pedidoStore.userVendedor.produtos) as ObservableList;
+        produtosAll.addAll(pedidoController.pedidoStore.userVendedor.produtos);
 
-        produtosSelect.addAll(pedidoController.pedidoStore.itensPedido ?? []) as ObservableList;
+        produtosSelect.addAll(pedidoController.pedidoStore.itensPedido ?? []);
       } else {
         produtosAll = await produtoService.getAll().asObservable();
+        if (appController.userStore.isVendedor)
+          produtosSelect = await produtoService.getProdutosById(appController.userStore.id).asObservable();
       }
 
       _getCategorias();
@@ -84,19 +94,16 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
     List<ProdutoDto> listProdDto = [];
 
-    UserDto userDto = userController.userStore.toDto();
-
-    if (userController.primeiroRegistro) {
+    if (userController?.primeiroRegistro ?? false) {
+      UserDto userDto = userController.userStore.toDto();
       userDto = await userService.saveOrUpdate(userDto);
 
-      if (userDto.base.id != null)
-        listProdDto = await produtoService.saveProdutos(produtosSelect, userDto);
+      if (userDto.base.id != null) listProdDto = await produtoService.saveProdutos(produtosSelect, userDto);
     } else {
-      listProdDto = await produtoService.saveProdutos(produtosSelect, userDto);
+      listProdDto = await produtoService.saveProdutos(produtosSelect, appController.userStore.toDto());
     }
 
-    if (listProdDto.isNotEmpty)
-      Modular.to.pushNamed(Modular.initialRoute);
+    if (listProdDto.isNotEmpty) Modular.to.pushNamed(Modular.initialRoute);
   }
 
   @action
@@ -121,8 +128,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   @action
   void removeProdutosSelect(ProdutoDto value) {
-    if (isSelect(value))
-      produtosSelect.remove(value);
+    if (isSelect(value)) produtosSelect.remove(value);
   }
 
   @action

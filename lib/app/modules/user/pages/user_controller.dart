@@ -58,7 +58,7 @@ abstract class _UserController with Store {
           userProdStore = UserProdStoreFactory.fromDto(appController.userStore.toDto().toUserProdDto());
         }
       }
-    } catch(e) {
+    } catch (e) {
       rethrow;
     } finally {
       setLoading(false);
@@ -67,5 +67,10 @@ abstract class _UserController with Store {
 
   Future<void> fazerPedido() async {
     Modular.to.pushNamed('/$PEDIDO_ROUTE', arguments: userProdStore.toDto());
+  }
+
+  Future<void> editarPerfil() async {
+    await Modular.to.pushNamed('/$USER_ROUTE/$USER_CADASTRO_ROUTE', arguments: appController.userStore);
+    load(null);
   }
 }

@@ -22,7 +22,7 @@ class SplachModule extends Module {
     //Controllers
     Bind((i) => AppController()),
     Bind((i) => SplachController(i.get<AppController>())),
-    Bind((i) => UserCadastroController(i.get<IUserService>())),
+    Bind((i) => UserCadastroController(i.get<IUserService>(), i.get<AppController>())),
     Bind((i) => HomeController(i.get<IUserService>(), i.get<ISincronizacaoService>(), i.get<AppController>())),
   ];
 

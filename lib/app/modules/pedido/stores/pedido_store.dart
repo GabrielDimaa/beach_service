@@ -1,7 +1,6 @@
 import 'package:beach_service/app/modules/pedido/dtos/pedido_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
-import 'package:beach_service/app/modules/user/stores/user_prod_store.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:mobx/mobx.dart';

@@ -23,7 +23,7 @@ class HomeModule extends Module {
     //Controllers
     Bind((i) => AppController()),
     Bind((i) => HomeController(i.get<IUserService>(), i.get<ISincronizacaoService>(), i.get<AppController>())),
-    Bind((i) => UserCadastroController(i.get<IUserService>())),
+    Bind((i) => UserCadastroController(i.get<IUserService>(), i.get<AppController>())),
   ];
 
   @override

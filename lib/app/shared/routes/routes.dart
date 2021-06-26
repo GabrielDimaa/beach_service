@@ -9,3 +9,4 @@ const String PRODUTO_ROUTE = "produto";
 const String HOME_ROUTE = "home";
 
 const String PEDIDO_ROUTE = "pedido";
+const String PEDIDO_BUSCA_ROUTE = "pedido_busca";

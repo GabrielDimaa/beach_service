@@ -1,5 +1,6 @@
 import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_controller.dart';
+import 'package:beach_service/app/modules/user/stores/user_store.dart';
 import 'package:beach_service/app/shared/components/app_bar/app_bar_title.dart';
 import 'package:beach_service/app/shared/components/busca_widget.dart';
 import 'package:beach_service/app/shared/components/button/default_button.dart';
@@ -15,9 +16,9 @@ import 'package:beach_service/app/shared/extensions/date_extension.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class UserCadastroPage extends StatefulWidget {
-  final String title;
+  final UserStore userStore;
 
-  const UserCadastroPage({Key key, this.title = "Cadastro"}) : super(key: key);
+  const UserCadastroPage({Key key, this.userStore}) : super(key: key);
 
   @override
   _UserCadastroPageState createState() => _UserCadastroPageState();
@@ -41,7 +42,12 @@ class _UserCadastroPageState extends State<UserCadastroPage> {
   void initState() {
     super.initState();
 
+    _init();
     _updateTextControllers();
+  }
+
+  void _init() {
+    if (widget.userStore != null) controller.userStore = widget.userStore;
   }
 
   void _updateTextControllers() {
@@ -76,7 +82,7 @@ class _UserCadastroPageState extends State<UserCadastroPage> {
               padding: EdgeInsets.only(bottom: bottomScroll ?? 0),
               child: Column(
                 children: [
-                  AppBarTitleWidget(title: widget.title),
+                  AppBarTitleWidget(title: "Cadastro"),
                   GestureDetector(
                     onTap: () {},
                     child: Row(
@@ -107,7 +113,7 @@ class _UserCadastroPageState extends State<UserCadastroPage> {
           ),
           DefaultButton(
             onPressed: _save,
-            child: IconTextWidget(text: "REGISTRAR", icon: Icons.save),
+            child: IconTextWidget(text: widget.userStore == null ? "REGISTRAR" : "SALVAR", icon: Icons.save),
           ),
         ],
       ),
@@ -142,22 +148,36 @@ class _UserCadastroPageState extends State<UserCadastroPage> {
             ),
           ),
           DefaultSizedBox(),
-          TextFormFieldWidget(
-            label: "Email",
-            controller: _controllerEmail,
-            keyboardType: TextInputType.emailAddress,
-            onSaved: controller.userStore.setEmail,
-            validator: InputValidator(EmailValidator()).validate,
+          Visibility(
+            visible: widget.userStore == null,
+            child: Column(
+              children: [
+                TextFormFieldWidget(
+                  label: "Email",
+                  controller: _controllerEmail,
+                  keyboardType: TextInputType.emailAddress,
+                  onSaved: controller.userStore.setEmail,
+                  validator: InputValidator(EmailValidator()).validate,
+                ),
+                DefaultSizedBox(),
+              ],
+            ),
           ),
-          DefaultSizedBox(),
-          TextFormFieldWidget(
-            label: "Senha",
-            controller: _controllerPassword,
-            obscure: true,
-            onSaved: controller.userStore.setPassword,
-            validator: InputValidator(PasswordValidator()).validate,
+          Visibility(
+            visible: widget.userStore == null,
+            child: Column(
+              children: [
+                TextFormFieldWidget(
+                  label: "Senha",
+                  controller: _controllerPassword,
+                  obscure: true,
+                  onSaved: controller.userStore.setPassword,
+                  validator: InputValidator(PasswordValidator()).validate,
+                ),
+                DefaultSizedBox(),
+              ],
+            ),
           ),
-          DefaultSizedBox(),
           TextFormFieldWidget(
             label: "CEP",
             controller: _controllerCep,

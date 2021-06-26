@@ -31,7 +31,7 @@ class ProdutoModule extends Module {
     Bind((i) => PedidoService(i.get<IPedidoRepository>())),
 
     //Controllers
-    Bind((i) => UserCadastroController(i.get<IUserService>())),
+    Bind((i) => UserCadastroController(i.get<IUserService>(), i.get<AppController>())),
     Bind((i) => PedidoController(i.get<IPedidoService>(), i.get<AppController>())),
     Bind((i) => AppController()),
     Bind((i) => ProdutoController(
@@ -39,6 +39,7 @@ class ProdutoModule extends Module {
           i.get<IUserService>(),
           i.get<UserCadastroController>(),
           i.get<PedidoController>(),
+          i.get<AppController>(),
         )),
   ];
 

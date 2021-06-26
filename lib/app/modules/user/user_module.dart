@@ -31,7 +31,7 @@ class UserModule extends Module {
     //Controllers
     Bind((i) => AppController()),
     Bind((i) => UserController(i.get<IUserService>(), i.get<IProdutoService>(), i.get<AppController>())),
-    Bind((i) => UserCadastroController(i.get<IUserService>())),
+    Bind((i) => UserCadastroController(i.get<IUserService>(), i.get<AppController>())),
     Bind((i) => HomeController(
           i.get<IUserService>(),
           i.get<ISincronizacaoService>(),
@@ -42,7 +42,7 @@ class UserModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ChildRoute(Modular.initialRoute, child: (_, args) => UserPage(userProdDto: args.data)),
-    ChildRoute("/$USER_CADASTRO_ROUTE", child: (_, args) => UserCadastroPage()),
+    ChildRoute("/$USER_CADASTRO_ROUTE", child: (_, args) => UserCadastroPage(userStore: args.data,)),
     ChildRoute("/$TIPO_USER_ROUTE", child: (_, args) => TipoUserPage()),
   ];
 }

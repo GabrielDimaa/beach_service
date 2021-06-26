@@ -4,7 +4,6 @@ import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_padding.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class PedidoBuscaPage extends StatefulWidget {
@@ -26,7 +25,7 @@ class _PedidoBuscaPageState extends ModularState<PedidoBuscaPage, PedidoBuscaCon
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text("Seus Pedidos"), iconTheme: theme.iconTheme.copyWith(color: PaletaCores.light)),
+      appBar: AppBar(title: Text("Seus Pedidos"), iconTheme: theme.iconTheme.copyWith(color: PaletaCores.primaryLight)),
       drawer: DrawerWidget(),
       body: Padding(
         padding: DefaultPadding.paddingList,

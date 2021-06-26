@@ -88,7 +88,10 @@ class DrawerWidget extends StatelessWidget {
                       icon: Icons.ballot,
                       label: "Pedidos",
                       isSelected: appController.page == PEDIDOS_PAGE,
-                      onTap: () => AlertDialogWidget.show(context, content: "Não clica aí meu, vai explodir teu celular!"),
+                      onTap: () {
+                        appController.setPage(PEDIDOS_PAGE);
+                        Modular.to.navigate('/$PEDIDO_ROUTE/$PEDIDO_BUSCA_ROUTE');
+                      },
                     ),
                     ItemDrawer(
                       icon: Icons.notifications,

@@ -78,6 +78,8 @@ abstract class _HomeController with Store implements IFormController{
 
       appController.userStore = UserStoreFactory.fromDto(await userService.getById(appController.loginStore.id));
 
+      await getLocalization();
+
       users = await userService.getAllUserProd(appController.userStore.toDto()).asObservable();
       users.removeWhere((element) => element.base.id == appController.userStore.id);
 
@@ -123,8 +125,8 @@ abstract class _HomeController with Store implements IFormController{
   }
 
   Future<void> updateMarkers() async {
-    final Uint8List markerIconLocal = await _getBytesFromAsset('assets/images/local-marker.png', 90);
-    final Uint8List markerIconUsers = await _getBytesFromAsset('assets/images/user-marker.png', 120);
+    final Uint8List markerIconLocal = await _getBytesFromAsset('assets/images/local-marker.png', 70);
+    final Uint8List markerIconUsers = await _getBytesFromAsset('assets/images/user-marker.png', 100);
 
     setMyMarker(
       Marker(
