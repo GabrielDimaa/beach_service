@@ -1,5 +1,6 @@
 import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/pedido/pages/busca/pedido_busca_controller.dart';
+import 'package:beach_service/app/modules/pedido/pages/busca/pedido_busca_page.dart';
 import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
 import 'package:beach_service/app/modules/pedido/pages/pedido_page.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository.dart';
@@ -14,13 +15,14 @@ class PedidoModule extends Module {
     Bind((i) => PedidoRepository()),
     Bind((i) => PedidoService(i.get<IPedidoRepository>())),
     Bind((i) => PedidoController(i.get<IPedidoService>(), i.get<AppController>())),
-    Bind((i) => PedidoBuscaController(i.get<PedidoController>(),)),
+    Bind((i) => PedidoBuscaController(i.get<IPedidoRepository>(), i.get<IPedidoService>(), i.get<PedidoController>(),)),
     Bind((i) => AppController()),
   ];
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute(Modular.initialRoute, child: (_, args) => PedidoPage(userVendedor: args.data,)),
+    //ChildRoute(Modular.initialRoute, child: (_, args) => PedidoPage(userVendedor: args.data,)),
+    ChildRoute(Modular.initialRoute, child: (_, args) => PedidoBuscaPage()),
   ];
 
 }

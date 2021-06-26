@@ -17,7 +17,7 @@ abstract class _PedidoController with Store implements IFormController {
   _PedidoController(this.pedidoService, this.appController);
 
   @observable
-  PedidoStore pedidoStore = PedidoStore();
+  PedidoStore pedidoStore = PedidoStoreFactory.novo();
 
   @observable
   bool loading;
