@@ -34,6 +34,7 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
 
   Future<void> _init() async {
     await controller.load();
+    controller.setContext(context);
   }
 
   @override
@@ -69,21 +70,23 @@ class ProdutoPageState extends ModularState<ProdutoPage, ProdutoController> {
           titleSpacing: 0,
           iconTheme: theme.iconTheme.copyWith(color: PaletaCores.primaryLight),
         ),
-        body: Observer(builder: (_) {
-          if (controller.loading)
-            return Center(child: CircularProgressIndicator());
-          else
-            return PageView(
-              controller: _pageController,
-              physics: BouncingScrollPhysics(),
-              allowImplicitScrolling: true,
-              onPageChanged: (int page) => controller.setPageController(page),
-              children: [
-                _listaProdutosPage(context, theme),
-                _meusProdutosPage(context, theme),
-              ],
-            );
-        },),
+        body: Observer(
+          builder: (_) {
+            if (controller.loading)
+              return Center(child: CircularProgressIndicator());
+            else
+              return PageView(
+                controller: _pageController,
+                physics: BouncingScrollPhysics(),
+                allowImplicitScrolling: true,
+                onPageChanged: (int page) => controller.setPageController(page),
+                children: [
+                  _listaProdutosPage(context, theme),
+                  _meusProdutosPage(context, theme),
+                ],
+              );
+          },
+        ),
       ),
     );
   }

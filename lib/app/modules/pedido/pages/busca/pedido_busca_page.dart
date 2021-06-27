@@ -3,8 +3,12 @@ import 'package:beach_service/app/modules/pedido/pages/busca/pedido_busca_contro
 import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
 import 'package:beach_service/app/shared/defaults/default_padding.dart';
+import 'package:beach_service/app/shared/routes/routes.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_svg/svg.dart';
 
 class PedidoBuscaPage extends StatefulWidget {
   @override
@@ -29,25 +33,56 @@ class _PedidoBuscaPageState extends ModularState<PedidoBuscaPage, PedidoBuscaCon
       drawer: DrawerWidget(),
       body: Padding(
         padding: DefaultPadding.paddingList,
-        child: ListView.separated(
-          separatorBuilder: (_, __) => Container(height: 0.5, color: Colors.grey[300]),
-          itemCount: 15,
-          itemBuilder: (_, index) {
-            return ListTile(
-              leading: AvatarWidget(
-                backgroundColor: PaletaCores.primaryLight,
-                circleSize: 48,
-                iconSize: 30,
-                iconColor: Colors.white,
-              ),
-              title: Text("Gabriel de Matos", style: theme.textTheme.bodyText1),
-              subtitle: Text("16/12/2020 13:50"),
-              trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right)),
-              onTap: () {},
-            );
+        child: Observer(
+          builder: (_) {
+            if (controller.loading) return Center(child: CircularProgressIndicator());
+            if ((controller.pedidos?.length ?? 0) > 0)
+              return ListView.separated(
+                separatorBuilder: (_, __) => Container(height: 0.5, color: Colors.grey[300]),
+                itemCount: controller.pedidos?.length ?? 0,
+                itemBuilder: (_, index) {
+                  String nome = "";
+                  if (controller.pedidoController.appController.userStore.isVendedor)
+                    nome = controller.pedidos[index].userConsumidor.nome;
+                  else
+                    nome = controller.pedidos[index].userVendedor.nome;
+                  return ListTile(
+                    leading: AvatarWidget(
+                      backgroundColor: PaletaCores.primaryLight,
+                      circleSize: 48,
+                      iconSize: 30,
+                      iconColor: Colors.white,
+                    ),
+                    title: Text(nome, style: theme.textTheme.bodyText1),
+                    subtitle: Text(controller.pedidos[index].dataHoraCriado.toString()),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    onTap: () => Modular.to.pushNamed("/$PEDIDO_ROUTE", arguments: controller.pedidos[index]),
+                  );
+                },
+              );
+            else
+              return pedidosEmptyWidget(theme);
           },
         ),
       ),
+    );
+  }
+
+  Widget pedidosEmptyWidget(ThemeData theme) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(
+          'assets/images/empty.svg',
+          height: 200,
+          semanticsLabel: 'Acme Logo',
+        ),
+        Text(
+          "Nem um pedido realizado.\nFaça um pedido para aparecer aqui.",
+          style: theme.textTheme.bodyText1,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }

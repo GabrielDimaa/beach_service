@@ -16,7 +16,7 @@ class PedidoModule extends Module {
     Bind((i) => PedidoRepository()),
     Bind((i) => PedidoService(i.get<IPedidoRepository>())),
     Bind((i) => PedidoController(i.get<IPedidoService>(), i.get<AppController>())),
-    Bind((i) => PedidoBuscaController(i.get<IPedidoRepository>(), i.get<IPedidoService>(), i.get<PedidoController>(),)),
+    Bind((i) => PedidoBuscaController(i.get<IPedidoService>(), i.get<PedidoController>(),)),
     Bind((i) => AppController()),
   ];
 

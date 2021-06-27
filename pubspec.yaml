@@ -16,6 +16,7 @@ dependencies:
   dio: ^4.0.0
   flutter_mobx: ^1.1.0
   flutter_modular: ^3.1.0
+  flutter_svg: ^0.22.0
   geolocator: ^7.0.3
   google_maps_flutter: ^2.0.3
   jwt_decoder: ^2.0.1
@@ -36,6 +37,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/user-marker.png
     - assets/images/local-marker.png
+    - assets/images/empty.svg
   fonts:
     - family: NotoSansJP
       fonts:

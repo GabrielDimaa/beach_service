@@ -5,4 +5,6 @@ import 'package:beach_service/app/shared/services/base_service.dart';
 
 class PedidoService extends BaseService<PedidoDto, IPedidoRepository> implements IPedidoService {
   PedidoService(IPedidoRepository baseRepository) : super(baseRepository);
+
+
 }

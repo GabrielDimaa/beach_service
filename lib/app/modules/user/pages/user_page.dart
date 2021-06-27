@@ -35,12 +35,12 @@ class _UserPageState extends ModularState<UserPage, UserController> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        iconTheme: theme.iconTheme.copyWith(color: PaletaCores.light),
+        iconTheme: theme.iconTheme.copyWith(color: PaletaCores.primaryLight),
         actions: [
           Visibility(
             visible: widget.userProdDto == null,
             child: IconButton(
-              icon: Icon(Icons.edit, color: PaletaCores.light),
+              icon: Icon(Icons.edit, color: PaletaCores.primaryLight),
               onPressed: () async => await controller.editarPerfil(),
             ),
           ),

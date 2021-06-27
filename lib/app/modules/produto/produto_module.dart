@@ -1,4 +1,6 @@
 import 'package:beach_service/app/app_controller.dart';
+import 'package:beach_service/app/modules/home/services/sincronizacao_service.dart';
+import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
 import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository_interface.dart';
@@ -40,6 +42,7 @@ class ProdutoModule extends Module {
           i.get<UserCadastroController>(),
           i.get<PedidoController>(),
           i.get<AppController>(),
+          i.get<ISincronizacaoService>(),
         )),
   ];
 

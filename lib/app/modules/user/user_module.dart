@@ -1,5 +1,6 @@
 import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/home/home_controller.dart';
+import 'package:beach_service/app/modules/home/services/sincronizacao_service.dart';
 import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
 import 'package:beach_service/app/modules/produto/repositories/produto_repository.dart';
 import 'package:beach_service/app/modules/produto/repositories/produto_repository_interface.dart';

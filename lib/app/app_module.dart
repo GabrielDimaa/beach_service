@@ -65,6 +65,7 @@ class AppModule extends Module {
           i.get<UserCadastroController>(),
           i.get<PedidoController>(),
           i.get<AppController>(),
+          i.get<ISincronizacaoService>(),
         )),
     Bind((i) => HomeController(
           i.get<IUserService>(),

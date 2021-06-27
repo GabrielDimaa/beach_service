@@ -17,16 +17,23 @@ abstract class BaseRepository<T extends IBaseDto> implements IBaseRepository<T> 
 
   @override
   Future<List<T>> getAll({dynamic params}) async {
-    List response = (await api.get(getRoute(), queryParameters: params)).data;
-    List<T> list = [];
+    try {
+      List response = (await api.get(getRoute(), queryParameters: params)).data;
+      List<T> list = [];
 
-    if (response.isNotEmpty) {
-      response.forEach((e) {
-        list.add(fromMap(e));
-      });
+      if (response.isNotEmpty) {
+        response.forEach((e) {
+          list.add(fromMap(e));
+        });
+      }
+
+      return list;
+    } on DioError catch(e) {
+      if (e.response != null) throw Exception(e.response.data[0]['message']);
+      throw Exception(e);
+    } catch (e) {
+      throw Exception(e);
     }
-
-    return list;
   }
 
   @override

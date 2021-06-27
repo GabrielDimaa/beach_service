@@ -32,7 +32,7 @@ class ProdutoRepository extends BaseRepository<ProdutoDto> implements IProdutoRe
 
   @override
   Future<List<ProdutoDto>> saveOrUpdate(List<ProdutoDto> listDto, UserDto userDto) async {
-    if (listDto.isEmpty) throw Exception("Nem um produto selecionado!");
+    if (listDto.isEmpty) throw Exception("Nenhum produto selecionado!");
 
     Map<String, dynamic> data = {"produtos": [
       for(ProdutoDto it in listDto) {

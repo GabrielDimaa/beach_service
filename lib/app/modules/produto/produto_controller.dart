@@ -1,4 +1,5 @@
 import 'package:beach_service/app/app_controller.dart';
+import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
 import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
 import 'package:beach_service/app/modules/produto/dtos/categoria_dto.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
@@ -11,6 +12,7 @@ import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.d
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:diacritic/diacritic.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
@@ -24,6 +26,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
   final UserCadastroController userController;
   final PedidoController pedidoController;
   final AppController appController;
+  final ISincronizacaoService sincronizacaoService;
 
   _ProdutoControllerBase(
     this.produtoService,
@@ -31,6 +34,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
     this.userController,
     this.pedidoController,
     this.appController,
+    this.sincronizacaoService,
   );
 
   CategoriaDto categoriaTodos = CategoriaDto(BaseDto(0), "Todos");
@@ -59,11 +63,17 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
   @observable
   bool loading = false;
 
+  @observable
+  BuildContext context;
+
   @action
   void setPageController(int value) => pageController = value;
 
   @action
   void setLoading(bool value) => loading = value;
+
+  @action
+  void setContext(BuildContext value) => context = value;
 
   @action
   Future<void> load() async {
@@ -76,8 +86,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
         produtosSelect.addAll(pedidoController.pedidoStore.itensPedido ?? []);
       } else {
         produtosAll = await produtoService.getAll().asObservable();
-        if (appController.userStore.isVendedor)
-          produtosSelect = await produtoService.getProdutosById(appController.userStore.id).asObservable();
+        if (appController.userStore.isVendedor) await getSelecionados();
       }
 
       _getCategorias();
@@ -99,11 +108,15 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
       userDto = await userService.saveOrUpdate(userDto);
 
       if (userDto.base.id != null) listProdDto = await produtoService.saveProdutos(produtosSelect, userDto);
-    } else {
-      listProdDto = await produtoService.saveProdutos(produtosSelect, appController.userStore.toDto());
-    }
 
-    if (listProdDto.isNotEmpty) Modular.to.pushNamed(Modular.initialRoute);
+      if (listProdDto.isNotEmpty) Modular.to.pushNamed(Modular.initialRoute);
+    } else {
+      sincronizacaoService.stop();
+      listProdDto = await produtoService.saveProdutos(produtosSelect, appController.userStore.toDto());
+      sincronizacaoService.start();
+
+      AlertDialogWidget.show(context, content: "Seus produtos foram salvos!");
+    }
   }
 
   @action
@@ -173,5 +186,13 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   bool isSelect(ProdutoDto value) {
     return produtosSelect.any((element) => element.base.id == value.base.id);
+  }
+
+  Future<void> getSelecionados() async {
+    List<ProdutoDto> lista = await produtoService.getProdutosById(appController.userStore.id);
+
+    produtosAll.forEach((element) {
+      if (lista.any((e) => e.base.id == element.base.id)) setProdutosSelect(element);
+    });
   }
 }

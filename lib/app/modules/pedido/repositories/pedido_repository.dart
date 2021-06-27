@@ -23,7 +23,7 @@ class PedidoRepository extends BaseRepository<PedidoDto> implements IPedidoRepos
   @override
   Map<String, dynamic> toMap(PedidoDto dto) {
     List<Map<String, dynamic>> itens = [];
-    dto.itensPedido.forEach((e) => itens.add({'id': e.base.id}));
+    dto.itensPedido.forEach((e) => itens.add({'produto_id': e.base.id}));
 
     return {
       'id': dto.base?.id,
