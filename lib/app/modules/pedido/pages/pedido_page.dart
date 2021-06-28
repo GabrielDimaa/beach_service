@@ -135,5 +135,3 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
     );
   }
 }
-
-// Enviar pedido

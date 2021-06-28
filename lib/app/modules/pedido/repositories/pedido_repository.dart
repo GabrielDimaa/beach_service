@@ -6,10 +6,11 @@ import 'package:beach_service/app/modules/user/repositories/user_repository.dart
 import 'package:beach_service/app/shared/api/api.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/repositories/base_repository.dart';
+import 'package:beach_service/app/shared/extensions/string_extension.dart';
 
 class PedidoRepository extends BaseRepository<PedidoDto> implements IPedidoRepository {
   @override
-  String getRoute() => "${BaseURL.baseURL}/pedidos";
+  String getRoute() => "${BaseURL.baseURL}/pedido";
 
   static Api api = Api();
 
@@ -29,28 +30,32 @@ class PedidoRepository extends BaseRepository<PedidoDto> implements IPedidoRepos
       'id': dto.base?.id,
       'lat': dto.lat,
       'lng': dto.lng,
-      'user_vendedor': UserRepository().toMapUserProd(dto.userVendedor),
-      'user_consumidor': UserRepository().toMap(dto.userConsumidor),
+      'id_consumidor': dto.userConsumidor.base.id,
+      'id_vendedor': dto.userVendedor.base.id,
       'itens': itens,
     };
   }
 
   @override
   PedidoDto fromMap(Map<String, dynamic> e) {
-    List<dynamic> produtosMap = e['itens'];
+    List<dynamic> produtosMap = [];
     List<ProdutoDto> produtos = [];
 
-    if (produtosMap != null && produtosMap.isNotEmpty)
-      produtosMap.forEach((element) => produtos.add(ProdutoRepository().fromMap(element)));
+    if (e.containsKey('itens'))
+      produtosMap = e['itens'];
+
+    if (produtosMap != null && produtosMap.isNotEmpty) produtosMap.forEach((element) {
+      produtos.add(ProdutoRepository().fromMap(element));
+    });
 
     return PedidoDto(
       BaseDto(e['id']),
       e['lat'],
       e['lng'],
-      UserRepository().fromMapUserProd(e['user_vendedor']),
-      UserRepository().fromMap(e['user_consumidor']),
-      e['data_hora_criado'],
-      e['data_hora_finalizado'],
+      e.containsKey('user_vendedor') ? UserRepository().fromMapUserProd(e['user_vendedor']) : null,
+      e.containsKey('user_consumidor') ? UserRepository().fromMap(e['user_consumidor']) : null,
+      e['data_hora_criado'].toString().parseToDateTimeWithHour(),
+      e['data_hora_finalizado']?.toString()?.parseToDateTimeWithHour(),
       produtos,
     );
   }

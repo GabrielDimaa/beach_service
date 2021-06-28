@@ -17,4 +17,8 @@ extension StringExtension on String {
   DateTime parseToDateTime() {
     return DateFormat("yyyy-MM-dd").parse(this.replaceAll('/', '-'));
   }
+
+  DateTime parseToDateTimeWithHour() {
+    return DateFormat("yyyy-MM-ddTHH:mm:ss").parse(this.replaceAll('/', '-'));
+  }
 }

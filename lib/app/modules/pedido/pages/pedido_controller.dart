@@ -1,8 +1,12 @@
 import 'package:beach_service/app/app_controller.dart';
+import 'package:beach_service/app/modules/pedido/dtos/pedido_dto.dart';
 import 'package:beach_service/app/modules/pedido/services/pedido_service_interface.dart';
 import 'package:beach_service/app/modules/pedido/stores/pedido_store.dart';
+import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
@@ -21,6 +25,12 @@ abstract class _PedidoController with Store implements IFormController {
 
   @observable
   bool loading;
+  
+  @observable
+  BuildContext context;
+  
+  @action
+  void setContext(BuildContext value) => context = value;
 
   @override
   Future<void> load() async {
@@ -40,7 +50,14 @@ abstract class _PedidoController with Store implements IFormController {
       if ((pedidoStore?.itensPedido?.length ?? 0) == 0) throw Exception("Escolha ao menos um produto.");
 
       loading = true;
-      await pedidoService.saveOrUpdate(pedidoStore.toDto());
+      PedidoDto dto = await pedidoService.saveOrUpdate(pedidoStore.toDto());
+
+      if (dto.base.id == null) throw Exception("Houve um erro ao enviar seu pedido.");
+
+      Future.delayed(Duration(milliseconds: 200), () {
+        AlertDialogWidget.show(context, content: "Pedido enviado com sucesso!");
+        Modular.to.navigate("/$HOME_ROUTE");
+      });
     } catch(e) {
       rethrow;
     } finally {

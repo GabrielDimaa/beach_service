@@ -124,8 +124,8 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   @action
   Future<void> avancarPedido() async {
-    pedidoController.pedidoStore.itensPedido.clear();
-    pedidoController.pedidoStore.itensPedido.addAll(produtosSelect) as Observable;
+    pedidoController.pedidoStore.itensPedido = [];
+    pedidoController.pedidoStore.itensPedido.addAll(produtosSelect);
 
     Modular.to.pop();
   }

@@ -36,4 +36,12 @@ abstract class _PedidoBuscaController with Store {
       setLoading(false);
     }
   }
+
+  @computed
+  String get message {
+    if (pedidoController.appController.userStore.isVendedor)
+      return "Receba pedidos para aparecer aqui.";
+    else
+      return "Nem um pedido realizado.\nFaça um pedido para aparecer aqui.";
+  }
 }

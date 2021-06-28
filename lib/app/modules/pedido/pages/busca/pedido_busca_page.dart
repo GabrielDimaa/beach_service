@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:beach_service/app/shared/extensions/date_extension.dart';
 
 class PedidoBuscaPage extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class _PedidoBuscaPageState extends ModularState<PedidoBuscaPage, PedidoBuscaCon
                       iconColor: Colors.white,
                     ),
                     title: Text(nome, style: theme.textTheme.bodyText1),
-                    subtitle: Text(controller.pedidos[index].dataHoraCriado.toString()),
+                    subtitle: Text(controller.pedidos[index].dataHoraCriado.formatedWithHour),
                     trailing: Icon(Icons.keyboard_arrow_right),
                     onTap: () => Modular.to.pushNamed("/$PEDIDO_ROUTE", arguments: controller.pedidos[index]),
                   );
@@ -78,7 +79,7 @@ class _PedidoBuscaPageState extends ModularState<PedidoBuscaPage, PedidoBuscaCon
           semanticsLabel: 'Acme Logo',
         ),
         Text(
-          "Nem um pedido realizado.\nFaça um pedido para aparecer aqui.",
+          controller.message,
           style: theme.textTheme.bodyText1,
           textAlign: TextAlign.center,
         ),

@@ -125,7 +125,7 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                   ),
                 ),
                 Visibility(
-                  visible: !(widget.userProdDto == null),
+                  visible: !(widget.userProdDto == null) && (widget.userProdDto?.produtos?.length ?? 0) > 0,
                   child: Padding(
                     padding: DefaultPadding.paddingButtonBottom,
                     child: GradienteButton(
