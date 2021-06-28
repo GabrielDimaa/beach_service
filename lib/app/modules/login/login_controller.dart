@@ -41,7 +41,7 @@ abstract class _LoginControllerBase with Store implements IFormController {
 
         loading = false;
 
-        Modular.to.pushNamed('/$HOME_ROUTE');
+        Modular.to.navigate('/$HOME_ROUTE');
       }
     } catch(e) {
       rethrow;

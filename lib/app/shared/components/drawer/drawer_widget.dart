@@ -5,6 +5,7 @@ import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.d
 import 'package:beach_service/app/shared/components/drawer/item_drawer.dart';
 import 'package:beach_service/app/shared/constants/page.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
+import 'package:beach_service/app/shared/preferences/auth_preferences.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -13,6 +14,11 @@ class DrawerWidget extends StatelessWidget {
   final AppController appController = Modular.get<AppController>();
 
   EdgeInsets get padding => EdgeInsets.all(16);
+
+  Future<void> _logout() async {
+    await AuthPreferences().delete();
+    Modular.to.navigate("/$LOGIN_ROUTE");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +117,7 @@ class DrawerWidget extends StatelessWidget {
               ItemDrawer(
                 icon: Icons.logout,
                 label: "Sair",
-                onTap: () {},
+                onTap: _logout,
               ),
               DefaultSizedBox(),
             ],

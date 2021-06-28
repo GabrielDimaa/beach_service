@@ -54,8 +54,8 @@ abstract class _PedidoController with Store implements IFormController {
 
       if (dto.base.id == null) throw Exception("Houve um erro ao enviar seu pedido.");
 
-      Future.delayed(Duration(milliseconds: 200), () {
-        AlertDialogWidget.show(context, content: "Pedido enviado com sucesso!");
+      AlertDialogWidget.show(context, content: "Pedido enviado com sucesso!");
+      Future.delayed(Duration(milliseconds: 1000), () {
         Modular.to.navigate("/$HOME_ROUTE");
       });
     } catch(e) {
