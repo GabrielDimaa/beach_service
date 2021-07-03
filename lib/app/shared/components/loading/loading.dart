@@ -22,6 +22,7 @@ class LoadingWidget extends StatelessWidget {
     return Center(
       child: Card(
         elevation: 12,
+        color: Colors.white,
         margin: EdgeInsets.symmetric(horizontal: 50),
         child: Padding(
           padding: const EdgeInsets.all(18),

@@ -5,6 +5,7 @@ import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
 import 'package:beach_service/app/shared/components/categorias_tile.dart';
 import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
+import 'package:beach_service/app/shared/components/loading/loading.dart';
 import 'package:beach_service/app/shared/defaults/default_padding.dart';
 import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,11 +50,17 @@ class _UserPageState extends ModularState<UserPage, UserController> {
       drawer: widget.userProdDto == null ? DrawerWidget() : null,
       body: Align(
         alignment: Alignment.center,
-        child: Observer(builder: (_) {
-          if (controller.loading) {
-            return CircularProgressIndicator();
-          } else {
-            return Column(
+        child: Stack(
+          children: [
+            Visibility(
+              child: Observer(
+                builder: (_) => Visibility(
+                  visible: controller.loading,
+                  child: LoadingWidget(description: "Aguarde...\nSincronizando suas informações."),
+                ),
+              ),
+            ),
+            Column(
               children: [
                 Expanded(
                   child: SingleChildScrollView(
@@ -136,9 +143,9 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                   ),
                 ),
               ],
-            );
-          }
-        }),
+            ),
+          ],
+        ),
       ),
     );
   }

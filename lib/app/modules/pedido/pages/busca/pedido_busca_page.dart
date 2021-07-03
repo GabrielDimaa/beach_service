@@ -2,6 +2,7 @@ import 'package:beach_service/app/app_widget.dart';
 import 'package:beach_service/app/modules/pedido/pages/busca/pedido_busca_controller.dart';
 import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
+import 'package:beach_service/app/shared/components/loading/loading.dart';
 import 'package:beach_service/app/shared/defaults/default_padding.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,7 +37,7 @@ class _PedidoBuscaPageState extends ModularState<PedidoBuscaPage, PedidoBuscaCon
         padding: DefaultPadding.paddingList,
         child: Observer(
           builder: (_) {
-            if (controller.loading) return Center(child: CircularProgressIndicator());
+            if (controller.loading) return LoadingWidget(description: "Aguarde...\nBuscando seus pedidos.");
             if ((controller.pedidos?.length ?? 0) > 0)
               return ListView.separated(
                 separatorBuilder: (_, __) => Container(height: 0.5, color: Colors.grey[300]),

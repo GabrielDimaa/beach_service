@@ -54,6 +54,8 @@ class _VendedorDialogState extends State<VendedorDialog> {
                 AvatarWidget(
                   backgroundColor: PaletaCores.primary,
                   iconColor: Colors.white,
+                  circleSize: 52,
+                  iconSize: 32,
                 ),
                 Expanded(
                   child: ListTile(

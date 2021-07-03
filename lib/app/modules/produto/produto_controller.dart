@@ -9,8 +9,10 @@ import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
 import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_controller.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
+import 'package:beach_service/app/shared/constants/page.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
+import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -99,23 +101,36 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
   @override
   Future<void> save() async {
-    if (produtosSelect.isEmpty) throw Exception("Selecione ao menos um produto!");
+    try {
+      setLoading(true);
 
-    List<ProdutoDto> listProdDto = [];
+      if (produtosSelect.isEmpty) throw Exception("Selecione ao menos um produto!");
 
-    if (userController?.primeiroRegistro ?? false) {
-      UserDto userDto = userController.userStore.toDto();
-      userDto = await userService.saveOrUpdate(userDto);
+      List<ProdutoDto> listProdDto = [];
 
-      if (userDto.base.id != null) listProdDto = await produtoService.saveProdutos(produtosSelect, userDto);
+      if (userController?.primeiroRegistro ?? false) {
+            UserDto userDto = userController.userStore.toDto();
+            userDto = await userService.saveOrUpdate(userDto);
 
-      if (listProdDto.isNotEmpty) Modular.to.navigate(Modular.initialRoute);
-    } else {
-      sincronizacaoService.stop();
-      listProdDto = await produtoService.saveProdutos(produtosSelect, appController.userStore.toDto());
-      sincronizacaoService.start();
+            if (userDto.base.id != null) listProdDto = await produtoService.saveProdutos(produtosSelect, userDto);
 
-      AlertDialogWidget.show(context, content: "Seus produtos foram salvos!");
+            if (listProdDto.isNotEmpty) Modular.to.navigate(Modular.initialRoute);
+          } else {
+            sincronizacaoService.stop();
+            listProdDto = await produtoService.saveProdutos(produtosSelect, appController.userStore.toDto());
+            sincronizacaoService.start();
+
+            AlertDialogWidget.show(context, content: "Seus produtos foram salvos!");
+
+            Future.delayed(Duration(milliseconds: 400), () {
+              appController.page = HOME_PAGE;
+              Modular.to.navigate("/$HOME_ROUTE");
+            });
+          }
+    } catch (e) {
+      rethrow;
+    } finally {
+      setLoading(false);
     }
   }
 
