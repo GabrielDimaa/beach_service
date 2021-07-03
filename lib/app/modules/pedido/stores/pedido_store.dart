@@ -68,6 +68,13 @@ abstract class _PedidoStore with Store {
   @action
   void setStatusPedido(EnumStatusPedido value) => statusPedido = value;
 
+  @action
+  void loadPedido() {
+    setLat(userConsumidor?.lat);
+    setLng(userConsumidor?.lng);
+    setDistance(userVendedor?.distance ?? 0.0);
+  }
+
   PedidoDto toDto() {
     return PedidoDto(
       BaseDto(id),

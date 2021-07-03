@@ -12,6 +12,7 @@ import 'package:beach_service/app/shared/defaults/default_sized_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:beach_service/app/shared/extensions/date_extension.dart';
 
 class PedidoPage extends StatefulWidget {
   final UserProdDto userVendedor;
@@ -38,6 +39,7 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
   }
 
   Future<void> _init() async {
+    await controller.setContext(context);
     await controller.load();
   }
 
@@ -57,140 +59,182 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    //region Itens produtos
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
+                child: Observer(
+                  builder: (_) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      //region Status pedido
+                      Visibility(
+                        visible: controller.pedidoRealizado,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            titleWidget("Itens"),
-                            SizedBox(width: 16),
-                            Visibility(
-                              visible: !controller.pedidoRealizado,
-                              child: TextButton(
-                                child: Text("Alterar", style: theme.bodyText1.copyWith(color: PaletaCores.primaryLight)),
-                                onPressed: controller.toProdutoPage,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Builder(
-                          builder: (_) {
-                            if (controller.pedidoStore?.statusPedido != null) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: PaletaCores.primaryLight, width: 1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
-                                  child: Text(
-                                    EnumStatusPedidoHelper.description(controller.pedidoStore?.statusPedido),
-                                    style: theme.bodyText2.copyWith(color: PaletaCores.primaryLight),
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return Container();
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    Observer(
-                      builder: (_) => ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: controller.pedidoStore?.itensPedido?.length ?? 0,
-                        itemBuilder: (_, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                descricaoWidget(controller.pedidoStore.itensPedido[index].descricao),
-                                Text(
-                                  controller.pedidoStore.itensPedido[index].categoriaDto.descricao,
-                                  style: theme.bodyText2.copyWith(color: Colors.grey),
+                                titleWidget("Data e Hora"),
+                                SizedBox(height: 10),
+                                descricaoWidget("Criado em: ${controller.pedidoStore.dataHoraCriado?.formatedWithHour ?? ""}"),
+                                Visibility(
+                                  visible: controller.pedidoStore?.dataHoraFinalizado != null,
+                                  child: descricaoWidget("Finalizado em: ${controller.pedidoStore.dataHoraFinalizado}"),
                                 ),
                               ],
                             ),
-                          );
-                        },
+                            Builder(
+                              builder: (_) {
+                                if (controller.pedidoStore?.statusPedido != null) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: PaletaCores.primaryLight, width: 1),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                                      child: Text(
+                                        EnumStatusPedidoHelper.description(controller.pedidoStore?.statusPedido),
+                                        style: theme.bodyText2.copyWith(color: PaletaCores.primaryLight),
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    //endregion
+                      //endregion
 
-                    DefaultSizedBox(),
+                      DefaultSizedBox(),
 
-                    //region Dados usuário
-                    titleWidget("Vendedor"),
-                    SizedBox(height: 10),
-                    descricaoWidget("Nome: ${controller.pedidoStore.userVendedor.nome}"),
-                    descricaoWidget("Empresa: ${controller.pedidoStore.userVendedor.empresa}"),
-                    descricaoWidget("Telefone: ${controller.pedidoStore.userVendedor.telefone}"),
-                    descricaoWidget("Email: ${controller.pedidoStore.userVendedor.email}"),
-                    //endregion
-
-                    DefaultSizedBox(),
-
-                    //region distancia
-                    Visibility(
-                      visible: controller.pedidoStore?.distance != null,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      //region Itens produtos
+                      Row(
                         children: [
-                          titleWidget("Distância"),
-                          SizedBox(height: 10),
-                          descricaoWidget("${controller.pedidoStore.distance} metros"),
+                          titleWidget("Itens"),
+                          SizedBox(width: 16),
+                          Visibility(
+                            visible: !controller.pedidoRealizado,
+                            child: TextButton(
+                              child: Text("Alterar", style: theme.bodyText1.copyWith(color: PaletaCores.primaryLight)),
+                              onPressed: controller.toProdutoPage,
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    //endregion
+                      Observer(
+                        builder: (_) => ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: controller.pedidoStore?.itensPedido?.length ?? 0,
+                          itemBuilder: (_, index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  descricaoWidget(controller.pedidoStore.itensPedido[index].descricao),
+                                  Text(
+                                    controller.pedidoStore.itensPedido[index].categoriaDto.descricao,
+                                    style: theme.bodyText2.copyWith(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      //endregion
 
-                    DefaultSizedBox(),
+                      DefaultSizedBox(),
+
+                      //region Dados usuário
+                      titleWidget("Vendedor"),
+                      SizedBox(height: 10),
+                      descricaoWidget("Nome: ${controller.pedidoStore.userVendedor.nome}"),
+                      descricaoWidget("Empresa: ${controller.pedidoStore.userVendedor.empresa}"),
+                      descricaoWidget("Telefone: ${controller.pedidoStore.userVendedor.telefone}"),
+                      descricaoWidget("Email: ${controller.pedidoStore.userVendedor.email}"),
+                      //endregion
+
+                      DefaultSizedBox(),
+
+                      //region distancia
+                      Observer(
+                        builder: (_) => Visibility(
+                          visible: controller.pedidoStore?.distance != null,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              titleWidget("Distância"),
+                              SizedBox(height: 10),
+                              descricaoWidget("${controller.pedidoStore.distance} metros"),
+                            ],
+                          ),
+                        ),
+                      ),
+                      //endregion
+
+                      DefaultSizedBox(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                Visibility(
+                  visible: !controller.pedidoRealizado,
+                  child: GradienteButton(
+                    child: IconTextWidget(
+                      text: "Enviar Pedido",
+                      icon: Icons.send,
+                      color: Colors.white,
+                    ),
+                    colors: PaletaCores.gradiente,
+                    onPressed: () async {
+                      try {
+                        await controller.save();
+                      } catch (e) {
+                        AlertDialogWidget.show(context, title: "Alerta!", content: "$e");
+                      }
+                    },
+                  ),
+                ),
+                Row(
+                  children: [
+                    Observer(
+                      builder: (_) => Visibility(
+                        visible: (controller.pedidoStore.statusPedido == EnumStatusPedido.EmAberto) || (controller.pedidoStore.statusPedido == EnumStatusPedido.Aceito),
+                        child: Expanded(
+                          child: OutlinedButton(
+                            onPressed: controller.cancelarPedido,
+                            style: OutlinedButton.styleFrom(side: BorderSide(color: PaletaCores.primaryLight)),
+                            child: Text("CANCELAR", style: TextStyle(fontSize: 16)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Observer(
+                      builder: (_) => Visibility(
+                        visible: controller.nextStatusPedido != null,
+                        child: Expanded(
+                          child: GradienteButton(
+                            child: Text(
+                              EnumStatusPedidoHelper.description(controller.nextStatusPedido).toUpperCase(),
+                              style: TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            colors: PaletaCores.gradiente,
+                            onPressed: controller.atualizarStatus,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ),
-            Visibility(
-              visible: !controller.pedidoRealizado,
-              child: GradienteButton(
-                child: IconTextWidget(
-                  text: "Enviar Pedido",
-                  icon: Icons.send,
-                  color: Colors.white,
-                ),
-                colors: PaletaCores.gradiente,
-                onPressed: () async {
-                  try {
-                    await controller.save();
-                  } catch (e) {
-                    AlertDialogWidget.show(context, title: "Alerta!", content: "$e");
-                  }
-                },
-              ),
-            ),
-            Visibility(
-              visible: !controller.pedidoRealizado && controller.appController.userStore.isVendedor,
-              child: GradienteButton(
-                child: IconTextWidget(
-                  text: "Status do pedido",
-                  icon: Icons.send,
-                  color: Colors.white,
-                ),
-                colors: PaletaCores.gradiente,
-                onPressed: () async {
-                  try {
-                    await controller.save();
-                  } catch (e) {
-                    AlertDialogWidget.show(context, title: "Alerta!", content: "$e");
-                  }
-                },
-              ),
+              ],
             ),
           ],
         ),

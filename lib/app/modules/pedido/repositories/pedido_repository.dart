@@ -35,6 +35,7 @@ class PedidoRepository extends BaseRepository<PedidoDto> implements IPedidoRepos
       'id_consumidor': dto.userConsumidor.base.id,
       'id_vendedor': dto.userVendedor.base.id,
       'status': EnumStatusPedidoHelper.getValue(dto.statusPedido),
+      'distance': dto.distance,
       'produtos': itens,
     };
   }
@@ -55,7 +56,7 @@ class PedidoRepository extends BaseRepository<PedidoDto> implements IPedidoRepos
       BaseDto(e['id']),
       e['lat'],
       e['lng'],
-      e['distance'],
+      double.parse(e['distance'].toString()),
       e.containsKey('user_vendedor')
           ? UserProdDto(
               base: BaseDto(e['user_vendedor']['id']),
@@ -82,7 +83,7 @@ class PedidoRepository extends BaseRepository<PedidoDto> implements IPedidoRepos
           : null,
       e['data_hora_criado'].toString().parseToDateTimeWithHour(),
       e['data_hora_finalizado']?.toString()?.parseToDateTimeWithHour(),
-      EnumStatusPedidoHelper.get(e['status']),
+      EnumStatusPedidoHelper.get(int.parse(e['status'].toString())),
       produtos,
     );
   }

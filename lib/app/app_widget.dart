@@ -64,6 +64,14 @@ class AppWidget extends StatelessWidget {
             textStyle: TextStyle(fontSize: 14, fontFamily: 'NotoSansJP'),
           ),
         ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            primary: PaletaCores.primaryLight,
+            padding: EdgeInsets.all(10),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            textStyle: TextStyle(fontSize: 14, fontFamily: 'NotoSansJP'),
+          ),
+        ),
         cardTheme: CardTheme(
           elevation: 4,
           color: Colors.white,

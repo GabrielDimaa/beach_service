@@ -33,28 +33,33 @@ abstract class _PedidoController with Store implements IFormController {
   @action
   void setContext(BuildContext value) => context = value;
 
+  @computed
+  bool get pedidoRealizado => pedidoStore.id != null;
+
+  @computed
+  bool get statusIsNotNull => pedidoStore.statusPedido != null;
+  EnumStatusPedido get nextStatusPedido {
+    if (statusIsNotNull) {
+      if (pedidoStore.statusPedido == EnumStatusPedido.EmAberto)
+        return EnumStatusPedido.Aceito;
+      else if (pedidoStore.statusPedido == EnumStatusPedido.Aceito)
+        return EnumStatusPedido.Finalizado;
+    }
+    return null;
+  }
+
   @override
   Future<void> load() async {
     if (!(pedidoStore.id != null)) {
-      pedidoStore.userConsumidor = appController.userStore;
-      pedidoStore.setLat(pedidoStore.userConsumidor?.lat);
-      pedidoStore.setLng(pedidoStore.userConsumidor?.lng);
-      pedidoStore.setDistance(pedidoStore.userVendedor?.distance ?? 0);
-
       await toProdutoPage().then((value) {
+        pedidoStore.userConsumidor = appController.userStore;
+        pedidoStore.loadPedido();
+
         if ((pedidoStore.itensPedido?.length ?? 0) == 0)
           Modular.to.pop();
       });
     }
   }
-
-  @action
-  Future<void> toProdutoPage() async {
-    await Modular.to.pushNamed('/$PRODUTO_ROUTE');
-  }
-
-  @computed
-  bool get pedidoRealizado => pedidoStore.id != null;
 
   @override
   Future<void> save() async {
@@ -81,4 +86,19 @@ abstract class _PedidoController with Store implements IFormController {
 
   @override
   Future<void> delete() async {}
+
+  @action
+  Future<void> toProdutoPage() async {
+    await Modular.to.pushNamed('/$PRODUTO_ROUTE');
+  }
+
+  @action
+  Future<void> cancelarPedido() async {
+
+  }
+
+  @action
+  Future<void> atualizarStatus() async {
+
+  }
 }
