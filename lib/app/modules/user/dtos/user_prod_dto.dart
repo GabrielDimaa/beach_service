@@ -10,8 +10,10 @@ class UserProdDto implements IBaseDto {
   String email;
   String telefone;
   String empresa;
+
   double lat;
   double lng;
+  double distance;
 
   List<ProdutoDto> produtos;
 
@@ -23,6 +25,7 @@ class UserProdDto implements IBaseDto {
     this.empresa,
     this.lat,
     this.lng,
+    this.distance,
     this.produtos,
   });
 }

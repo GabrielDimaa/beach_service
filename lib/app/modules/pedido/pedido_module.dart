@@ -22,13 +22,8 @@ class PedidoModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    //ChildRoute(Modular.initialRoute, child: (_, args) => PedidoPage(userVendedor: args.data,)),
-    //ChildRoute(Modular.initialRoute, child: (_, args) => PedidoBuscaPage()),
-
-
-    ChildRoute(Modular.initialRoute, child: (_, args) => PedidoPage(userVendedor: args.data,)),
+    ChildRoute(Modular.initialRoute, child: (_, args) => PedidoPage(userVendedor: args.data)),
+    ChildRoute("/$PEDIDO_RESUMO_ROUTE", child: (_, args) => PedidoPage(pedidoDto: args.data)),
     ChildRoute("/$PEDIDO_BUSCA_ROUTE", child: (_, args) => PedidoBuscaPage()),
-
   ];
-
 }

@@ -1,3 +1,4 @@
+import 'package:beach_service/app/modules/pedido/enums/enum_status_pedido.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
@@ -10,6 +11,7 @@ class PedidoDto implements IBaseDto {
 
   double lat;
   double lng;
+  double distance;
 
   UserProdDto userVendedor;
   UserDto userConsumidor;
@@ -17,16 +19,20 @@ class PedidoDto implements IBaseDto {
   DateTime dataHoraCriado;
   DateTime dataHoraFinalizado;
 
+  EnumStatusPedido statusPedido;
+
   List<ProdutoDto> itensPedido;
 
   PedidoDto(
     this.base,
     this.lat,
     this.lng,
+    this.distance,
     this.userVendedor,
     this.userConsumidor,
     this.dataHoraCriado,
     this.dataHoraFinalizado,
+    this.statusPedido,
     this.itensPedido,
   );
 }

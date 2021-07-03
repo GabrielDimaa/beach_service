@@ -71,7 +71,7 @@ class _VendedorDialogState extends State<VendedorDialog> {
                       ],
                     ),
                     Text(
-                      "500M",
+                      "${widget.userProdDto.distance} metros",
                       style: theme.textTheme.bodyText1.copyWith(fontSize: 12),
                     )
                   ],

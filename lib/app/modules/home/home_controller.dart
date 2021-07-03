@@ -101,19 +101,20 @@ abstract class _HomeController with Store implements IFormController{
   Future<void> delete() async {}
 
   Future<void> _verificarPermissao() async {
-    setEnabledLocalization(await Geolocator.isLocationServiceEnabled());
+    while(!enabledLocalization) {
+      bool enabled = await Geolocator.isLocationServiceEnabled();
 
-    if (!enabledLocalization) return Future.error('Os serviços de localização estão desativados.');
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
 
-    LocationPermission permission = await Geolocator.checkPermission();
+        if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+          enabled = false;
+        }
+      }
 
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-
-      if (permission == LocationPermission.denied) return Future.error('Permissões de localização negadas.');
+      setEnabledLocalization(enabled);
     }
-
-    if (permission == LocationPermission.deniedForever) return Future.error('As permissões de localização são negadas permanentemente, não podemos solicitar permissões.');
   }
 
   Future<void> getLocalization() async {

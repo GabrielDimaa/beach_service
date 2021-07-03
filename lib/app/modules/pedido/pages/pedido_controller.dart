@@ -1,5 +1,6 @@
 import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/pedido/dtos/pedido_dto.dart';
+import 'package:beach_service/app/modules/pedido/enums/enum_status_pedido.dart';
 import 'package:beach_service/app/modules/pedido/services/pedido_service_interface.dart';
 import 'package:beach_service/app/modules/pedido/stores/pedido_store.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
@@ -34,20 +35,33 @@ abstract class _PedidoController with Store implements IFormController {
 
   @override
   Future<void> load() async {
-    pedidoStore.userConsumidor = appController.userStore;
-    pedidoStore.setLat(pedidoStore.userConsumidor?.lat);
-    pedidoStore.setLng(pedidoStore.userConsumidor?.lng);
+    if (!(pedidoStore.id != null)) {
+      pedidoStore.userConsumidor = appController.userStore;
+      pedidoStore.setLat(pedidoStore.userConsumidor?.lat);
+      pedidoStore.setLng(pedidoStore.userConsumidor?.lng);
+      pedidoStore.setDistance(pedidoStore.userVendedor?.distance ?? 0);
 
-    await toProdutoPage().then((value) {
-      if ((pedidoStore.itensPedido?.length ?? 0) == 0)
-        Modular.to.pop();
-    });
+      await toProdutoPage().then((value) {
+        if ((pedidoStore.itensPedido?.length ?? 0) == 0)
+          Modular.to.pop();
+      });
+    }
   }
+
+  @action
+  Future<void> toProdutoPage() async {
+    await Modular.to.pushNamed('/$PRODUTO_ROUTE');
+  }
+
+  @computed
+  bool get pedidoRealizado => pedidoStore.id != null;
 
   @override
   Future<void> save() async {
     try {
       if ((pedidoStore?.itensPedido?.length ?? 0) == 0) throw Exception("Escolha ao menos um produto.");
+
+      pedidoStore.statusPedido = EnumStatusPedido.EmAberto;
 
       loading = true;
       PedidoDto dto = await pedidoService.saveOrUpdate(pedidoStore.toDto());
@@ -67,8 +81,4 @@ abstract class _PedidoController with Store implements IFormController {
 
   @override
   Future<void> delete() async {}
-
-  Future<void> toProdutoPage() async {
-    await Modular.to.pushNamed('/$PRODUTO_ROUTE');
-  }
 }

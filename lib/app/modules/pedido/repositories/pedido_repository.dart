@@ -1,8 +1,10 @@
 import 'package:beach_service/app/modules/pedido/dtos/pedido_dto.dart';
+import 'package:beach_service/app/modules/pedido/enums/enum_status_pedido.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository_interface.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/produto/repositories/produto_repository.dart';
-import 'package:beach_service/app/modules/user/repositories/user_repository.dart';
+import 'package:beach_service/app/modules/user/dtos/user_dto.dart';
+import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/shared/api/api.dart';
 import 'package:beach_service/app/shared/dtos/base_dto.dart';
 import 'package:beach_service/app/shared/repositories/base_repository.dart';
@@ -32,7 +34,8 @@ class PedidoRepository extends BaseRepository<PedidoDto> implements IPedidoRepos
       'lng': dto.lng,
       'id_consumidor': dto.userConsumidor.base.id,
       'id_vendedor': dto.userVendedor.base.id,
-      'itens': itens,
+      'status': EnumStatusPedidoHelper.getValue(dto.statusPedido),
+      'produtos': itens,
     };
   }
 
@@ -41,22 +44,54 @@ class PedidoRepository extends BaseRepository<PedidoDto> implements IPedidoRepos
     List<dynamic> produtosMap = [];
     List<ProdutoDto> produtos = [];
 
-    if (e.containsKey('itens'))
-      produtosMap = e['itens'];
+    if (e.containsKey('produtos')) produtosMap = e['produtos'];
 
-    if (produtosMap != null && produtosMap.isNotEmpty) produtosMap.forEach((element) {
-      produtos.add(ProdutoRepository().fromMap(element));
-    });
+    if (produtosMap != null && produtosMap.isNotEmpty)
+      produtosMap.forEach((element) {
+        produtos.add(ProdutoRepository().fromMap(element));
+      });
 
     return PedidoDto(
       BaseDto(e['id']),
       e['lat'],
       e['lng'],
-      e.containsKey('user_vendedor') ? UserRepository().fromMapUserProd(e['user_vendedor']) : null,
-      e.containsKey('user_consumidor') ? UserRepository().fromMap(e['user_consumidor']) : null,
+      e['distance'],
+      e.containsKey('user_vendedor')
+          ? UserProdDto(
+              base: BaseDto(e['user_vendedor']['id']),
+              nome: e['user_vendedor']['nome'],
+              email: e['user_vendedor']['email'],
+              telefone: e['user_vendedor']['telefone'],
+              empresa: e['user_vendedor']['empresa'],
+            )
+          : null,
+      e.containsKey('user_consumidor')
+          ? UserDto(
+              BaseDto(e['user_consumidor']['id']),
+              e['user_consumidor']['nome'],
+              e['user_consumidor']['email'],
+              null,
+              e['user_consumidor']['telefone'],
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+            )
+          : null,
       e['data_hora_criado'].toString().parseToDateTimeWithHour(),
       e['data_hora_finalizado']?.toString()?.parseToDateTimeWithHour(),
+      EnumStatusPedidoHelper.get(e['status']),
       produtos,
     );
+  }
+
+  @override
+  Future<List<PedidoDto>> getAll({params}) {
+    Map<String, dynamic> json = {};
+    if (params != null) json = {'id': params};
+
+    return super.getAll(params: json);
   }
 }

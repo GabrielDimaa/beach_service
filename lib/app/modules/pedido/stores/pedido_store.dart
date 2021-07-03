@@ -1,4 +1,5 @@
 import 'package:beach_service/app/modules/pedido/dtos/pedido_dto.dart';
+import 'package:beach_service/app/modules/pedido/enums/enum_status_pedido.dart';
 import 'package:beach_service/app/modules/produto/dtos/produto_dto.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/modules/user/stores/user_store.dart';
@@ -20,6 +21,9 @@ abstract class _PedidoStore with Store {
   double lng;
 
   @observable
+  double distance;
+
+  @observable
   UserStore userConsumidor;
 
   @observable
@@ -34,11 +38,17 @@ abstract class _PedidoStore with Store {
   @observable
   DateTime dataHoraFinalizado;
 
+  @observable
+  EnumStatusPedido statusPedido;
+
   @action
   void setLat(double value) => lat = value;
 
   @action
   void setLng(double value) => lng = value;
+
+  @action
+  void setDistance(double value) => distance = value;
 
   @action
   void setUserConsumidor(UserStore value) => userConsumidor = value;
@@ -55,15 +65,20 @@ abstract class _PedidoStore with Store {
   @action
   void setItensPedido(List<ProdutoDto> value) => itensPedido = value;
 
+  @action
+  void setStatusPedido(EnumStatusPedido value) => statusPedido = value;
+
   PedidoDto toDto() {
     return PedidoDto(
       BaseDto(id),
       lat,
       lng,
+      distance,
       userVendedor,
       userConsumidor.toDto(),
       dataHoraCriado,
       dataHoraFinalizado,
+      statusPedido,
       itensPedido,
     );
   }
@@ -72,11 +87,13 @@ abstract class _PedidoStore with Store {
     this.id,
     this.lat,
     this.lng,
+    this.distance,
     this.userConsumidor,
     this.userVendedor,
     this.itensPedido,
     this.dataHoraCriado,
     this.dataHoraFinalizado,
+    this.statusPedido,
   );
 }
 
@@ -87,11 +104,13 @@ abstract class PedidoStoreFactory {
         dto.base.id,
         dto.lat,
         dto.lng,
+        dto.distance,
         UserStoreFactory.fromDto(dto.userConsumidor),
         dto.userVendedor,
         dto.itensPedido,
         dto.dataHoraCriado,
         dto.dataHoraFinalizado,
+        dto.statusPedido,
       );
     } else {
       return null;
@@ -100,6 +119,8 @@ abstract class PedidoStoreFactory {
 
   static PedidoStore novo() {
     return PedidoStore(
+      null,
+      null,
       null,
       null,
       null,

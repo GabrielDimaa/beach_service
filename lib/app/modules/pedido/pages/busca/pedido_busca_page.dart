@@ -57,7 +57,7 @@ class _PedidoBuscaPageState extends ModularState<PedidoBuscaPage, PedidoBuscaCon
                     title: Text(nome, style: theme.textTheme.bodyText1),
                     subtitle: Text(controller.pedidos[index].dataHoraCriado.formatedWithHour),
                     trailing: Icon(Icons.keyboard_arrow_right),
-                    onTap: () => Modular.to.pushNamed("/$PEDIDO_ROUTE", arguments: controller.pedidos[index]),
+                    onTap: () => Modular.to.pushNamed("/$PEDIDO_ROUTE/$PEDIDO_RESUMO_ROUTE", arguments: controller.pedidos[index]),
                   );
                 },
               );

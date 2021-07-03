@@ -30,6 +30,9 @@ abstract class _UserProdStore with Store {
   double lng;
 
   @observable
+  double distance;
+
+  @observable
   List<ProdutoDto> produtos = ObservableList<ProdutoDto>();
 
   @action
@@ -54,6 +57,9 @@ abstract class _UserProdStore with Store {
   void setLng(double value) => lng = value;
 
   @action
+  void setDistance(double value) => distance = value;
+
+  @action
   void setProdutos(List<ProdutoDto> values) {
     produtos = ObservableList<ProdutoDto>();
     produtos.addAll(values);
@@ -67,6 +73,7 @@ abstract class _UserProdStore with Store {
     this.empresa,
     this.lat,
     this.lng,
+    this.distance,
     this.produtos,
   });
 
@@ -79,6 +86,7 @@ abstract class _UserProdStore with Store {
       empresa: empresa,
       lat: lat,
       lng: lng,
+      distance: distance,
       produtos: produtos,
     );
   }
@@ -95,6 +103,7 @@ abstract class UserProdStoreFactory {
         empresa: dto.empresa,
         lat: dto.lat,
         lng: dto.lng,
+        distance: dto.distance,
         produtos: dto.produtos,
       );
     } else {

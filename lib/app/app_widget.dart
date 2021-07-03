@@ -59,7 +59,7 @@ class AppWidget extends StatelessWidget {
         ),
         textButtonTheme: TextButtonThemeData(
           style: ElevatedButton.styleFrom(
-            onPrimary: PaletaCores.primary,
+            onPrimary: PaletaCores.primaryLight,
             padding: EdgeInsets.all(10),
             textStyle: TextStyle(fontSize: 14, fontFamily: 'NotoSansJP'),
           ),

@@ -1,5 +1,8 @@
 import 'package:beach_service/app/app_widget.dart';
+import 'package:beach_service/app/modules/pedido/dtos/pedido_dto.dart';
+import 'package:beach_service/app/modules/pedido/enums/enum_status_pedido.dart';
 import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
+import 'package:beach_service/app/modules/pedido/stores/pedido_store.dart';
 import 'package:beach_service/app/modules/user/dtos/user_prod_dto.dart';
 import 'package:beach_service/app/shared/components/button/gradiente_button.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
@@ -12,8 +15,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class PedidoPage extends StatefulWidget {
   final UserProdDto userVendedor;
+  final PedidoDto pedidoDto;
 
-  const PedidoPage({Key key, this.userVendedor}) : super(key: key);
+  const PedidoPage({Key key, this.userVendedor, this.pedidoDto}) : super(key: key);
 
   @override
   PedidoPageState createState() => PedidoPageState();
@@ -24,7 +28,11 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
   void initState() {
     super.initState();
 
-    controller.pedidoStore.setUserVendedor(widget.userVendedor);
+    if (widget.pedidoDto != null) {
+      controller.pedidoStore = PedidoStoreFactory.fromDto(widget.pedidoDto);
+    } else {
+      controller.pedidoStore.setUserVendedor(widget.userVendedor);
+    }
 
     _init();
   }
@@ -42,10 +50,7 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
     Widget descricaoWidget(String text) => Text(text, style: theme.bodyText2.copyWith(color: Colors.grey[700]));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Pedido"),
-        iconTheme: iconTheme.copyWith(color: PaletaCores.light)
-      ),
+      appBar: AppBar(title: Text("Pedido"), iconTheme: iconTheme.copyWith(color: PaletaCores.primaryLight)),
       body: Padding(
         padding: DefaultPadding.paddingList,
         child: Column(
@@ -57,12 +62,41 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                   children: [
                     //region Itens produtos
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        titleWidget("Itens"),
-                        SizedBox(width: 16),
-                        TextButton(
-                          child: Text("Alterar", style: theme.bodyText1.copyWith(color: PaletaCores.primaryLight)),
-                          onPressed: controller.toProdutoPage,
+                        Row(
+                          children: [
+                            titleWidget("Itens"),
+                            SizedBox(width: 16),
+                            Visibility(
+                              visible: !controller.pedidoRealizado,
+                              child: TextButton(
+                                child: Text("Alterar", style: theme.bodyText1.copyWith(color: PaletaCores.primaryLight)),
+                                onPressed: controller.toProdutoPage,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Builder(
+                          builder: (_) {
+                            if (controller.pedidoStore?.statusPedido != null) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: PaletaCores.primaryLight, width: 1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                                  child: Text(
+                                    EnumStatusPedidoHelper.description(controller.pedidoStore?.statusPedido),
+                                    style: theme.bodyText2.copyWith(color: PaletaCores.primaryLight),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          },
                         ),
                       ],
                     ),
@@ -97,16 +131,24 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                     SizedBox(height: 10),
                     descricaoWidget("Nome: ${controller.pedidoStore.userVendedor.nome}"),
                     descricaoWidget("Empresa: ${controller.pedidoStore.userVendedor.empresa}"),
+                    descricaoWidget("Telefone: ${controller.pedidoStore.userVendedor.telefone}"),
                     descricaoWidget("Email: ${controller.pedidoStore.userVendedor.email}"),
-                    descricaoWidget("Email: ${controller.pedidoStore.userVendedor.telefone}"),
                     //endregion
 
                     DefaultSizedBox(),
 
                     //region distancia
-                    titleWidget("Distância"),
-                    SizedBox(height: 10),
-                    descricaoWidget("500 metros"),
+                    Visibility(
+                      visible: controller.pedidoStore?.distance != null,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          titleWidget("Distância"),
+                          SizedBox(height: 10),
+                          descricaoWidget("${controller.pedidoStore.distance} metros"),
+                        ],
+                      ),
+                    ),
                     //endregion
 
                     DefaultSizedBox(),
@@ -114,20 +156,41 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                 ),
               ),
             ),
-            GradienteButton(
-              onPressed: () async {
-                try {
-                  await controller.save();
-                } catch (e) {
-                  AlertDialogWidget.show(context, title: "Alerta!", content: "$e");
-                }
-              },
-              child: IconTextWidget(
-                text: "Enviar Pedido",
-                icon: Icons.send,
-                color: Colors.white,
+            Visibility(
+              visible: !controller.pedidoRealizado,
+              child: GradienteButton(
+                child: IconTextWidget(
+                  text: "Enviar Pedido",
+                  icon: Icons.send,
+                  color: Colors.white,
+                ),
+                colors: PaletaCores.gradiente,
+                onPressed: () async {
+                  try {
+                    await controller.save();
+                  } catch (e) {
+                    AlertDialogWidget.show(context, title: "Alerta!", content: "$e");
+                  }
+                },
               ),
-              colors: PaletaCores.gradiente,
+            ),
+            Visibility(
+              visible: !controller.pedidoRealizado && controller.appController.userStore.isVendedor,
+              child: GradienteButton(
+                child: IconTextWidget(
+                  text: "Status do pedido",
+                  icon: Icons.send,
+                  color: Colors.white,
+                ),
+                colors: PaletaCores.gradiente,
+                onPressed: () async {
+                  try {
+                    await controller.save();
+                  } catch (e) {
+                    AlertDialogWidget.show(context, title: "Alerta!", content: "$e");
+                  }
+                },
+              ),
             ),
           ],
         ),

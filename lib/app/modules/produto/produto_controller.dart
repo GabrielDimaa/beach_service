@@ -86,7 +86,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
         produtosSelect.addAll(pedidoController.pedidoStore.itensPedido ?? []);
       } else {
         produtosAll = await produtoService.getAll().asObservable();
-        if (appController.userStore.isVendedor) await getSelecionados();
+        if (appController.userStore.isVendedor) await _getSelecionados();
       }
 
       _getCategorias();
@@ -109,7 +109,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
 
       if (userDto.base.id != null) listProdDto = await produtoService.saveProdutos(produtosSelect, userDto);
 
-      if (listProdDto.isNotEmpty) Modular.to.pushNamed(Modular.initialRoute);
+      if (listProdDto.isNotEmpty) Modular.to.navigate(Modular.initialRoute);
     } else {
       sincronizacaoService.stop();
       listProdDto = await produtoService.saveProdutos(produtosSelect, appController.userStore.toDto());
@@ -188,7 +188,7 @@ abstract class _ProdutoControllerBase with Store implements IFormController {
     return produtosSelect.any((element) => element.base.id == value.base.id);
   }
 
-  Future<void> getSelecionados() async {
+  Future<void> _getSelecionados() async {
     List<ProdutoDto> lista = await produtoService.getProdutosById(appController.userStore.id);
 
     produtosAll.forEach((element) {

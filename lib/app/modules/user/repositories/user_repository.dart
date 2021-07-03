@@ -102,6 +102,7 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
       empresa: e['empresa'],
       lat: e['lat'],
       lng: e['lng'],
+      distance: double.parse(e['distance'].toString()),
       produtos: produtos,
     );
   }
@@ -122,7 +123,8 @@ class UserRepository extends BaseRepository<UserDto> implements IUserRepository 
 
       List<UserProdDto> listUsers = [];
 
-      Response response = await api.get(
+      Response response = await
+      api.get(
         getRoute(),
         queryParameters: {
           'tipo_user': EnumTipoUserHelper.getValue(userDto.tipoUser),

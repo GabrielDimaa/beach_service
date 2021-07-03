@@ -1,5 +1,4 @@
 import 'package:beach_service/app/app_controller.dart';
-import 'package:beach_service/app/modules/home/services/sincronizacao_service.dart';
 import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
 import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
 import 'package:beach_service/app/modules/pedido/repositories/pedido_repository.dart';
@@ -12,11 +11,11 @@ import 'package:beach_service/app/modules/produto/repositories/produto_repositor
 import 'package:beach_service/app/modules/produto/repositories/produto_repository_interface.dart';
 import 'package:beach_service/app/modules/produto/services/produto_service.dart';
 import 'package:beach_service/app/modules/produto/services/produto_service_interface.dart';
+import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_controller.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository.dart';
 import 'package:beach_service/app/modules/user/repositories/user_repository_interface.dart';
 import 'package:beach_service/app/modules/user/services/user_service.dart';
 import 'package:beach_service/app/modules/user/services/user_service_interface.dart';
-import 'package:beach_service/app/modules/user/pages/cadastro/user_cadastro_controller.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class ProdutoModule extends Module {
