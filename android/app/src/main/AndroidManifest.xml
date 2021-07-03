@@ -8,7 +8,7 @@
     <application
         android:label="beach_service"
         android:usesCleartextTraffic="true"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCd2Vc5XvRSApOZdHNM9pPOCdOF8PU6IqE"/>
         <activity
