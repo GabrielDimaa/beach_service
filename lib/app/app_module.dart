@@ -54,11 +54,7 @@ class AppModule extends Module {
     Bind((i) => SplachController(i.get<AppController>())),
     Bind((i) => LoginController(i.get<ILoginService>(), i.get<AppController>())),
     Bind((i) => UserCadastroController(i.get<IUserService>(), i.get<AppController>())),
-    Bind((i) => UserController(
-          i.get<IUserService>(),
-          i.get<IProdutoService>(),
-          i.get<AppController>()
-        )),
+    Bind((i) => UserController(i.get<IUserService>(), i.get<IProdutoService>(), i.get<AppController>())),
     Bind((i) => ProdutoController(
           i.get<IProdutoService>(),
           i.get<IUserService>(),
@@ -72,7 +68,11 @@ class AppModule extends Module {
           i.get<ISincronizacaoService>(),
           i.get<AppController>(),
         )),
-    Bind((i) => PedidoController(i.get<IPedidoService>(), i.get<AppController>()))
+    Bind((i) => PedidoController(
+          i.get<IPedidoService>(),
+          i.get<AppController>(),
+          i.get<ISincronizacaoService>(),
+        ))
   ];
 
   @override

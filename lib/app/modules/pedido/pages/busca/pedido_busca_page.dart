@@ -1,4 +1,5 @@
 import 'package:beach_service/app/app_widget.dart';
+import 'package:beach_service/app/modules/pedido/enums/enum_status_pedido.dart';
 import 'package:beach_service/app/modules/pedido/pages/busca/pedido_busca_controller.dart';
 import 'package:beach_service/app/shared/components/avatar/avatar_widget.dart';
 import 'package:beach_service/app/shared/components/drawer/drawer_widget.dart';
@@ -10,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:beach_service/app/shared/extensions/date_extension.dart';
 
 class PedidoBuscaPage extends StatefulWidget {
   @override
@@ -48,17 +48,22 @@ class _PedidoBuscaPageState extends ModularState<PedidoBuscaPage, PedidoBuscaCon
                     nome = controller.pedidos[index].userConsumidor.nome;
                   else
                     nome = controller.pedidos[index].userVendedor.nome;
-                  return ListTile(
-                    leading: AvatarWidget(
-                      backgroundColor: PaletaCores.primaryLight,
-                      circleSize: 48,
-                      iconSize: 30,
-                      iconColor: Colors.white,
+                  return Observer(
+                    builder: (_) => ListTile(
+                      leading: AvatarWidget(
+                        backgroundColor: PaletaCores.primaryLight,
+                        circleSize: 48,
+                        iconSize: 30,
+                        iconColor: Colors.white,
+                      ),
+                      title: Text(nome, style: theme.textTheme.bodyText1),
+                      subtitle: Text(
+                        EnumStatusPedidoHelper.description(controller.pedidos[index].statusPedido),
+                        style: TextStyle(color: PaletaCores.primaryLight),
+                      ),
+                      trailing: Icon(Icons.keyboard_arrow_right),
+                      onTap: () => Modular.to.pushNamed("/$PEDIDO_ROUTE/$PEDIDO_RESUMO_ROUTE", arguments: controller.pedidos[index]),
                     ),
-                    title: Text(nome, style: theme.textTheme.bodyText1),
-                    subtitle: Text(controller.pedidos[index].dataHoraCriado.formatedWithHour),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                    onTap: () => Modular.to.pushNamed("/$PEDIDO_ROUTE/$PEDIDO_RESUMO_ROUTE", arguments: controller.pedidos[index]),
                   );
                 },
               );

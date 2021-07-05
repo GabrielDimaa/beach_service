@@ -33,7 +33,11 @@ class ProdutoModule extends Module {
 
     //Controllers
     Bind((i) => UserCadastroController(i.get<IUserService>(), i.get<AppController>())),
-    Bind((i) => PedidoController(i.get<IPedidoService>(), i.get<AppController>())),
+    Bind((i) => PedidoController(
+          i.get<IPedidoService>(),
+          i.get<AppController>(),
+          i.get<ISincronizacaoService>(),
+        )),
     Bind((i) => AppController()),
     Bind((i) => ProdutoController(
           i.get<IProdutoService>(),

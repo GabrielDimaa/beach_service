@@ -16,9 +16,9 @@ import 'package:beach_service/app/shared/extensions/date_extension.dart';
 
 class PedidoPage extends StatefulWidget {
   final UserProdDto userVendedor;
-  final PedidoDto pedidoDto;
+  final PedidoStore pedidoStore;
 
-  const PedidoPage({Key key, this.userVendedor, this.pedidoDto}) : super(key: key);
+  const PedidoPage({Key key, this.userVendedor, this.pedidoStore}) : super(key: key);
 
   @override
   PedidoPageState createState() => PedidoPageState();
@@ -29,17 +29,17 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
   void initState() {
     super.initState();
 
-    if (widget.pedidoDto != null) {
-      controller.pedidoStore = PedidoStoreFactory.fromDto(widget.pedidoDto);
+    if (widget.pedidoStore != null) {
+      controller.pedidoStore = widget.pedidoStore;
     } else {
       controller.pedidoStore.setUserVendedor(widget.userVendedor);
     }
 
-    _init();
+    _init().then((value) => null);
   }
 
   Future<void> _init() async {
-    await controller.setContext(context);
+    controller.setContext(context);
     await controller.load();
   }
 
@@ -50,7 +50,6 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
 
     Widget titleWidget(String title) => Text(title, style: theme.bodyText1);
     Widget descricaoWidget(String text) => Text(text, style: theme.bodyText2.copyWith(color: Colors.grey[700]));
-
     return Scaffold(
       appBar: AppBar(title: Text("Pedido"), iconTheme: iconTheme.copyWith(color: PaletaCores.primaryLight)),
       body: Padding(
@@ -74,14 +73,18 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                               children: [
                                 titleWidget("Data e Hora"),
                                 SizedBox(height: 10),
-                                descricaoWidget("Criado em: ${controller.pedidoStore.dataHoraCriado?.formatedWithHour ?? ""}"),
-                                Visibility(
-                                  visible: controller.pedidoStore?.dataHoraFinalizado != null,
-                                  child: descricaoWidget("Finalizado em: ${controller.pedidoStore.dataHoraFinalizado}"),
+                                Observer(
+                                  builder: (_) => descricaoWidget("Criado em: ${controller.pedidoStore?.dataHoraCriado?.formatedWithHour ?? ""}"),
+                                ),
+                                Observer(
+                                  builder: (_) => Visibility(
+                                    visible: controller.pedidoStore?.dataHoraFinalizado != null,
+                                    child: descricaoWidget("Finalizado em: ${controller.pedidoStore?.dataHoraFinalizado?.formatedWithHour ?? ""}"),
+                                  ),
                                 ),
                               ],
                             ),
-                            Builder(
+                            Observer(
                               builder: (_) {
                                 if (controller.pedidoStore?.statusPedido != null) {
                                   return Container(
@@ -92,7 +95,7 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
                                       child: Text(
-                                        EnumStatusPedidoHelper.description(controller.pedidoStore?.statusPedido),
+                                        EnumStatusPedidoHelper.description(controller.pedidoStore?.statusPedido ?? 1),
                                         style: theme.bodyText2.copyWith(color: PaletaCores.primaryLight),
                                       ),
                                     ),
@@ -114,11 +117,13 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                         children: [
                           titleWidget("Itens"),
                           SizedBox(width: 16),
-                          Visibility(
-                            visible: !controller.pedidoRealizado,
-                            child: TextButton(
-                              child: Text("Alterar", style: theme.bodyText1.copyWith(color: PaletaCores.primaryLight)),
-                              onPressed: controller.toProdutoPage,
+                          Observer(
+                            builder: (_) => Visibility(
+                              visible: !controller.pedidoRealizado,
+                              child: TextButton(
+                                child: Text("Alterar", style: theme.bodyText1.copyWith(color: PaletaCores.primaryLight)),
+                                onPressed: controller.toProdutoPage,
+                              ),
                             ),
                           ),
                         ],
@@ -152,10 +157,10 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                       //region Dados usuário
                       titleWidget("Vendedor"),
                       SizedBox(height: 10),
-                      descricaoWidget("Nome: ${controller.pedidoStore.userVendedor.nome}"),
-                      descricaoWidget("Empresa: ${controller.pedidoStore.userVendedor.empresa}"),
-                      descricaoWidget("Telefone: ${controller.pedidoStore.userVendedor.telefone}"),
-                      descricaoWidget("Email: ${controller.pedidoStore.userVendedor.email}"),
+                      descricaoWidget("Nome: ${controller.pedidoStore?.userVendedor?.nome ?? ""}"),
+                      descricaoWidget("Empresa: ${controller.pedidoStore?.userVendedor?.empresa ?? ""}"),
+                      descricaoWidget("Telefone: ${controller.pedidoStore?.userVendedor?.telefone ?? ""}"),
+                      descricaoWidget("Email: ${controller.pedidoStore?.userVendedor?.email ?? ""}"),
                       //endregion
 
                       DefaultSizedBox(),
@@ -169,7 +174,7 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                             children: [
                               titleWidget("Distância"),
                               SizedBox(height: 10),
-                              descricaoWidget("${controller.pedidoStore.distance} metros"),
+                              descricaoWidget("${controller.pedidoStore?.distance?.toStringAsFixed(2) ?? ""} metros"),
                             ],
                           ),
                         ),
@@ -206,7 +211,7 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                   children: [
                     Observer(
                       builder: (_) => Visibility(
-                        visible: (controller.pedidoStore.statusPedido == EnumStatusPedido.EmAberto) || (controller.pedidoStore.statusPedido == EnumStatusPedido.Aceito),
+                        visible: controller.appController.userStore.isVendedor && controller.pedidoRealizado && controller.pedidoStore.statusPedido == EnumStatusPedido.EmAberto || controller.pedidoStore.statusPedido == EnumStatusPedido.Aceito,
                         child: Expanded(
                           child: OutlinedButton(
                             onPressed: controller.cancelarPedido,
@@ -217,21 +222,21 @@ class PedidoPageState extends ModularState<PedidoPage, PedidoController> {
                       ),
                     ),
                     SizedBox(width: 20),
-                    Observer(
-                      builder: (_) => Visibility(
-                        visible: controller.nextStatusPedido != null,
-                        child: Expanded(
+                    Observer(builder: (_) {
+                      if (controller.appController.userStore.isVendedor && controller.pedidoRealizado && controller.nextStatusPedido != null)
+                        return Expanded(
                           child: GradienteButton(
                             child: Text(
-                              EnumStatusPedidoHelper.description(controller.nextStatusPedido).toUpperCase(),
+                              EnumStatusPedidoHelper.description(controller.nextStatusPedido ?? 1).toUpperCase(),
                               style: TextStyle(color: Colors.white, fontSize: 16),
                             ),
                             colors: PaletaCores.gradiente,
                             onPressed: controller.atualizarStatus,
                           ),
-                        ),
-                      ),
-                    ),
+                        );
+                      else
+                        return Container();
+                    }),
                   ],
                 ),
               ],

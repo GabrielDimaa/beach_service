@@ -44,7 +44,7 @@ class SincronizacaoService implements ISincronizacaoService {
     print("## Iniciando sincronização ##");
 
     if (_timer == null || !_timer.isActive) {
-      _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
+      _timer = Timer.periodic(Duration(seconds: 60), (timer) async {
         await runner();
       });
     }

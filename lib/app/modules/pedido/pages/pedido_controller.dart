@@ -1,9 +1,11 @@
 import 'package:beach_service/app/app_controller.dart';
+import 'package:beach_service/app/modules/home/services/sincronizacao_service_interface.dart';
 import 'package:beach_service/app/modules/pedido/dtos/pedido_dto.dart';
 import 'package:beach_service/app/modules/pedido/enums/enum_status_pedido.dart';
 import 'package:beach_service/app/modules/pedido/services/pedido_service_interface.dart';
 import 'package:beach_service/app/modules/pedido/stores/pedido_store.dart';
 import 'package:beach_service/app/shared/components/dialog/alert_dialog_widget.dart';
+import 'package:beach_service/app/shared/constants/page.dart';
 import 'package:beach_service/app/shared/interfaces/form_controller_interface.dart';
 import 'package:beach_service/app/shared/routes/routes.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,8 +20,9 @@ class PedidoController = _PedidoController with _$PedidoController;
 abstract class _PedidoController with Store implements IFormController {
   final IPedidoService pedidoService;
   final AppController appController;
+  final ISincronizacaoService sincronizacaoService;
 
-  _PedidoController(this.pedidoService, this.appController);
+  _PedidoController(this.pedidoService, this.appController, this.sincronizacaoService);
 
   @observable
   PedidoStore pedidoStore = PedidoStoreFactory.novo();
@@ -51,7 +54,7 @@ abstract class _PedidoController with Store implements IFormController {
   @override
   Future<void> load() async {
     if (!(pedidoStore.id != null)) {
-      await toProdutoPage().then((value) {
+      toProdutoPage().then((value) {
         pedidoStore.userConsumidor = appController.userStore;
         pedidoStore.loadPedido();
 
@@ -75,6 +78,7 @@ abstract class _PedidoController with Store implements IFormController {
 
       AlertDialogWidget.show(context, content: "Pedido enviado com sucesso!");
       Future.delayed(Duration(milliseconds: 1000), () {
+        appController.setPage(HOME_PAGE);
         Modular.to.navigate("/$HOME_ROUTE");
       });
     } catch(e) {
@@ -99,6 +103,20 @@ abstract class _PedidoController with Store implements IFormController {
 
   @action
   Future<void> atualizarStatus() async {
+    try {
+      sincronizacaoService.stop();
 
+      PedidoStore pedidoStore = this.pedidoStore.clone();
+      pedidoStore.setStatusPedido(nextStatusPedido);
+      pedidoStore = PedidoStoreFactory.fromDto(await pedidoService.saveOrUpdate(pedidoStore.toDto()));
+
+      if (pedidoStore.statusPedido != this.pedidoStore.statusPedido)
+        this.pedidoStore.setStatusPedido(pedidoStore.statusPedido);
+    } catch (e) {
+      await sincronizacaoService.start();
+      rethrow;
+    } finally {
+      await sincronizacaoService.start();
+    }
   }
 }

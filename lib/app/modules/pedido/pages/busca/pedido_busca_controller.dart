@@ -2,6 +2,7 @@ import 'package:beach_service/app/app_controller.dart';
 import 'package:beach_service/app/modules/pedido/dtos/pedido_dto.dart';
 import 'package:beach_service/app/modules/pedido/pages/pedido_controller.dart';
 import 'package:beach_service/app/modules/pedido/services/pedido_service_interface.dart';
+import 'package:beach_service/app/modules/pedido/stores/pedido_store.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,7 +17,7 @@ abstract class _PedidoBuscaController with Store {
   _PedidoBuscaController(this.pedidoService, this.pedidoController);
 
   @observable
-  ObservableList<PedidoDto> pedidos = ObservableList<PedidoDto>();
+  ObservableList<PedidoStore> pedidos = ObservableList<PedidoStore>();
 
   @observable
   bool loading = false;
@@ -29,7 +30,8 @@ abstract class _PedidoBuscaController with Store {
     try {
       setLoading(true);
 
-      pedidos.addAll(await pedidoService.getAll(params: (Modular.get<AppController>()).userStore.id).asObservable());
+      List<PedidoDto> pedidosDto = await pedidoService.getAll(params: (Modular.get<AppController>()).userStore.id);
+      pedidos = pedidosDto.map((e) => PedidoStoreFactory.fromDto(e)).toList().asObservable();
     } catch(e) {
       rethrow;
     } finally {

@@ -90,6 +90,21 @@ abstract class _PedidoStore with Store {
     );
   }
 
+  PedidoStore clone() {
+    return PedidoStore(
+      this.id,
+      this.lat,
+      this.lng,
+      this.distance,
+      this.userConsumidor,
+      this.userVendedor,
+      this.itensPedido,
+      this.dataHoraCriado,
+      this.dataHoraFinalizado,
+      this.statusPedido,
+    );
+  }
+
   _PedidoStore(
     this.id,
     this.lat,

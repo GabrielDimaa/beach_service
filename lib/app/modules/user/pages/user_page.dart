@@ -76,7 +76,7 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                         SizedBox(height: 10),
                         Observer(
                           builder: (_) => Text(
-                            controller.userProdStore.nome,
+                            controller.userProdStore?.nome ?? "",
                             style: theme.textTheme.headline1.copyWith(color: Colors.black, fontSize: 28),
                           ),
                         ),
@@ -110,22 +110,18 @@ class _UserPageState extends ModularState<UserPage, UserController> {
                         }),
                         SizedBox(height: 10),
                         Observer(builder: (_) {
-                          if (!controller.loading) {
-                            List<Widget> produtos = [];
-                            if ((controller.userProdStore?.produtos?.length ?? 0) > 0) {
-                              produtos = controller.userProdStore.produtos.map((e) {
-                                return ListTile(
-                                  title: Text(e.descricao, style: theme.textTheme.bodyText1),
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                );
-                              }).toList();
-                            }
-                            return Column(
-                              children: produtos,
-                            );
-                          } else {
-                            return CircularProgressIndicator();
+                          List<Widget> produtos = [];
+                          if ((controller.userProdStore?.produtos?.length ?? 0) > 0) {
+                            produtos = controller.userProdStore.produtos.map((e) {
+                              return ListTile(
+                                title: Text(e.descricao, style: theme.textTheme.bodyText1),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                              );
+                            }).toList();
                           }
+                          return Column(
+                            children: produtos,
+                          );
                         }),
                       ],
                     ),
