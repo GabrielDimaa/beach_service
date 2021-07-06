@@ -36,7 +36,7 @@ No contexto da solicitação do usuário consumidor, após isso a aplicação va
 </p>
 
 ## :collision: Status do Projeto
-Status do Projeto: Finalizado ✔️
+Status do Projeto: Concluído ✔️
 
 ## :fire: Implementações e Tecnologias
 <h3>Frontend: Flutter</h3>
