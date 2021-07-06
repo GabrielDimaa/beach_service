@@ -1,5 +1,5 @@
 <div align="center">
-  <h1> Pets Wallet </h1>
+  <h1>Beach Service</h1>
   <img src="https://github.com/GabrielDimaa/beach_service/blob/master/assets/images/logo.png?raw=true" width="180px" height="180px"/>
 </div>
 
@@ -35,6 +35,9 @@ Quando o vendedor se cadastrar no aplicativo ele poderá se registrar escolhendo
 No contexto da solicitação do usuário consumidor, após isso a aplicação vai dar match com vendedores de acordo com o pedido. O vendedor poderá aceitar o pedido do consumidor, logo depois, calcular o tempo da entrega de acordo com a distância entre ambos.
 </p>
 
+## :collision: Status do Projeto
+Status do Projeto: Finalizado ✔️
+
 ## :fire: Implementações e Tecnologias
 <h3>Frontend: Flutter</h3>
 
@@ -45,5 +48,5 @@ No contexto da solicitação do usuário consumidor, após isso a aplicação va
 - > google_maps_flutter
 - > dio
 
-<h3>API: Adonis JS</h3>
+<a href="https://github.com/LuisGustavoRosa/beach_service_back"><h3>API: Adonis JS</h3></a>
 <h3>Banco de dados: MySQL</h3>
